@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Film Ratings - Tabella Ordinabile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 2em;
+            letter-spacing: 1px;
+        }
+        
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .toggle-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-btn:hover {
+            background: #5568d3;
+        }
+        
+        .stats {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        thead {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        th {
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+        }
+        
+        th:first-child {
+            cursor: default;
+        }
+        
+        th:hover:not(:first-child) {
+            background: #e9ecef;
+        }
+        
+        th.sortable::after {
+            content: ' ⇅';
+            color: #aaa;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        th.sort-asc::after {
+            content: ' ▲';
+            color: #667eea;
+        }
+        
+        th.sort-desc::after {
+            content: ' ▼';
+            color: #667eea;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        tbody tr.watched {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transform: scaleY(0);
+        }
+        
+        .checkbox-cell {
+            width: 50px;
+            text-align: center;
+        }
+        
+        .checkbox-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #28a745;
+        }
+        
+        .rating-high {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .rating-medium {
+            color: #ffc107;
+            font-weight: 600;
+        }
+        
+        .rating-low {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        .series-badge {
+            display: inline-block;
+            background: #e7f3ff;
+            color: #0066cc;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .no-data {
+            color: #999;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5em;
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Film Ratings Database</h1>
+        
+        <div class="controls">
+            <div class="stats">
+                <strong>Totale film:</strong> <span id="totalFilms">0</span> | 
+                <strong>Visti:</strong> <span id="watchedCount">0</span> | 
+                <strong>Da vedere:</strong> <span id="remainingCount">0</span>
+            </div>
+            <button class="toggle-btn" id="toggleWatched">Mostra film visti</button>
+        </div>
+        
+        <div class="table-wrapper">
+            <table id="filmTable">
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell">Visto</th>
+                        <th class="sortable" data-column="title" data-type="string">Titolo</th>
+                        <th class="sortable" data-column="rt" data-type="number">Rotten Tomatoes</th>
+                        <th class="sortable" data-column="imdb" data-type="number">IMDb</th>
+                        <th class="sortable" data-column="cinemascore" data-type="string">CinemaScore</th>
+                        <th data-column="series">Serie</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        var filmData = [
+            {id: 1, title: "A Million Miles Away", rt: 96, imdb: 7.3, cinemascore: "", series: ""},
+            {id: 2, title: "American Underdog", rt: 98, imdb: 7.1, cinemascore: "A+", series: ""},
+            {id: 3, title: "Animali fantastici – I segreti di Silente", rt: 83, imdb: 6.2, cinemascore: "B+", series: "Fantastic Beasts"},
+            {id: 4, title: "Beetlejuice Beetlejuice", rt: 82, imdb: 6.6, cinemascore: "B+", series: "Beetlejuice"},
+            {id: 5, title: "Black Phone", rt: 88, imdb: 6.9, cinemascore: "B+", series: ""},
+            {id: 6, title: "Creed III", rt: 96, imdb: 6.7, cinemascore: "A-", series: "Rocky/Creed"},
+            {id: 7, title: "Crudelia", rt: 97, imdb: 7.3, cinemascore: "A", series: "101 Dalmatians"},
+            {id: 8, title: "Dungeons & Dragons – L'onore dei ladri", rt: 93, imdb: 7.2, cinemascore: "A-", series: "Dungeons & Dragons"},
+            {id: 9, title: "Elvis", rt: 94, imdb: 7.3, cinemascore: "A-", series: ""},
+            {id: 10, title: "F1: Il film", rt: 97, imdb: 7.5, cinemascore: "A", series: ""},
+            {id: 11, title: "Fly Me to the Moon – Le due facce della Luna", rt: 89, imdb: 6.6, cinemascore: "A-", series: ""},
+            {id: 12, title: "Ghostbusters: Legacy", rt: 94, imdb: 7.0, cinemascore: "A-", series: "Ghostbusters"},
+            {id: 13, title: "Ghostbusters – Minaccia glaciale", rt: 86, imdb: 6.1, cinemascore: "B+", series: "Ghostbusters"},
+            {id: 14, title: "Giurato numero 2", rt: 90, imdb: 7.0, cinemascore: "", series: ""},
+            {id: 15, title: "I Cavalieri dello Zodiaco", rt: 60, imdb: 4.4, cinemascore: "", series: ""},
+            {id: 16, title: "Il Sistema", rt: 36, imdb: 4.3, cinemascore: "", series: ""},
+            {id: 17, title: "Io sono Nessuno", rt: 94, imdb: 7.4, cinemascore: "A-", series: "Nobody"},
+            {id: 18, title: "Io sono Nessuno 2", rt: 89, imdb: 6.8, cinemascore: "", series: "Nobody"},
+            {id: 19, title: "Jigen Daisuke", rt: 65, imdb: 5.7, cinemascore: "", series: "Lupin III"},
+            {id: 20, title: "John Wick 4", rt: 93, imdb: 7.6, cinemascore: "A", series: "John Wick"},
+            {id: 21, title: "Jungle Cruise", rt: 92, imdb: 6.5, cinemascore: "A-", series: ""},
+            {id: 22, title: "Killers of the Flower Moon", rt: 84, imdb: 7.5, cinemascore: "A-", series: ""},
+            {id: 23, title: "Magic Mike – The Last Dance", rt: 73, imdb: 5.2, cinemascore: "", series: "Magic Mike"},
+            {id: 24, title: "Mission: Impossible – Dead Reckoning Parte Uno", rt: 94, imdb: 7.7, cinemascore: "A", series: "Mission: Impossible"},
+            {id: 25, title: "No Time to Die", rt: 88, imdb: 7.3, cinemascore: "A-", series: "James Bond"},
+            {id: 26, title: "Non mollare mai", rt: 98, imdb: 7.1, cinemascore: "A+", series: ""},
+            {id: 27, title: "Nosferatu", rt: 76, imdb: 7.1, cinemascore: "B", series: ""},
+            {id: 28, title: "Sentinelle", rt: null, imdb: 5.1, cinemascore: "", series: ""},
+            {id: 29, title: "Sonic 3 – Il film", rt: 95, imdb: 6.9, cinemascore: "", series: "Sonic the Hedgehog"},
+            {id: 30, title: "Speak No Evil – Non parlare con gli sconosciuti", rt: 83, imdb: 6.8, cinemascore: "", series: ""},
+            {id: 31, title: "Super Mario Bros. – Il film", rt: 95, imdb: 7.0, cinemascore: "A", series: ""},
+            {id: 32, title: "The Beekeeper", rt: 94, imdb: 6.5, cinemascore: "B+", series: ""},
+            {id: 33, title: "The Burial – Il caso O'Keefe", rt: 78, imdb: 7.1, cinemascore: "", series: ""},
+            {id: 34, title: "The Covenant", rt: 98, imdb: 7.5, cinemascore: "A", series: ""},
+            {id: 35, title: "The Equalizer 3", rt: 94, imdb: 6.9, cinemascore: "A", series: "The Equalizer"},
+            {id: 36, title: "The Fabelmans", rt: 83, imdb: 7.5, cinemascore: "A", series: ""},
+            {id: 37, title: "The Fall Guy", rt: 86, imdb: 6.9, cinemascore: "A-", series: ""},
+            {id: 38, title: "The Outfit", rt: 92, imdb: 7.2, cinemascore: "", series: ""},
+            {id: 39, title: "The Plane", rt: 94, imdb: 6.5, cinemascore: "B+", series: ""},
+            {id: 40, title: "The Warrior – The Iron Claw", rt: 94, imdb: 7.6, cinemascore: "A-", series: ""},
+            {id: 41, title: "Transformers – Il risveglio", rt: 91, imdb: 6.0, cinemascore: "A-", series: "Transformers"},
+            {id: 42, title: "Tron: Ares", rt: 87, imdb: null, cinemascore: "", series: "Tron"},
+            {id: 43, title: "Ultima notte a Soho", rt: 89, imdb: 7.0, cinemascore: "B+", series: ""},
+            {id: 44, title: "Una battaglia dopo l'altra", rt: 85, imdb: null, cinemascore: "", series: ""},
+            {id: 45, title: "Uno rosso", rt: 90, imdb: 6.8, cinemascore: "A-", series: ""},
+            {id: 46, title: "Weapons", rt: 87, imdb: null, cinemascore: "A-", series: ""},
+            {id: 47, title: "Wicked", rt: 99, imdb: 7.5, cinemascore: "A", series: "Wicked"},
+            {id: 48, title: "Wonka", rt: 90, imdb: 7.0, cinemascore: "A-", series: "Charlie and the Chocolate Factory"},
+            {id: 49, title: "Wrath of Man", rt: 90, imdb: 7.1, cinemascore: "A-", series: ""}
+        ];
+
+        var currentSort = {column: null, direction: null};
+        var watchedFilms = new Set(JSON.parse(localStorage.getItem('watchedFilms') || '[]'));
+        var showWatched = false;
+
+        function getRatingClass(value, type) {
+            if (!value) return '';
+            if (type === 'rt' || type === 'imdb') {
+                var num = parseFloat(value);
+                if (type === 'rt') {
+                    if (num >= 90) return 'rating-high';
+                    if (num >= 70) return 'rating-medium';
+                    return 'rating-low';
+                }
+                if (type === 'imdb') {
+                    if (num >= 7.0) return 'rating-high';
+                    if (num >= 6.0) return 'rating-medium';
+                    return 'rating-low';
+                }
+            }
+            if (type === 'cinemascore') {
+                if (value.indexOf('A') === 0) return 'rating-high';
+                if (value.indexOf('B') === 0) return 'rating-medium';
+                return 'rating-low';
+            }
+            return '';
+        }
+
+        function updateStats() {
+            document.getElementById('totalFilms').textContent = filmData.length;
+            document.getElementById('watchedCount').textContent = watchedFilms.size;
+            document.getElementById('remainingCount').textContent = filmData.length - watchedFilms.size;
+        }
+
+        function renderTable(data) {
+            var tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(function(film) {
+                var row = document.createElement('tr');
+                var isWatched = watchedFilms.has(film.id);
+                
+                if (isWatched && !showWatched) {
+                    row.classList.add('watched');
+                }
+                
+                var rtDisplay = film.rt !== null ? film.rt + '%' : '<span class="no-data">N/D</span>';
+                var imdbDisplay = film.imdb !== null ? film.imdb : '<span class="no-data">N/D</span>';
+                var csDisplay = film.cinemascore || '<span class="no-data">N/D</span>';
+                var seriesDisplay = film.series ? '<span class="series-badge">' + film.series + '</span>' : '';
+                
+                row.innerHTML = '<td class="checkbox-cell"><div class="checkbox-wrapper"><input type="checkbox" data-film-id="' + film.id + '" ' + (isWatched ? 'checked' : '') + '></div></td>' +
+                    '<td><strong>' + film.title + '</strong></td>' +
+                    '<td class="' + getRatingClass(film.rt, 'rt') + '">' + rtDisplay + '</td>' +
+                    '<td class="' + getRatingClass(film.imdb, 'imdb') + '">' + imdbDisplay + '</td>' +
+                    '<td class="' + getRatingClass(film.cinemascore, 'cinemascore') + '">' + csDisplay + '</td>' +
+                    '<td>' + seriesDisplay + '</td>';
+                
+                tbody.appendChild(row);
+            });
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.addEventListener('change', handleCheckboxChange);
+            });
+            
+            updateStats();
+        }
+
+        function handleCheckboxChange(e) {
+            var filmId = parseInt(e.target.dataset.filmId);
+            var row = e.target.closest('tr');
+            
+            if (e.target.checked) {
+                watchedFilms.add(filmId);
+                setTimeout(function() {
+                    if (!showWatched) {
+                        row.classList.add('watched');
+                    }
+                }, 300);
+            } else {
+                watchedFilms.delete(filmId);
+                row.classList.remove('watched');
+            }
+            
+            localStorage.setItem('watchedFilms', JSON.stringify(Array.from(watchedFilms)));
+            updateStats();
+        }
+
+        function sortData(column, type) {
+            var direction = 'asc';
+            
+            if (currentSort.column === column) {
+                direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            }
+            
+            var sorted = filmData.slice().sort(function(a, b) {
+                var valA = a[column];
+                var valB = b[column];
+                
+                if (valA === null || valA === undefined || valA === '') valA = type === 'number' ? -Infinity : 'zzz';
+                if (valB === null || valB === undefined || valB === '') valB = type === 'number' ? -Infinity : 'zzz';
+                
+                if (type === 'number') {
+                    valA = parseFloat(valA);
+                    valB = parseFloat(valB);
+                }
+                
+                if (type === 'string') {
+                    valA = valA.toString().toLowerCase();
+                    valB = valB.toString().toLowerCase();
+                }
+                
+                if (valA < valB) return direction === 'asc' ? -1 : 1;
+                if (valA > valB) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            currentSort = {column: column, direction: direction};
+            updateHeaders();
+            renderTable(sorted);
+        }
+
+        function updateHeaders() {
+            document.querySelectorAll('th.sortable').forEach(function(th) {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.dataset.column === currentSort.column) {
+                    th.classList.add('sort-' + currentSort.direction);
+                }
+            });
+        }
+
+        document.querySelectorAll('th.sortable').forEach(function(th) {
+            th.addEventListener('click', function() {
+                var column = th.dataset.column;
+                var type = th.dataset.type;
+                sortData(column, type);
+            });
+        });
+
+        document.getElementById('toggleWatched').addEventListener('click', function() {
+            showWatched = !showWatched;
+            var btn = document.getElementById('toggleWatched');
+            btn.textContent = showWatched ? 'Nascondi film visti' : 'Mostra film visti';
+            
+            document.querySelectorAll('tbody tr').forEach(function(row) {
+                var checkbox = row.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    if (showWatched) {
+                        row.classList.remove('watched');
+                    } else {
+                        row.classList.add('watched');
+                    }
+                }
+            });
+        });
+
+        renderTable(filmData);
+    </script>
+</body>
+</html>
