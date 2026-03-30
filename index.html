@@ -78,16 +78,16 @@
 <body>
 <header>
   <h1>&#128211; Guida Completa ai Vini</h1>
-  <p>Strumento di sala — uso interno</p>
+  <p>Strumento di sala &mdash; uso interno</p>
 </header>
 
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-dot" style="background:var(--bubble)"></div>Bollicine: 7</div>
-  <div class="stat-item"><div class="stat-dot" style="background:var(--white-wine)"></div>Bianchi: 13</div>
-  <div class="stat-item"><div class="stat-dot" style="background:var(--rose)"></div>Rosati: 1</div>
-  <div class="stat-item"><div class="stat-dot" style="background:var(--red-wine)"></div>Rossi: 13</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--white-wine)"></div>Bianchi: 12</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--rose)"></div>Rosati: 2</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--red-wine)"></div>Rossi: 14</div>
   <div class="stat-item"><div class="stat-dot" style="background:var(--sweet)"></div>Dolci: 2</div>
-  <div class="stat-item"><div class="stat-dot" style="background:var(--success)"></div>Giacenze: 10</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--success)"></div>Giacenze: 13</div>
 </div>
 
 <div class="search-bar">
@@ -109,7 +109,6 @@
 <main id="main"></main>
 
 <script>
-<script>
 var W = [
   {id:1,cat:"bollicine",nome:"Spumante Brut Lumis",prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"24€",bic:"6€",vig:"80% Vernaccia, 20% Chardonnay",vin:"Metodo Charmat, bassa pressione.",prof:"Fresco, agrumato, bollicine delicate. Asciutto, beverino, leggero e immediato.",abb:"Aperitivo, fritture leggere, salumi toscani, bruschette, antipasti freddi, pesce in tempura.",nil:0,sm:0},
 
@@ -119,9 +118,9 @@ var W = [
 
   {id:4,cat:"bollicine",nome:"Altalanga Extra Brut DOCG",prod:"Ettore Germano",zona:"Serralunga d'Alba, Langhe",pr:"40€",bic:null,vig:"80% Pinot Nero, 20% Chardonnay",vin:"Metodo Classico, affinamento sui lieviti oltre 30 mesi.",prof:"Perlage fine, crosta di pane, frutta secca, mela verde, accenni floreali. Palato cremoso, acidità vivace, finale lungo.",abb:"Aperitivo gourmet, pesce crudo e crostacei, ostriche, uova al tartufo, salumi nobili, formaggi stagionati.",nil:1,sm:0,sub:"Ferrari Maximum (~40€) · Champagne Rémi Couvreur (55€)",pitch:"L'Altalanga non è disponibile. Ferrari Maximum è il sostituto diretto 1:1 per fascia e stile: Metodo Classico cremoso, morbido e gastronomico. Per un cliente che vuole salire di livello, Rémi Couvreur è l'upgrade più elegante e verticale.",nota:"NON DISPONIBILE. Sostituzione primaria: Ferrari Maximum; upgrade: Champagne Rémi Couvreur. Ferrari da gestire con parsimonia: solo 2 bottiglie."},
 
-  {id:5,cat:"bollicine",nome:"Trento DOC Perlè",prod:"Ferrari",zona:"Trentino",pr:"60€",bic:null,vig:"100% Chardonnay",vin:"Metodo Classico, affinamento minimo 24 mesi sui lieviti.",prof:"Elegante, perlage finissimo, fiori bianchi, mela, agrumi, lieve tostato. Strutturato, sapido, verticale.",abb:"Pesce nobile (branzino, orata al forno, astice), risotto ai funghi porcini, antipasti sofisticati, tartare di tonno.",nil:0,sm:0},
+  {id:5,cat:"bollicine",nome:"Trento DOC Perlè",prod:"Ferrari",zona:"Trentino",pr:"60€",bic:null,vig:"100% Chardonnay",vin:"Metodo Classico, affinamento minimo 24 mesi sui lieviti.",prof:"Elegante, perlage finissimo, fiori bianchi, mela, agrumi, lieve tostato. Strutturato, sapido, verticale.",abb:"Pesce nobile (branzino, orata al forno, astice), risotto ai funghi porcini, antipasti sofisticati, tartare di tonno.",nil:1,sm:0,sub:"Champagne Rémi Couvreur (55€)",pitch:"Se il Perlè non è disponibile, Rémi Couvreur è l'alternativa più coerente per livello, verticalità e servizio su tavoli di fascia alta.",nota:"Alternativa premium operativa: Champagne Rémi Couvreur."},
 
-  {id:6,cat:"bollicine",nome:"Cremant d'Alsace Millesimé Brut",prod:"Dirler-Cadé",zona:"Alsazia",pr:"40€",bic:null,vig:"45% Pinot Gris, 30% Pinot Nero, 25% Auxerrois",vin:"Metodo Classico alsaziano, millesimato.",prof:"Bollicine fini, pesca gialla, spezie dolci, pasta frolla. Corpo medio-pieno, finale morbido.",abb:"Piatti con funghi, foie gras, terrine di carne, formaggi a pasta molle o erborinati, risotti cremosi.",nil:1,sm:0,sub:"Ferrari Maximum (~40€) · Rémi Couvreur (55€) [upgrade]",pitch:"Il Cremant non è disponibile. Ferrari Maximum resta la scelta più vicina per fascia e logica gastronomica; Rémi Couvreur è l'alternativa premium per chi cerca più tensione e verticalità."},
+  {id:6,cat:"bollicine",nome:"Crémant d'Alsace Millesimé Brut",prod:"Dirler-Cadé",zona:"Alsazia",pr:"40€",bic:null,vig:"45% Pinot Gris, 30% Pinot Nero, 25% Auxerrois",vin:"Metodo Classico alsaziano, millesimato.",prof:"Bollicine fini, pesca gialla, spezie dolci, pasta frolla. Corpo medio-pieno, finale morbido.",abb:"Piatti con funghi, foie gras, terrine di carne, formaggi a pasta molle o erborinati, risotti cremosi.",nil:1,sm:0,sub:"Ferrari Maximum (~40€) · Rémi Couvreur (55€) [upgrade]",pitch:"Il Crémant non è disponibile. Ferrari Maximum resta la scelta più vicina per fascia e logica gastronomica; Rémi Couvreur è l'alternativa premium per chi cerca più tensione e verticalità.",nota:"NON DISPONIBILE. Sostituzione primaria: Ferrari Maximum; upgrade: Rémi Couvreur."},
 
   {id:7,cat:"bollicine",nome:"Champagne Zero Pas Dosé",prod:"Tarlant",zona:"Champagne",pr:"95€",bic:null,vig:"32% Pinot Nero, 32% Chardonnay, 32% Meunier, 4% Petit Meslier",vin:"Pas Dosé 0 g/l zucchero, fermentazione parziale in barrique, affinamento circa 7 anni.",prof:"Tensione minerale straordinaria, agrumi, mela cotogna, nocciola, spezie fini, gessosità. Palato teso, salino, preciso.",abb:"Ostriche, crudi di mare, sushi di alto livello. Vino da clientela esperta.",nil:1,sm:0},
 
@@ -155,7 +154,7 @@ var W = [
 
   {id:40,cat:"rossi",nome:"Chianti CS DOCG Campale",prod:"Il Colombaio di Santa Chiara",zona:"Chianti Classico",pr:"24€",bic:"6€",vig:"90% Sangiovese, 10% Merlot",vin:"Affinamento in acciaio. Pronta beva.",prof:"Ciliegia, prugna fresca, spezie leggere. Tannini morbidi, fresco, leggero corpo. Vino immediato e piacevole.",abb:"Bistecca, affettati, pizza, pasta al ragù, pici al sugo, ribollita.",nil:0,sm:0},
 
-  {id:41,cat:"rossi",nome:"Chianti Classico",prod:"Riecine",zona:"Gaiole in Chianti (biodinamico)",pr:"35€",bic:null,vig:"100% Sangiovese",vin:"Fermentazione in cemento, approccio naturale.",prof:"Ciliegia fresca, viola, tabacco, terra, leggero balsamico. Acidità vivace, tannini fini. Stile elegante più che potente.",abb:"Bistecca alla fiorentina, selvaggina leggera, pasta al ragù di cinghiale, pecorino stagionato.",nil:1,sm:0,sub:"Chianti Classico Ten. Carleone (35€) · Chianti Classico Isole e Olena (35€)",pitch:"Il Riecine non è disponibile. Tenuta Carleone è il sostituto principale: stesso vitigno, stessa fascia prezzo e qualità analoga. Se termina, Isole e Olena resta la seconda proposta, sempre sul profilo classico, elegante e territoriale.",nota:"NON DISPONIBILE. Sostituto primario: Tenuta Carleone; seconda scelta: Isole e Olena. Entrambi stesso vitigno e stesso prezzo."},
+  {id:41,cat:"rossi",nome:"Chianti Classico",prod:"Riecine",zona:"Gaiole in Chianti (biodinamico)",pr:"35€",bic:null,vig:"100% Sangiovese",vin:"Fermentazione in cemento, approccio naturale.",prof:"Ciliegia fresca, viola, tabacco, terra, leggero balsamico. Acidità vivace, tannini fini. Stile elegante più che potente.",abb:"Bistecca alla fiorentina, selvaggina leggera, pasta al ragù di cinghiale, pecorino stagionato.",nil:1,sm:0,sub:"Chianti Classico Ten. Carleone (35€) · Chianti Classico Isole e Olena (35€)",pitch:"Il Riecine non è disponibile. Tenuta Carleone è il sostituto principale: stesso vitigno, stesso prezzo e qualità analoga. Se termina, Isole e Olena resta la seconda proposta, sempre sul profilo classico, elegante e territoriale.",nota:"NON DISPONIBILE. Sostituto primario: Tenuta Carleone; seconda scelta: Isole e Olena. Entrambi stesso vitigno e stesso prezzo."},
 
   {id:42,cat:"rossi",nome:"Chianti CS Riserva DOCG Il Priore",prod:"Il Colombaio di Santa Chiara",zona:"Chianti Classico",pr:"36€",bic:null,vig:"90% Sangiovese, 10% Canaiolo",vin:"Riserva: almeno 24 mesi di affinamento.",prof:"Ciliegia matura, prugna, spezie, tabacco, cuoio lieve. Struttura più complessa del Campale, tannini presenti ma maturi.",abb:"Carni rosse arrosto, selvaggina, pecorino stagionato di Pienza, pasta al ragù di lepre.",nil:0,sm:0},
 
@@ -231,11 +230,11 @@ function card(w){
     bdg+='<span class="badge '+(lo?'bsl':'bs')+'">Stock: '+e(w.stock)+'</span>';
   }
   var top='';
-  if(w.sm) top+='<div class="smalt-banner">&#128308; PRIORITÀ SMALTIMENTO — proporre attivamente ogni sera</div>';
+  if(w.sm) top+='<div class="smalt-banner">&#128308; PRIORITA&#8217; SMALTIMENTO &mdash; proporre attivamente ogni sera</div>';
   if(w.nil){
     var sp='';
     if(w.sub){var pp=w.sub.split('·');for(var i=0;i<pp.length;i++) sp+='<span class="sub-pill">'+e(pp[i].trim())+'</span>';}
-    top+='<div class="not-in-list">&#9888;&#65039;<div><strong>Non ancora in lista</strong>'+(sp?'<div class="subs">'+sp+'</div>':'')+'</div></div>';
+    top+='<div class="not-in-list">&#9888;&#65039;<div><strong>Non disponibile / sostituzione consigliata</strong>'+(sp?'<div class="subs">'+sp+'</div>':'')+'</div></div>';
   }
   var pitch='';
   if(w.pitch) pitch='<div class="pitch-box"><strong>Pitch di vendita</strong>'+e(w.pitch)+'</div>';
@@ -283,7 +282,7 @@ function render(){
       var w=W[wi];
       if(w.cat!==cat.k) continue;
       if(s){
-        var h=(w.nome+' '+w.prod+' '+w.vig+' '+(w.zona||'')+' '+w.prof+' '+w.abb+' '+(w.nota||'')).toLowerCase();
+        var h=(w.nome+' '+w.prod+' '+w.vig+' '+(w.zona||'')+' '+w.prof+' '+w.abb+' '+(w.nota||'')+' '+(w.pitch||'')+' '+(w.sub||'')).toLowerCase();
         if(h.indexOf(s)===-1) continue;
       }
       list.push(w);
@@ -309,7 +308,6 @@ for(var ti=0;ti<tabs.length;ti++){
     });
   })(tabs[ti]);
 }
-
 var inp=document.getElementById('searchInput');
 function onInput(){ curS=inp.value; render(); }
 inp.addEventListener('input',onInput);
