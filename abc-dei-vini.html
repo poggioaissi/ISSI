@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Guida Vini — Sala</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0f0c09; --surface:#1a1510; --surface2:#221c14; --border:#3a2e20;
+    --gold:#c9a34e; --gold-light:#e8c97a; --cream:#f2e8d5; --muted:#8a7a62;
+    --red-wine:#8b2635; --rose:#c4607a; --white-wine:#c9a34e;
+    --bubble:#6b9fa8; --sweet:#9b6b3a; --warning:#e07a3a; --success:#5a8a5a;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--cream); min-height:100vh; font-size:15px; line-height:1.6; -webkit-text-size-adjust:100%; }
+  header { background:linear-gradient(135deg,#1a1510 0%,#0f0c09 60%); border-bottom:1px solid var(--border); padding:20px 16px 16px; position:-webkit-sticky; position:sticky; top:0; z-index:100; }
+  header h1 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--gold-light); letter-spacing:.03em; }
+  header p { font-size:.78rem; color:var(--muted); margin-top:2px; text-transform:uppercase; letter-spacing:.1em; }
+  .stats-bar { display:-webkit-flex; display:flex; gap:12px; padding:10px 16px; background:var(--surface); border-bottom:1px solid var(--border); overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .stats-bar::-webkit-scrollbar { display:none; }
+  .stat-item { display:-webkit-flex; display:flex; align-items:center; gap:5px; white-space:nowrap; font-size:.72rem; color:var(--muted); }
+  .stat-dot { width:7px; height:7px; border-radius:50%; display:inline-block; }
+  .search-bar { padding:12px 16px 0; }
+  .search-bar input { width:100%; padding:10px 14px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:.9rem; outline:none; -webkit-appearance:none; appearance:none; }
+  .search-bar input:focus { border-color:var(--gold); }
+  .tabs-wrap { overflow-x:auto; padding:12px 16px 0; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .tabs-wrap::-webkit-scrollbar { display:none; }
+  .tabs { display:-webkit-flex; display:flex; gap:6px; white-space:nowrap; padding-bottom:2px; }
+  .tab { padding:7px 14px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.78rem; font-weight:500; cursor:pointer; white-space:nowrap; -webkit-appearance:none; appearance:none; }
+  .tab.active { background:var(--gold); border-color:var(--gold); color:var(--bg); font-weight:600; }
+  main { padding:16px; max-width:900px; margin:0 auto; }
+  .section-title { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); letter-spacing:.06em; text-transform:uppercase; margin:24px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .wine-grid { display:grid; gap:10px; }
+  .wine-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer; }
+  .wine-card-header { display:-webkit-flex; display:flex; justify-content:space-between; align-items:flex-start; padding:14px 14px 10px; gap:10px; }
+  .wine-card-header h3 { font-family:'Playfair Display',serif; font-size:.97rem; font-weight:600; color:var(--cream); line-height:1.3; -webkit-flex:1; flex:1; }
+  .wine-card-header h3 small { display:block; font-family:'DM Sans',sans-serif; font-size:.75rem; font-weight:400; color:var(--muted); margin-top:2px; }
+  .price-tag { text-align:right; white-space:nowrap; -webkit-flex-shrink:0; flex-shrink:0; }
+  .price-main { display:block; font-weight:600; font-size:.95rem; color:var(--gold-light); }
+  .price-glass { display:block; font-size:.72rem; color:var(--muted); margin-top:1px; }
+  .badges { display:-webkit-flex; display:flex; -webkit-flex-wrap:wrap; flex-wrap:wrap; gap:5px; padding:0 14px 10px; }
+  .badge { font-size:.68rem; padding:2px 8px; border-radius:12px; font-weight:500; letter-spacing:.03em; text-transform:uppercase; }
+  .bv { background:#2a2010; color:var(--gold); border:1px solid #3a3015; }
+  .bs { background:#1a2a1a; color:#6fa86f; border:1px solid #2a3a2a; }
+  .bsl { background:#2a1a0a; color:var(--warning); border:1px solid #3a2a1a; }
+  .bg { background:#0a1a2a; color:var(--bubble); border:1px solid #1a2a3a; }
+  .wine-detail { display:none; border-top:1px solid var(--border); background:var(--surface2); }
+  .wine-detail.open { display:block; }
+  .detail-grid { display:grid; grid-template-columns:1fr 1fr; }
+  .detail-block { padding:12px 14px; border-bottom:1px solid var(--border); }
+  .detail-block:nth-child(odd) { border-right:1px solid var(--border); }
+  .detail-block:last-child { border-bottom:none; }
+  .detail-block.full { grid-column:1/-1; border-right:none; }
+  .detail-label { font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:4px; font-weight:500; }
+  .detail-value { font-size:.83rem; color:var(--cream); line-height:1.5; }
+  .not-in-list { display:-webkit-flex; display:flex; align-items:flex-start; gap:8px; padding:8px 14px; background:#2a1a0a; border-top:1px solid #4a2a0a; font-size:.75rem; color:var(--warning); }
+  .subs { display:-webkit-flex; display:flex; -webkit-flex-wrap:wrap; flex-wrap:wrap; gap:5px; margin-top:5px; }
+  .sub-pill { font-size:.7rem; padding:3px 8px; background:#1a2a1a; border:1px solid #2a4a2a; color:#8ac88a; border-radius:10px; }
+  .pitch-box { margin:8px 14px 12px; padding:10px 12px; background:#1a1a2a; border:1px solid #2a2a4a; border-left:3px solid var(--bubble); border-radius:6px; font-size:.8rem; color:#a8c0d8; font-style:italic; line-height:1.5; }
+  .pitch-box strong { display:block; font-style:normal; font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; color:var(--bubble); margin-bottom:4px; font-weight:600; }
+  .smalt-banner { background:#2a1500; border-top:1px solid #5a3010; padding:6px 14px; font-size:.72rem; color:#e09050; }
+  .type-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; }
+  .dot-bollicine { background:var(--bubble); }
+  .dot-bianchi { background:var(--white-wine); }
+  .dot-rosati { background:var(--rose); }
+  .dot-rossi { background:var(--red-wine); }
+  .dot-dolci { background:var(--sweet); }
+  .dot-giacenze { background:var(--success); }
+  .chevron { width:18px; height:18px; border:1.5px solid var(--muted); border-radius:50%; display:-webkit-flex; display:flex; align-items:center; justify-content:center; -webkit-flex-shrink:0; flex-shrink:0; font-size:.6rem; color:var(--muted); }
+  .wine-card.open .chevron { border-color:var(--gold); color:var(--gold); }
+  .no-results { text-align:center; padding:48px 16px; color:var(--muted); font-size:.9rem; }
+  @media (max-width:500px) { .detail-grid { grid-template-columns:1fr; } .detail-block:nth-child(odd) { border-right:none; } }
+  @media (min-width:600px) { .wine-grid { grid-template-columns:1fr 1fr; } }
+  @media (min-width:900px) { header,.search-bar,.tabs-wrap,main,.stats-bar { padding-left:32px; padding-right:32px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>&#128211; Guida Completa ai Vini</h1>
+  <p>Strumento di sala — uso interno</p>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-dot" style="background:var(--bubble)"></div>Bollicine: 7</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--white-wine)"></div>Bianchi: 13</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--rose)"></div>Rosati: 1</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--red-wine)"></div>Rossi: 13</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--sweet)"></div>Dolci: 2</div>
+  <div class="stat-item"><div class="stat-dot" style="background:var(--success)"></div>Giacenze: 10</div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Cerca vino, vitigno, abbinamento..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-f="all">Tutti</button>
+    <button class="tab" data-f="bollicine">&#127870; Bollicine</button>
+    <button class="tab" data-f="bianchi">&#127962; Bianchi</button>
+    <button class="tab" data-f="rosati">&#127801; Rosati</button>
+    <button class="tab" data-f="rossi">&#127863; Rossi</button>
+    <button class="tab" data-f="dolci">&#127855; Dolci</button>
+    <button class="tab" data-f="giacenze">&#128230; Giacenze</button>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<script>
+var W = [
+  {id:1,cat:"bollicine",nome:'Spumante Brut "Lumis"',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"24€",bic:"6€",vig:"80% Vernaccia, 20% Chardonnay",vin:"Metodo Charmat, bassa pressione. Produttore locale di San Gimignano, cantina di riferimento della denominazione.",prof:"Fresco, agrumato, bollicine delicate. Asciutto, beverino, senza complessità eccessiva. Leggero e immediato.",abb:"Aperitivo, fritture leggere, salumi toscani, bruschette, antipasti freddi, pesce in tempura. Perfetto come benvenuto.",nil:0,sm:0},
+  {id:2,cat:"bollicine",nome:'Spumante Brut "Lumis" Magnum',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"54€",bic:null,vig:"80% Vernaccia, 20% Chardonnay",vin:"Identico al Lumis standard, formato Magnum. Il grande formato rallenta l'evoluzione e mantiene freschezza più a lungo.",prof:"Identico al Lumis. Il Magnum è da proporre per tavoli grandi o celebrazioni.",abb:"Stessi del Lumis. Da proporre per festeggiamenti, tavoli da 4+ persone.",nil:0,sm:0},
+  {id:3,cat:"bollicine",nome:'Spumante Brut "Lumis" Rosé',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"26€",bic:null,vig:"100% Sangiovese",vin:"Metodo Charmat, vinificazione in rosato con breve macerazione sulle bucce.",prof:"Rosa cerasuolo, fragola, melograno, rosa, spezie leggere. Secco, fresco, leggermente più fruttato del Lumis bianco.",abb:"Aperitivo, pizza, bruschette, salumi, piatti estivi, pasta al pomodoro fresco.",nil:0,sm:0},
+  {id:4,cat:"bollicine",nome:"Altalanga Extra Brut DOCG",prod:"Ettore Germano",zona:"Serralunga d'Alba, Langhe",pr:"40€",bic:null,vig:"80% Pinot Nero, 20% Chardonnay",vin:"Metodo Classico, affinamento sui lieviti oltre 30 mesi. Produttore di Serralunga d'Alba, Langhe.",prof:"Perlage fine e persistente, note di crosta di pane, frutta secca, mela verde, accenni floreali. Palato cremoso, acidità vivace, finale lungo e armonioso.",abb:"Aperitivo gourmet, pesce crudo e crostacei, ostriche, uova al tartufo, salumi nobili, formaggi stagionati, pasta con sughi ricchi.",nil:1,sm:0,sub:"Ferrari Maximum (~40€) · Champagne Rémi Couvreur (55€)",pitch:"Nel frattempo il nostro Ferrari Maximum è un Metodo Classico cremoso e strutturato, all'altezza di qualsiasi abbinamento gastronomico."},
+  {id:5,cat:"bollicine",nome:'Trento DOC "Perlè"',prod:"Ferrari",zona:"Trentino",pr:"60€",bic:null,vig:"100% Chardonnay",vin:"Metodo Classico, affinamento minimo 24 mesi sui lieviti. Cantina di riferimento assoluta per il Metodo Classico italiano.",prof:"Elegante, perlage finissimo, note di fiori bianchi, mela, agrumi, lieve tostato. Strutturato, sapido, verticale.",abb:"Pesce nobile, risotto ai funghi porcini, antipasti sofisticati, tartare di tonno. Ottimo a tutto pasto con cucina di alto livello.",nil:0,sm:0},
+  {id:6,cat:"bollicine",nome:"Crémant d'Alsace Millesimé Brut",prod:"Dirler-Cadé",zona:"Alsazia",pr:"40€",bic:null,vig:"45% Pinot Gris, 30% Pinot Nero, 25% Auxerrois",vin:"Metodo Classico alsaziano, millesimato.",prof:"Bollicine fini, profilo aromatico speziato e caldo. Note di pesca gialla, spezie dolci, pasta frolla. Corpo medio-pieno, finale morbido.",abb:"Piatti con funghi, foie gras, terrine di carne, formaggi a pasta molle o erborinati, cucina alsaziana, risotti cremosi.",nil:1,sm:0,sub:"Ferrari Maximum (~40€) · Champagne Rémi Couvreur (55€)",pitch:"Il Crémant è in arrivo. Nel frattempo il nostro Ferrari Maximum è un Metodo Classico cremoso e strutturato, all'altezza di qualsiasi abbinamento gastronomico."},
+  {id:7,cat:"bollicine",nome:'Champagne "Zero"',prod:"Tarlant",zona:"Champagne",pr:"95€",bic:null,vig:"32% Pinot Nero, 32% Chardonnay, 32% Meunier, 4% Petit Meslier",vin:"Pas Dosé (0 g/l di zucchero residuo), fermentazione parziale in barrique, no malolattica, affinamento sui lieviti circa 7 anni.",prof:"Tensione minerale straordinaria, note di agrumi, mela cotogna, nocciola, spezie fini, gessosità. Palato teso, salino, preciso, bollicina finissima, finale lunghissimo.",abb:"Ostriche, crudités di mare, sushi di alto livello, piatti à la minute minimali. Vino da clientela esperta e appassionata.",nil:0,sm:0},
+
+  {id:10,cat:"bianchi",nome:'Vernaccia di San Gimignano DOCG "Selvabianca"',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"24€",bic:"6€",vig:"100% Vernaccia di San Gimignano",vin:"Vinificazione in acciaio, annata giovane, immediata. Produttore di San Gimignano, cantina storica della denominazione.",prof:"Colore paglierino con riflessi dorati, note di fiori bianchi, mela, pesca, agrumi. Secco, minerale, con finale leggermente amaricante. Corpo leggero-medio, fresco.",abb:"Antipasti toscani, affettati, bruschette, zuppe di legumi, pesce al forno, fritture, formaggi freschi. Il vino del territorio da valorizzare con i turisti.",nil:0,sm:0},
+  {id:11,cat:"bianchi",nome:'Vernaccia di San Gimignano DOCG "Albereta"',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"46€",bic:null,vig:"100% Vernaccia di San Gimignano",vin:"Selezione di vigna, affinamento più lungo con parte in legno o barrique. Cru aziendale di riferimento.",prof:"Rispetto alla Selvabianca, più strutturata e complessa. Note di frutta matura, mandorla, mineralità intensa. Sapida, lunga, con profondità inattesa.",abb:"Piatti di pesce strutturati, zuppa di pesce, cacciucco leggero, pasta con sughi bianchi di mare, risotto allo zafferano, formaggi semi-stagionati toscani.",nil:0,sm:0},
+  {id:12,cat:"bianchi",nome:'Alto Adige Chardonnay "Schwarzhaus"',prod:"Stroblhof",zona:"Appiano, Alto Adige",pr:"30€",bic:null,vig:"100% Chardonnay",vin:"Vigneto a 430 m slm nella zona di Appiano. Stile moderno, elegante, con cura per preservare mineralità e frutto.",prof:"Mineralità intensa, note di mela verde, pesca bianca e vaniglia. Morbido e persistente. Fruttato, corposo, strutturato ma non eccessivamente burroso.",abb:"Pasta con burro e tartufo, secondi di pesce in salsa, pollo arrosto, risotti cremosi, formaggi a pasta semi-dura.",nil:0,sm:0},
+  {id:13,cat:"bianchi",nome:'Alto Adige Sauvignon "Nico"',prod:"Stroblhof",zona:"Caldaro, Alto Adige",pr:"32€",bic:null,vig:"100% Sauvignon Blanc",vin:"Prodotto a Caldaro, stile altoatesino moderno, alta freschezza e profumi varietali intensi.",prof:"Frutta tropicale, agrumi, mela verde, accenti floreali, nota minerale delicata. Vivace, acidità equilibrata, finale lungo e rinfrescante.",abb:"Insalate di mare, crudités di verdure, caprese, piatti di pesce leggeri, sushi, formaggi di capra freschi, verdure alla griglia.",nil:0,sm:0},
+  {id:14,cat:"bianchi",nome:'Alto Adige Valle Isarco "Kerner"',prod:"Taschlerhof",zona:"Valle Isarco",pr:"28€",bic:null,vig:"100% Kerner (incrocio Riesling × Trollinger)",vin:"Vigneti su pendii scistosi a 530+ m di altitudine, fermentazione a temperatura controllata, affinamento in acciaio. Produttore di eccellenza della Valle Isarco.",prof:"Piacevolmente aromatico, note di frutta a polpa bianca, agrumi, fiori bianchi alpini, mineralità schistacea. Fresco, verticale, beverino.",abb:"Antipasti di pesce, speck e formaggi altoatesini, trota in padella, piatti di verdure, cucina leggera di montagna.",nil:1,sm:0,sub:"Reguta Traminer Aromatico (24€)",pitch:"Il Kerner sta arrivando. Nel frattempo abbiamo un Traminer Aromatico della stessa famiglia: floreale, fresco, con quella leggerezza aromatica che si abbina benissimo a questo piatto."},
+  {id:15,cat:"bianchi",nome:"Alto Adige Valle Isarco Gewurztraminer",prod:"Taschlerhof",zona:"Valle Isarco",pr:"32€",bic:null,vig:"100% Gewurztraminer",vin:"70% acciaio, 30% legno. Affinamento sulle fecce fini per aumentare complessità.",prof:"Frutta esotica matura, floreale intenso di rosa, spezie dolci, elegante nota agrumata. Corpo pieno, retrogusto fresco e leggermente amaricante.",abb:"Cucina asiatica, formaggi erborinati, foie gras, pesce e crostacei alla griglia, carni bianche in salsa aromatica. Perfetto con clienti curiosi.",nil:0,sm:0},
+  {id:16,cat:"bianchi",nome:"Riesling Wehlener Sonnenuhr Spätlese Trocken",prod:"Kerpen",zona:"Mosella, Germania",pr:"30€",bic:null,vig:"100% Riesling",vin:'Dalla Mosella tedesca, vigneto storico Wehlener Sonnenuhr. "Spätlese Trocken" = vendemmia tardiva vinificata secca, massima concentrazione senza zucchero residuo.',prof:"Pesca bianca, albicocca, agrumi, pietra focaia, idrocarburi leggeri. Acidità tagliente, grande verticalità, lunghissima persistenza. Strutturato ma non pesante.",abb:"Piatti di pesce strutturati, astice alla griglia, capesante, triglie in umido, cucina orientale speziata, salmone affumicato.",nil:1,sm:0,sub:"Greco di Tufo Terre Diverse (32€)",pitch:"Il Riesling non è ancora arrivato, ma abbiamo un Greco di Tufo straordinario: stesso carattere minerale e quella freschezza tagliente che cercate, con un'anima più mediterranea."},
+  {id:17,cat:"bianchi",nome:"Soave Classico DOC",prod:"Pieropan",zona:"Monteforte d'Alpone",pr:"24€",bic:null,vig:"85% Garganega, 15% Trebbiano di Soave",vin:"Uno dei produttori di riferimento assoluto del Soave. Vigneti nella zona classica storica. Affinamento in acciaio.",prof:"Floreale, pesca, mandorla fresca, minerale vulcanico. Secco, fresco, sapido. Classico vino da pasto, leggero e piacevole.",abb:"Pasta con vongole, pesce al vapore o al forno, risotto alle erbe, insalate di mare, pizza bianca, formaggi freschi.",nil:0,sm:0},
+  {id:18,cat:"bianchi",nome:'Lugana DOC "Capotesta"',prod:"Cascina Maddalena",zona:"Lago di Garda",pr:"26€",bic:null,vig:"100% Turbiana (Trebbiano di Lugana)",vin:"Lago di Garda, terreni argillosi profondi che conferiscono struttura insolita per un bianco del Nord. Affinamento in acciaio.",prof:"Note di pesca bianca, fiori di campo, erbe aromatiche, lieve nota mandorlata, mineralità gessosa. Corpo medio, fresco, con buona struttura e lunghezza.",abb:"Pesce di lago e di mare, risotto al limone, pasta con gamberetti, fritture di pesce, secondi bianchi leggeri.",nil:1,sm:0,sub:"Bisci Verdicchio di Matelica (26€ / 6€ bic)",pitch:"Il Lugana è in arrivo. Nel frattempo abbiamo un Verdicchio di Matelica straordinario: stesso profilo strutturato e minerale, ottimo con il pesce."},
+  {id:19,cat:"bianchi",nome:"Vermentino Colli di Luni DOC",prod:"Ottaviano Lambruschi",zona:"Liguria / Lunigiana",pr:"26€",bic:null,vig:"100% Vermentino",vin:"Produttore di riferimento della Liguria/Lunigiana. Terroir di confine tra Liguria e Toscana, vigneti su pendii con forte influenza marina.",prof:"Agrumi, erbe mediterranee, fiori di ginestra, note saline e iodate. Secco, fresco, sapido, con leggera nota amaricante finale.",abb:"Pasta al pesto, pesce alla ligure, trofie, focaccia con pesce, antipasti di mare, insalate di polpo.",nil:0,sm:0},
+  {id:20,cat:"bianchi",nome:"Fiano di Avellino DOCG",prod:"Colli di Lapio",zona:"Lapio, Irpinia",pr:"28€",bic:null,vig:"100% Fiano di Avellino",vin:"Produttore iconico di Lapio, riferimento per la denominazione. Acciaio, affinamento in bottiglia.",prof:"Note di miele, nocciola, mela cotogna, fiori di campo, zafferano, lieve affumicato. Corpo medio-pieno, acidità equilibrata, lunga persistenza.",abb:"Secondi di mare strutturati, branzino in crosta, orata al forno, pasta con pesto di pistacchi, piatti di funghi, risotti complessi, formaggi semi-stagionati.",nil:0,sm:0},
+  {id:21,cat:"bianchi",nome:"Etna Bianco DOC",prod:"Benanti",zona:"Etna, Sicilia",pr:"33€",bic:null,vig:"100% Carricante",vin:"Vigneti sui versanti Est e Sud dell'Etna, terreni vulcanici sabbiosi. Affinamento in acciaio.",prof:"Mela, zagara, pompelmo, cedro, sentori iodati e salmastri, mineralità vulcanica intensa. Secco, fresco, elegante. Grande sapidità, finale pulito e persistente.",abb:"Crudi di mare, carpacci di pesce, pasta alle sarde, pesce alla siciliana, verdure grigliate, formaggi freschi siciliani.",nil:0,sm:0},
+  {id:22,cat:"bianchi",nome:'IGT Toscana "Fonteuva" Bianco',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"18€",bic:"5€",vig:"Vernaccia, Vermentino, Malvasia",vin:"Blend di vitigni toscani, vino da tavola informale e accessibile. Ingresso di gamma del Colombaio.",prof:"Fresco, fruttato, facile beva. Note floreali e di frutta bianca, leggero corpo, poco impegnativo. Non ha pretese di complessità.",abb:"Aperitivo, salumi, bruschette, pizza, piadine. Vino da tavola quotidiano.",nil:1,sm:0,sub:"Reguta Pinot Grigio (24€/6€ bic) · Reguta Chardonnay (24€/6€ bic)",pitch:"Abbiamo un Pinot Grigio friulano fresco e leggero — immediato, perfetto per cominciare."},
+
+  {id:30,cat:"rosati",nome:'Rosé IGT "Cremisi"',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"24€",bic:"6€",vig:"100% Sangiovese",vin:"Vinificazione in rosato con breve macerazione sulle bucce. Affinamento in acciaio.",prof:"Rosa cerasuolo, fragola, melograno, rosa, spezie leggere. Secco, fresco, bevibile. Versatile e piacevole.",abb:"Aperitivo, pizza, bruschette, salumi, piatti estivi, pasta al pomodoro fresco.",nil:0,sm:0},
+
+  {id:40,cat:"rossi",nome:'Chianti CS DOCG "Campale"',prod:"Il Colombaio di Santa Chiara",zona:"Chianti",pr:"24€",bic:"6€",vig:"90% Sangiovese, 10% Merlot",vin:"Vino di pronta beva, affinamento in acciaio. Il 10% di Merlot ammorbidisce i tannini del Sangiovese. Produttore locale di riferimento.",prof:"Ciliegia, prugna fresca, spezie leggere. Tannini morbidi, fresco, leggero corpo. Vino immediato e piacevole.",abb:"Bistecca, affettati, pizza, pasta al ragù, pici al sugo, ribollita.",nil:0,sm:0},
+  {id:41,cat:"rossi",nome:"Chianti Classico",prod:"Riecine",zona:"Gaiole in Chianti",pr:"35€",bic:null,vig:"100% Sangiovese",vin:"Produttore biodinamico di Gaiole in Chianti. Fermentazione in cemento, approccio naturale.",prof:"Ciliegia fresca, viola, tabacco, terra, leggero balsamico. Acidità vivace, tannini fini e presenti. Stile elegante più che potente.",abb:"Bistecca alla fiorentina, selvaggina leggera, pasta al ragù di cinghiale, pecorino stagionato.",nil:0,sm:0},
+  {id:42,cat:"rossi",nome:'Chianti CS Riserva DOCG "Il Priore"',prod:"Il Colombaio di Santa Chiara",zona:"Chianti Classico",pr:"36€",bic:null,vig:"90% Sangiovese, 10% Canaiolo",vin:"Riserva = almeno 24 mesi di affinamento. Il Canaiolo tradizionale invece del Merlot internazionale: scelta più storica e toscana.",prof:"Ciliegia matura, prugna, spezie, tabacco, cuoio lieve. Struttura più complessa rispetto al Campale, tannini presenti ma maturi.",abb:"Carni rosse arrosto, selvaggina, pecorino stagionato di Pienza, pasta al ragù di lepre.",nil:0,sm:0},
+  {id:43,cat:"rossi",nome:'Chianti CL Riserva DOCG "Vigna Barbischio"',prod:"Maurizio Alongi",zona:"Chianti Classico",pr:"48€",bic:null,vig:"100% Sangiovese",vin:"Cru di vigna nel Chianti Classico DOCG. Produttore artigianale di qualità, vinificazione in cemento o grandi botti.",prof:"Più concentrato e complesso rispetto al Priore: ciliegia nera, spezie orientali, cuoio, terra rossa, balsamico. Tannini setosi ma persistenti, lunga chiusura.",abb:"Bistecca alla fiorentina di qualità, cinghiale in umido, agnello al forno, formaggi stagionati importanti.",nil:0,sm:0},
+  {id:44,cat:"rossi",nome:"Rosso di Montalcino DOC",prod:"Castello Tricerchi",zona:"Montalcino",pr:"32€",bic:null,vig:"100% Sangiovese (clone Brunello)",vin:'Il "fratello minore" del Brunello, stessa vigna, affinamento più breve (1 anno in legno). Ingresso alla denominazione di Montalcino.',prof:"Ciliegia, rosa canina, spezie dolci, mineralità. Tannico ma meno austero del Brunello, già pienamente bevibile e piacevole.",abb:"Pasta al ragù di carne, pici all'aglione, bistecca, selvaggina, formaggi semi-stagionati.",nil:0,sm:0},
+  {id:45,cat:"rossi",nome:"Brunello di Montalcino DOCG",prod:"Castello Tricerchi",zona:"Montalcino",pr:"66€",bic:null,vig:"100% Sangiovese Grosso (Brunello)",vin:"Minimo 5 anni di affinamento (3 in legno + 2 in bottiglia). Castello Tricerchi è una piccola tenuta di qualità nel cuore di Montalcino.",prof:"Grande vino, complesso: ciliegia sotto spirito, rosa appassita, tabacco, cuoio, grafite, terra, spezie orientali. Tannini importanti, acidità vivace, lunghissima persistenza.",abb:"Bistecca fiorentina di alta qualità, piccione arrosto, cinghiale brasato, selvaggina nobile, formaggi stagionati a lungo.",nil:0,sm:0},
+  {id:46,cat:"rossi",nome:"Bolgheri Rosso DOC",prod:"Le Macchiole",zona:"Bolgheri",pr:"38€",bic:null,vig:"Merlot, Cabernet Franc, Cabernet Sauvignon, Syrah",vin:'Produttore di riferimento assoluto di Bolgheri. Affinamento in barrique.',prof:"Frutta nera matura, cedro, spezie, cacao, lieve balsamico. Corpo pieno, tannini vellutati, potente ma elegante. Stile internazionale con anima toscana.",abb:"Carni rosse importanti, costata alla brace, agnello, selvaggina, formaggi stagionati, piatti di struttura.",nil:0,sm:0},
+  {id:47,cat:"rossi",nome:'Cabernet Franc IGT "Bacicolo"',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"80€",bic:null,vig:"100% Cabernet Franc",vin:"Produzione artigianale del Colombaio. Affinamento in barrique.",prof:"Peperone maturo, ribes nero, violetta, spezie, tabacco verde, mineralità. Tannico e verticale. Più nervoso del Merlot, grande tensione acida.",abb:"Agnello arrosto, piccione, coniglio alla cacciatora strutturato, selvaggina, formaggi stagionati complessi. Abbinamento coraggioso con tartufo.",nil:0,sm:0},
+  {id:48,cat:"rossi",nome:"Nebbiolo Langhe DOC",prod:"Ettore Germano",zona:"Serralunga d'Alba",pr:"26€",bic:null,vig:"100% Nebbiolo",vin:"Produttore di Serralunga d'Alba. Il Langhe Nebbiolo proviene da vigne giovani o parcelle non destinate al Barolo classico.",prof:"Ciliegia, lampone, rosa, viola, spezie, catrame leggero. Tannini importanti ma già accessibili, acidità vivace. Stile giovane-Barolo.",abb:"Brasato al vino rosso, tajarin al ragù, risotto con salsiccia, formaggi erborinati, selvaggina leggera.",nil:0,sm:0},
+  {id:49,cat:"rossi",nome:"Ciliegiolo IGT",prod:"Antonio Camillo",zona:"Manciano, Maremma Toscana",pr:"24€",bic:null,vig:"100% Ciliegiolo",vin:"Produttore di Manciano, Maremma toscana. Affinamento breve in acciaio per preservare il frutto.",prof:"Ciliegia fresca, lampone, viola, note balsamiche, leggera speziatura. Corpo medio, tannini morbidissimi, freschezza sorprendente. Estremamente piacevole e beverino.",abb:"Taglieri di salumi toscani, ribollita, pasta al pomodoro, secondi di carne bianca, pizza.",nil:0,sm:0},
+  {id:50,cat:"rossi",nome:"Etna Rosso DOC",prod:"Tenuta delle Terre Nere",zona:"Etna",pr:"45€",bic:null,vig:"100% Nerello Mascalese",vin:"Uno dei produttori più rispettati dell'Etna. Vigneti su lava vulcanica a quote elevate, viti vecchie pre-fillossera. Affinamento in grandi botti di rovere.",prof:"Ciliegia croccante, lampone, rosa, spezie, cenere vulcanica, tabacco, mineralità intensa. Tannini eleganti e setosi, acidità vivace. Spesso paragonato al Pinot Nero per stile.",abb:"Pesce strutturato, carni bianche, agnello, funghi, pasta alla norma con carne.",nil:0,sm:0},
+  {id:51,cat:"rossi",nome:"Pinot Nero",prod:"Panizzi",zona:"San Gimignano",pr:"28€",bic:null,vig:"100% Pinot Nero",vin:"Panizzi è produttore storicamente di Vernaccia di San Gimignano. Questo Pinot Nero viene da vigne sui suoli di San Gimignano.",prof:"Fragola, lampone, ciliegia, lieve floreale, spezie dolci. Corpo leggero-medio, tannini soffici, fresco. Stile borgognone light.",abb:"Pasta con funghi trifolati, salmone al forno, pollo arrosto, tagliere di salumi delicati, carni bianche in umido.",nil:0,sm:0},
+  {id:52,cat:"rossi",nome:'IGT Toscana Rosso "Fonteuva"',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"18€",bic:"5€",vig:"100% Sangiovese",vin:"Acciaio, pronta beva. Ingresso di gamma per il rosso del Colombaio.",prof:"Fresco, fruttato, semplice. Ciliegia, frutta rossa, leggero. Vino da tavola immediato.",abb:"Pizza, pasta al pomodoro, pici, affettati, piatti semplici quotidiani.",nil:0,sm:0},
+
+  {id:60,cat:"dolci",nome:'Moscato d\'Asti DOCG "Camp Blanc"',prod:"Emidio Vada",zona:"Asti, Piemonte",pr:"26€",bic:null,vig:"100% Moscato Bianco di Canelli",vin:"Metodo Asti (Charmat corto), bassa gradazione alcolica (5-6% vol.), perlage delicato e soffice.",prof:"Pesca, albicocca, acacia, miele, rosa, salvia. Dolce, leggero, aromatico, bollicina sofficissima. Non stucchevole grazie alla freschezza acida.",abb:"Crostate di frutta, pesche, frutta fresca, dessert non cioccolatosi, torte di pasticceria secca, panettone. Anche da solo come digestivo leggero.",nil:0,sm:0},
+  {id:61,cat:"dolci",nome:'Passito di Pantelleria DOC "Ben Ryé"',prod:"Donnafugata",zona:"Pantelleria, Sicilia",pr:"65€",bic:null,vig:"100% Zibibbo, alberello Pantesco",vin:"Appassimento al sole delle uve, macerazione sulle bucce, affinamento 7 mesi in vasca + 12 mesi in bottiglia.",prof:"Colore ambra brillante. Albicocca fresca e candita, scorza d'arancia, macchia mediterranea, miele, erbe aromatiche, note salmastre e balsamiche. Dolce ma con straordinario equilibrio.",abb:"Dessert alle mandorle, cannoli, formaggi erborinati e stagionati, torta di ricotta. Ottimo da solo come vino da meditazione.",nil:0,sm:0},
+
+  {id:70,cat:"giacenze",nome:"Greco di Tufo Terre Diverse",prod:"Terre Diverse",zona:"Campania, Irpinia",pr:"32€",bic:null,stock:"5 bottiglie",vig:"100% Greco di Tufo",vin:"",prof:"Pera, pesca, mandorla, note minerali sulfuree tipiche del vitigno, sapido, fresco, buona struttura. Bianco del Sud con carattere nordico nell'eleganza.",abb:"Pasta alla genovese napoletana, pesce al forno, frittura di pesce, formaggi semi-stagionati.",nota:"Sostituto del Riesling Kerpen.",nil:0,sm:0},
+  {id:71,cat:"giacenze",nome:"Chianti Classico Ten. Carleone",prod:"Tenuta Carleone",zona:"Chianti Classico",pr:"35€",bic:null,stock:"2 bottiglie",vig:"100% Sangiovese",vin:"",prof:"Chianti Classico di qualità artigianale, stile elegante e preciso. Ciliegia, viola, tabacco, tannini fini.",abb:"Come per il Chianti Classico Riecine: bistecca, selvaggina, ragù di carne.",nota:"Sostituto del Chianti Classico Riecine se esaurito.",nil:0,sm:0},
+  {id:72,cat:"giacenze",nome:"Chianti Classico Isole e Olena",prod:"Isole e Olena",zona:"Barberino Tavernelle",pr:"35€",bic:null,stock:"1 bottiglia",vig:"100% Sangiovese",vin:"",prof:"Eleganza, finezza, stile tradizionale.",abb:"Come per il Chianti Classico Riecine: bistecca, selvaggina, ragù di carne.",nota:"Solo 1 bottiglia rimasta. Usare con cura.",nil:0,sm:0},
+  {id:73,cat:"giacenze",nome:"Ferrari Maximum",prod:"Ferrari",zona:"Trentino",pr:"~40€",bic:null,stock:"2 bottiglie",vig:"Chardonnay con saldo di Pinot Nero — Metodo Classico Trento DOC",vin:"Metodo Classico.",prof:"Più ricco e morbido del Perlè, note biscottate, crema, agrumi maturi. Strutturato, complesso.",abb:"Risotti cremosi, pesce in salsa, tartine gourmet, aperitivo di livello.",nota:"Sostituto di Altalanga e Crémant. Solo 2 bottiglie: gestire con parsimonia.",nil:0,sm:0},
+  {id:74,cat:"giacenze",nome:"Champagne Rémi Couvreur",prod:"Rémi Couvreur",zona:"Champagne",pr:"55€",bic:null,stock:"5 bottiglie",vig:"100% Chardonnay (Blanc de Blancs)",vin:"Blanc de Blancs, Metodo Classico.",prof:"Fiori bianchi, agrumi, gesso, grande freschezza e verticalità. Stile Blanc de Blancs puro, minerale e preciso.",abb:"Ostriche, crudi di mare, pesce nobile, aperitivo di livello, sushi.",nota:"Upgrade rispetto a Ferrari Maximum o sostituto del Trento DOC Perlè.",nil:0,sm:0},
+  {id:80,cat:"giacenze",nome:"Bisci Verdicchio di Matelica",prod:"Bisci",zona:"Marche, DOC Matelica",pr:"26€",bic:"6€",stock:"3 bottiglie",vig:"100% Verdicchio",vin:"",prof:"Mandorla fresca, erbe, agrumi, note amare eleganti nel finale. Più strutturato e minerale del Verdicchio dei Castelli di Jesi.",abb:"Pesce di lago e di mare, pasta con asparagi, coniglio in porchetta.",nota:"Sostituto del Lugana Capotesta.",nil:0,sm:0},
+  {id:81,cat:"giacenze",nome:"Vermentino Tenuta Campomaccione",prod:"Tenuta Campomaccione",zona:"Maremma Toscana",pr:"26€",bic:"6€",stock:"4 bottiglie",vig:"100% Vermentino",vin:"",prof:"Agrumi, erbe mediterranee, note saline. Fresco, leggero, immediato.",abb:"Aperitivo, bruschette, insalate di mare, pesce semplice.",nota:"Alternativa al Vermentino Lambruschi.",nil:0,sm:0},
+  {id:82,cat:"giacenze",nome:"Reguta Traminer Aromatico",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"5 bottiglie",vig:"100% Traminer Aromatico",vin:"",prof:"Il più aromatico dei quattro Reguta. Rosa, litchi, fiori bianchi, frutta esotica, spezie dolci. Corpo leggero, molto profumato e accessibile. Secco al palato.",abb:"Aperitivo, cucina etnica, formaggi freschi aromatici, insalate di frutta e formaggio, antipasti freddi, dessert secchi.",nota:"Sostituto del Kerner Taschlerhof.",nil:0,sm:0},
+  {id:83,cat:"giacenze",nome:"Reguta Chardonnay",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"4 bottiglie",vig:"100% Chardonnay",vin:"Senza passaggio in legno.",prof:"Stile fruttato-floreale. Mela golden, pesca, fiori bianchi, leggera vaniglia. Corpo leggero-medio, fresco, morbido, rotondo e facile.",abb:"Aperitivo, antipasti, pasta con sughi bianchi leggeri, pollo alla piastra, pesce al forno semplice, formaggi a pasta molle.",nota:"Alternativa al Fonteuva Bianco.",nil:0,sm:0},
+  {id:84,cat:"giacenze",nome:"Reguta Sauvignon",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"8 bottiglie",vig:"100% Sauvignon Blanc",vin:"",prof:"Fruttato e aromatico. Note di bosso, pesca bianca, pompelmo, erba tagliata. Fresco, leggero, con una leggera nota erbacea tipica del vitigno in pianura friulana.",abb:"Aperitivo, insalate, pesce leggero al vapore, carpaccio di verdure, formaggi freschi di capra, frittatine alle erbe.",nota:"Alternativa più semplice al Sauvignon Nico.",nil:0,sm:0},
+  {id:85,cat:"giacenze",nome:"Reguta Pinot Grigio",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"7 bottiglie",vig:"100% Pinot Grigio",vin:"",prof:"Il più neutro e versatile dei quattro Reguta. Pera, mela, fiori bianchi, accenno di mandorla. Corpo leggero, fresco, minerale appena accennato. Pulito, senza eccessi.",abb:"Aperitivo universale, pizza bianca, pasta delicata, pesce al forno o alla griglia, insalate miste, fritture leggere, formaggi freschi.",nota:"Sostituto principale del Fonteuva Bianco.",nil:0,sm:0},
+  {id:86,cat:"giacenze",nome:'Rosato Tenuta Campomaccione "Zingarelli"',prod:"Tenuta Campomaccione",zona:"Maremma Toscana",pr:"24€",bic:"6€",stock:"16 bottiglie",vig:"80% Sangiovese, 20% Syrah",vin:"",prof:"Rosa cerasuolo, fragola, melograno, pepe rosa. Fresco, fruttato, corpo medio. Il Syrah aggiunge struttura e spezia rispetto a un rosato solo Sangiovese.",abb:"Aperitivo, pizza, taglieri misti, pasta al pomodoro fresco, secondi di pesce leggeri, piatti estivi.",nota:"PRIORITÀ SMALTIMENTO: 16 bottiglie, da proporre attivamente ogni sera. Cremisi esaurito → Zingarelli.",nil:0,sm:1}
+];
+
+var CATS = [
+  {k:"bollicine", label:"&#127870; Bollicine"},
+  {k:"bianchi",   label:"&#127962; Bianchi"},
+  {k:"rosati",    label:"&#127801; Rosati"},
+  {k:"rossi",     label:"&#127863; Rossi"},
+  {k:"dolci",     label:"&#127855; Dolci e Dessert"},
+  {k:"giacenze",  label:"&#128230; Giacenze da Smaltire"}
+];
+
+var curF = "all", curS = "";
+
+function e(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function card(w){
+  var dot='<span class="type-dot dot-'+w.cat+'"></span>';
+  var bdg='';
+  if(w.vig) bdg+='<span class="badge bv">'+e(w.vig)+'</span>';
+  if(w.bic) bdg+='<span class="badge bg">Al bicchiere '+e(w.bic)+'</span>';
+  if(w.stock){
+    var lo=(w.stock.charAt(0)==='1'||w.stock.charAt(0)==='2');
+    bdg+='<span class="badge '+(lo?'bsl':'bs')+'">Stock: '+e(w.stock)+'</span>';
+  }
+  var top='';
+  if(w.sm) top+='<div class="smalt-banner">&#128308; PRIORITÀ SMALTIMENTO — proporre attivamente ogni sera</div>';
+  if(w.nil){
+    var sp='';
+    if(w.sub){var pp=w.sub.split('·');for(var i=0;i<pp.length;i++) sp+='<span class="sub-pill">'+e(pp[i].trim())+'</span>';}
+    top+='<div class="not-in-list">&#9888;&#65039;<div><strong>Non ancora in lista</strong>'+(sp?'<div class="subs">'+sp+'</div>':'')+'</div></div>';
+  }
+  var pitch='';
+  if(w.pitch) pitch='<div class="pitch-box"><strong>Pitch di vendita</strong>'+e(w.pitch)+'</div>';
+  var vnote='';
+  if(w.nota) vnote='<div class="detail-block full"><div class="detail-label">Note operative</div><div class="detail-value" style="color:var(--warning)">'+e(w.nota)+'</div></div>';
+  var vvin='';
+  if(w.vin) vvin='<div class="detail-block full"><div class="detail-label">Vinificazione</div><div class="detail-value">'+e(w.vin)+'</div></div>';
+
+  return '<div class="wine-card" id="c'+w.id+'">'+
+    top+
+    '<div class="wine-card-header" onclick="tc('+w.id+')">'+
+      '<h3>'+dot+e(w.nome)+'<small>'+e(w.prod)+(w.zona?' &middot; '+e(w.zona):'')+'</small></h3>'+
+      '<div class="price-tag"><span class="price-main">'+e(w.pr)+'</span>'+(w.bic?'<span class="price-glass">bic. '+e(w.bic)+'</span>':'')+'</div>'+
+      '<div class="chevron">&#9660;</div>'+
+    '</div>'+
+    (bdg?'<div class="badges">'+bdg+'</div>':'')+
+    '<div class="wine-detail" id="d'+w.id+'">'+
+      pitch+
+      '<div class="detail-grid">'+
+        '<div class="detail-block"><div class="detail-label">Profilo sensoriale</div><div class="detail-value">'+e(w.prof)+'</div></div>'+
+        '<div class="detail-block"><div class="detail-label">Abbinamenti</div><div class="detail-value">'+e(w.abb)+'</div></div>'+
+        vvin+vnote+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+
+function tc(id){
+  var c=document.getElementById('c'+id);
+  var d=document.getElementById('d'+id);
+  if(!c||!d) return;
+  var open=c.className.indexOf('open')>-1;
+  if(open){ c.className=c.className.replace(' open',''); d.className=d.className.replace(' open',''); }
+  else{ c.className+=' open'; d.className+=' open'; }
+}
+
+function render(){
+  var s=curS.toLowerCase().trim();
+  var out='', tot=0;
+  for(var ci=0;ci<CATS.length;ci++){
+    var cat=CATS[ci];
+    if(curF!=='all' && curF!==cat.k) continue;
+    var list=[];
+    for(var wi=0;wi<W.length;wi++){
+      var w=W[wi];
+      if(w.cat!==cat.k) continue;
+      if(s){
+        var h=(w.nome+' '+w.prod+' '+w.vig+' '+(w.zona||'')+' '+w.prof+' '+w.abb+' '+(w.nota||'')).toLowerCase();
+        if(h.indexOf(s)===-1) continue;
+      }
+      list.push(w);
+    }
+    if(!list.length) continue;
+    tot+=list.length;
+    out+='<h2 class="section-title">'+cat.label+'</h2><div class="wine-grid">';
+    for(var li=0;li<list.length;li++) out+=card(list[li]);
+    out+='</div>';
+  }
+  if(!tot) out='<div class="no-results">Nessun vino trovato per &laquo;'+e(curS)+'&raquo;</div>';
+  document.getElementById('main').innerHTML=out;
+}
+
+var tabs=document.querySelectorAll('.tab');
+for(var ti=0;ti<tabs.length;ti++){
+  (function(t){
+    t.addEventListener('click',function(){
+      for(var i=0;i<tabs.length;i++) tabs[i].className=tabs[i].className.replace(' active','');
+      t.className+=' active';
+      curF=t.getAttribute('data-f');
+      render();
+    });
+  })(tabs[ti]);
+}
+
+var inp=document.getElementById('searchInput');
+function onInput(){ curS=inp.value; render(); }
+inp.addEventListener('input',onInput);
+inp.addEventListener('keyup',onInput);
+
+render();
+</script>
+</body>
+</html>
