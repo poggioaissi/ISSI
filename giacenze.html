@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Disponibilità vini — Light / Dark UI</title>
+<title>Giacenze vini</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,6 @@
 :root,
 [data-theme="light"]{
   --bg:#f6f4ef;
-  --bg-elev:#fbfaf7;
   --panel:#fdfcf9;
   --panel-2:#f1ede6;
   --text:#1f1c17;
@@ -23,7 +22,6 @@
   --line-strong:#cfc5b6;
 
   --accent:#8b5e34;
-  --accent-2:#b78956;
   --accent-soft:#efe1cf;
 
   --ok:#2d6a4f;
@@ -41,6 +39,9 @@
   --gold:#a47a2a;
   --gold-soft:#f3e7c7;
 
+  --replace:#6e4bb8;
+  --replace-soft:#e7def8;
+
   --shadow-sm:0 1px 2px rgba(24,18,10,.04);
   --shadow-md:0 8px 24px rgba(24,18,10,.07);
   --shadow-lg:0 18px 48px rgba(24,18,10,.10);
@@ -49,21 +50,10 @@
   --radius-sm:14px;
   --radius-md:18px;
   --radius-lg:24px;
-
-  --space-1:4px;
-  --space-2:8px;
-  --space-3:12px;
-  --space-4:16px;
-  --space-5:20px;
-  --space-6:24px;
-  --space-8:32px;
-  --space-10:40px;
-  --space-12:48px;
 }
 
 [data-theme="dark"]{
   --bg:#111111;
-  --bg-elev:#171717;
   --panel:#1b1b1b;
   --panel-2:#232323;
   --text:#f3efe7;
@@ -73,7 +63,6 @@
   --line-strong:#3a352f;
 
   --accent:#d2a56a;
-  --accent-2:#e4bf8e;
   --accent-soft:#2d241a;
 
   --ok:#79b894;
@@ -90,6 +79,9 @@
 
   --gold:#e1bb68;
   --gold-soft:#2c2515;
+
+  --replace:#b89cff;
+  --replace-soft:#231c33;
 
   --shadow-sm:0 1px 2px rgba(0,0,0,.25);
   --shadow-md:0 10px 28px rgba(0,0,0,.28);
@@ -112,12 +104,6 @@ body{
 button,input{font:inherit;color:inherit}
 button{border:0;background:none;cursor:pointer}
 input{outline:none}
-
-.shell{
-  width:min(1280px, calc(100% - 32px));
-  margin:0 auto;
-  padding:24px 0 40px;
-}
 
 .topbar{
   position:sticky;
@@ -165,12 +151,6 @@ input{outline:none}
   margin-top:4px;
 }
 
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
 .theme-toggle{
   width:44px;
   height:44px;
@@ -182,145 +162,15 @@ input{outline:none}
   box-shadow:var(--shadow-sm);
 }
 
-.hero{
-  display:grid;
-  grid-template-columns:1.35fr .95fr;
-  gap:18px;
-  margin-top:18px;
-}
-
-.hero-card,
-.side-card{
-  background:color-mix(in srgb, var(--panel) 92%, transparent);
-  border:1px solid var(--line);
-  border-radius:28px;
-  box-shadow:var(--shadow-md);
-}
-
-.hero-card{
-  padding:30px;
-  position:relative;
-  overflow:hidden;
-}
-
-.hero-card::after{
-  content:"";
-  position:absolute;
-  inset:auto -40px -40px auto;
-  width:200px;
-  height:200px;
-  border-radius:50%;
-  background:radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 66%);
-  pointer-events:none;
-}
-
-.kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:999px;
-  background:var(--accent-soft);
-  color:var(--accent);
-  font-size:.78rem;
-  font-weight:700;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-}
-
-.hero h2{
-  margin-top:16px;
-  font-family:'Newsreader',serif;
-  font-size:clamp(2rem,4vw,3.7rem);
-  line-height:.95;
-  letter-spacing:-.04em;
-  max-width:12ch;
-}
-
-.hero p{
-  margin-top:14px;
-  color:var(--text-soft);
-  max-width:58ch;
-  font-size:1rem;
-}
-
-.metrics{
-  margin-top:22px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-}
-.metric{
-  background:var(--bg-elev);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:14px;
-}
-.metric strong{
-  display:block;
-  font-size:1.2rem;
-  font-weight:800;
-  color:var(--text);
-}
-.metric span{
-  display:block;
-  margin-top:4px;
-  font-size:.8rem;
-  color:var(--text-soft);
-}
-
-.side-card{
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:16px;
-}
-.side-card h3{
-  font-family:'Newsreader',serif;
-  font-size:1.35rem;
-  letter-spacing:-.02em;
-}
-.side-card p{
-  color:var(--text-soft);
-  font-size:.95rem;
-}
-.legend{
-  display:grid;
-  gap:10px;
-}
-.legend-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:12px 14px;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:var(--bg-elev);
-}
-.legend-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-}
-.legend-item span{
-  font-size:.88rem;
-  color:var(--text-soft);
-}
-.legend-item strong{
-  font-size:.9rem;
+.shell{
+  width:min(1280px, calc(100% - 32px));
+  margin:0 auto;
+  padding:22px 0 40px;
 }
 
 .toolbar{
-  margin-top:18px;
   display:grid;
-  grid-template-columns:1.2fr auto;
+  grid-template-columns:1fr;
   gap:14px;
 }
 
@@ -342,26 +192,6 @@ input{outline:none}
   font-size:.96rem;
 }
 .search svg{color:var(--text-faint);flex-shrink:0}
-
-.toolbar-right{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-.pill{
-  min-height:58px;
-  padding:0 16px;
-  border-radius:20px;
-  border:1px solid var(--line);
-  background:var(--panel);
-  color:var(--text-soft);
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  box-shadow:var(--shadow-sm);
-  font-weight:600;
-}
 
 .tabs{
   display:flex;
@@ -430,7 +260,7 @@ input{outline:none}
 }
 
 .card-top{
-  padding:18px 18px 14px;
+  padding:18px;
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
@@ -443,10 +273,10 @@ input{outline:none}
   letter-spacing:-.02em;
 }
 .card-title p{
-  margin-top:5px;
+  margin-top:6px;
   color:var(--text-soft);
-  font-size:.86rem;
-  max-width:42ch;
+  font-size:.88rem;
+  max-width:48ch;
 }
 
 .price{
@@ -464,7 +294,7 @@ input{outline:none}
   display:flex;
   flex-wrap:wrap;
   gap:8px;
-  padding:0 18px 14px;
+  padding:0 18px 18px;
 }
 .badge{
   display:inline-flex;
@@ -476,93 +306,42 @@ input{outline:none}
   border:1px solid transparent;
   font-size:.74rem;
   font-weight:800;
-  letter-spacing:.04em;
+  letter-spacing:.02em;
+}
+.badge.white{
+  background:var(--blue-soft);
+  color:var(--blue);
+  border-color:color-mix(in srgb,var(--blue) 18%, transparent);
+}
+.badge.red{
+  background:var(--red-soft);
+  color:var(--red);
+  border-color:color-mix(in srgb,var(--red) 18%, transparent);
+}
+.badge.bubble{
+  background:var(--gold-soft);
+  color:var(--gold);
+  border-color:color-mix(in srgb,var(--gold) 18%, transparent);
+}
+.badge.rose{
+  background:var(--rose-soft);
+  color:var(--rose);
+  border-color:color-mix(in srgb,var(--rose) 18%, transparent);
+}
+.badge.stock{
+  background:var(--ok-soft);
+  color:var(--ok);
+  border-color:color-mix(in srgb,var(--ok) 18%, transparent);
   text-transform:uppercase;
 }
-.badge.white{background:var(--blue-soft); color:var(--blue); border-color:color-mix(in srgb,var(--blue) 18%, transparent)}
-.badge.red{background:var(--red-soft); color:var(--red); border-color:color-mix(in srgb,var(--red) 18%, transparent)}
-.badge.bubble{background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb,var(--gold) 18%, transparent)}
-.badge.rose{background:var(--rose-soft); color:var(--rose); border-color:color-mix(in srgb,var(--rose) 18%, transparent)}
-.badge.stock{background:var(--ok-soft); color:var(--ok); border-color:color-mix(in srgb,var(--ok) 18%, transparent)}
-.badge.new{background:var(--accent-soft); color:var(--accent); border-color:color-mix(in srgb,var(--accent) 18%, transparent)}
-
-.card-actions{
-  padding:0 18px 18px;
-}
-.expand{
-  width:100%;
-  min-height:46px;
-  border-radius:16px;
-  border:1px solid var(--line);
-  background:var(--bg-elev);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 14px;
-  color:var(--text-soft);
+.badge.replace{
+  background:var(--replace-soft);
+  color:var(--replace);
+  border-color:color-mix(in srgb,var(--replace) 28%, transparent);
+  font-size:.76rem;
   font-weight:700;
-}
-
-.detail{
-  display:none;
-  border-top:1px solid var(--line);
-  background:linear-gradient(180deg, color-mix(in srgb,var(--panel-2) 84%, transparent), transparent);
-}
-.detail.open{display:block}
-
-.detail-inner{
-  padding:18px;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-}
-
-.info-block{
-  background:var(--bg-elev);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-}
-.info-label{
-  font-size:.72rem;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-weight:800;
-  margin-bottom:8px;
-}
-.info-block ul{
-  padding-left:18px;
-}
-.info-block li{
-  margin-bottom:7px;
-  color:var(--text);
-  font-size:.9rem;
-}
-.pick-name{
-  font-weight:800;
-  color:var(--accent);
-}
-
-.notes{
-  background:color-mix(in srgb, var(--panel) 94%, transparent);
-  border:1px solid var(--line);
-  border-radius:28px;
-  padding:22px;
-  box-shadow:var(--shadow-sm);
-}
-.notes h3{
-  font-family:'Newsreader',serif;
-  font-size:1.45rem;
-  letter-spacing:-.02em;
-}
-.notes ul{
-  padding-left:20px;
-  margin-top:14px;
-}
-.notes li{
-  margin-bottom:10px;
-  color:var(--text-soft);
+  text-transform:none;
+  letter-spacing:0;
 }
 
 .empty{
@@ -574,26 +353,16 @@ input{outline:none}
   border-radius:24px;
 }
 
-@media (max-width: 980px){
-  .hero{grid-template-columns:1fr}
-  .metrics{grid-template-columns:repeat(2,1fr)}
-  .toolbar{grid-template-columns:1fr}
-}
-
 @media (max-width: 720px){
   .shell{width:min(100% - 20px, 1280px)}
   .topbar-inner{width:min(100% - 20px, 1280px)}
   .grid{grid-template-columns:1fr}
   .brand-copy p{display:none}
-  .hero-card,.side-card,.notes{border-radius:22px}
-  .hero-card{padding:22px}
-  .hero h2{max-width:14ch}
-  .metrics{grid-template-columns:1fr 1fr}
 }
 
 @media (max-width: 480px){
-  .metrics{grid-template-columns:1fr}
-  .toolbar-right{flex-wrap:wrap}
+  .tabs{gap:8px}
+  .tab{font-size:.82rem;padding:10px 14px}
 }
 </style>
 </head>
@@ -603,73 +372,25 @@ input{outline:none}
     <div class="brand">
       <div class="brand-mark">🍷</div>
       <div class="brand-copy">
-        <h1>Disponibilità vini</h1>
-        <p>Fuori lista, al bicchiere e sostituzioni del nuovo menù</p>
+        <h1>Giacenze vini</h1>
+        <p>Solo bottiglia, al bicchiere e vini non ancora disponibili</p>
       </div>
     </div>
 
-    <div class="header-actions">
-      <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema">
-        <span id="themeIcon">☀️</span>
-      </button>
-    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema">
+      <span id="themeIcon">☀️</span>
+    </button>
   </div>
 </div>
 
 <div class="shell">
-  <section class="hero">
-    <div class="hero-card">
-      <span class="kicker">Uso interno</span>
-      <h2>Stock reale e sostituzioni immediate</h2>
-      <p>Una UI più pulita e contemporanea per consultare velocemente cosa puoi vendere subito, cosa puoi versare al bicchiere e quali etichette usare in sostituzione nel nuovo menù.</p>
-
-      <div class="metrics">
-        <div class="metric"><strong>5</strong><span>Solo bottiglia</span></div>
-        <div class="metric"><strong>7</strong><span>Anche al bicchiere</span></div>
-        <div class="metric"><strong>10</strong><span>Voci nuovo menù</span></div>
-        <div class="metric"><strong>€6</strong><span>Prezzo bicchiere</span></div>
-      </div>
-    </div>
-
-    <aside class="side-card">
-      <div>
-        <h3>Legenda rapida</h3>
-        <p>I colori distinguono tipologia vino e stato operativo, così in sala si legge tutto con un colpo d’occhio.</p>
-      </div>
-
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-left"><span class="dot" style="background:var(--blue)"></span><span>Bianco</span></div>
-          <strong>Etichette bianche</strong>
-        </div>
-        <div class="legend-item">
-          <div class="legend-left"><span class="dot" style="background:var(--red)"></span><span>Rosso</span></div>
-          <strong>Etichette rosse</strong>
-        </div>
-        <div class="legend-item">
-          <div class="legend-left"><span class="dot" style="background:var(--gold)"></span><span>Bollicine</span></div>
-          <strong>Champagne / spumanti</strong>
-        </div>
-        <div class="legend-item">
-          <div class="legend-left"><span class="dot" style="background:var(--rose)"></span><span>Rosato</span></div>
-          <strong>Vino rosato</strong>
-        </div>
-      </div>
-    </aside>
-  </section>
-
   <section class="toolbar">
     <div class="search">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="11" cy="11" r="7"></circle>
         <path d="M20 20l-3.5-3.5"></path>
       </svg>
       <input type="text" id="searchInput" placeholder="Cerca vino, vitigno, cantina, prezzo, sostituzione..." />
-    </div>
-
-    <div class="toolbar-right">
-      <div class="pill">2026 UI</div>
-      <div class="pill">Light / Dark</div>
     </div>
   </section>
 
@@ -677,8 +398,7 @@ input{outline:none}
     <button class="tab active" data-f="all">Tutti</button>
     <button class="tab" data-f="bottiglia">Solo bottiglia</button>
     <button class="tab" data-f="bicchiere">Anche al bicchiere</button>
-    <button class="tab" data-f="nuovo">Nuovo menù</button>
-    <button class="tab" data-f="note">Note</button>
+    <button class="tab" data-f="nuovo">Vini non ancora disponibili</button>
   </div>
 
   <main class="content" id="main"></main>
@@ -686,43 +406,34 @@ input{outline:none}
 
 <script>
 const A = [
-  {id:1,cat:"bottiglia",tipo:"bianco",nome:"Greco di Tufo Terre Diverse",pr:"32€",desc:"Solo bottiglia — 5 bottiglie disponibili",det:["Quantità: 5x","Tipologia: Bianco","Vitigno: 100% Greco di Tufo","Prezzo vendita: 32€"]},
-  {id:2,cat:"bottiglia",tipo:"rosso",nome:"Chianti Classico Ten. Carleone",pr:"35€",desc:"Solo bottiglia — 2 bottiglie disponibili",det:["Quantità: 2x","Tipologia: Rosso","Vitigno: 100% Sangiovese","Prezzo vendita: 35€"]},
-  {id:3,cat:"bottiglia",tipo:"rosso",nome:"Chianti Classico Isole e Olena",pr:"35€",desc:"Solo bottiglia — 1 bottiglia disponibile",det:["Quantità: 1x","Tipologia: Rosso","Prezzo vendita: 35€"]},
-  {id:4,cat:"bottiglia",tipo:"bollicine",nome:"Ferrari Maximum",pr:"35€",desc:"Solo bottiglia — 2 bottiglie disponibili",det:["Quantità: 2x","Tipologia: Bollicine","Prezzo vendita: 35€"]},
-  {id:5,cat:"bottiglia",tipo:"bollicine",nome:"Champagne Rémi Couvreur",pr:"55€",desc:"Solo bottiglia — 5 bottiglie disponibili",det:["Quantità: 5x","Tipologia: Bollicine","Vitigno: 100% Chardonnay","Prezzo vendita: 55€"]},
+  {id:1,cat:"bottiglia",tipo:"bianco",nome:"Greco di Tufo Terre Diverse",pr:"32€",desc:"Solo bottiglia — 5 bottiglie disponibili. 100% Greco di Tufo."},
+  {id:2,cat:"bottiglia",tipo:"rosso",nome:"Chianti Classico Isole e Olena",pr:"35€",desc:"Solo bottiglia — 1 bottiglia disponibile."},
+  {id:3,cat:"bottiglia",tipo:"rosso",nome:"Chianti Classico Ten. Carleone",pr:"35€",desc:"Solo bottiglia — 2 bottiglie disponibili. 100% Sangiovese."},
+  {id:4,cat:"bottiglia",tipo:"bollicine",nome:"Champagne Rémi Couvreur",pr:"55€",desc:"Solo bottiglia — 5 bottiglie disponibili. 100% Chardonnay."},
+  {id:5,cat:"bottiglia",tipo:"bollicine",nome:"Ferrari Maximum",pr:"35€",desc:"Solo bottiglia — 2 bottiglie disponibili."},
 
-  {id:6,cat:"bicchiere",tipo:"bianco",nome:"Bisci Verdicchio di Matelica",pr:"26€",desc:"Disponibile anche al bicchiere — 3 bottiglie",det:["Quantità: 3x","Tipologia: Bianco","Vitigno: 100% Verdicchio","Prezzo bottiglia: 26€","Prezzo al bicchiere: 6€"]},
-  {id:7,cat:"bicchiere",tipo:"bianco",nome:"Vermentino Tenuta Campomaccione",pr:"26€",desc:"Disponibile anche al bicchiere — 4 bottiglie",det:["Quantità: 4x","Tipologia: Bianco","Vitigno: 100% Vermentino","Prezzo bottiglia: 26€","Prezzo al bicchiere: 6€"]},
-  {id:8,cat:"bicchiere",tipo:"bianco",nome:"Reguta Traminer Aromatico",pr:"24€",desc:"Disponibile anche al bicchiere — 5 bottiglie",det:["Quantità: 5x","Tipologia: Bianco","Prezzo bottiglia: 24€","Prezzo al bicchiere: 6€"]},
-  {id:9,cat:"bicchiere",tipo:"bianco",nome:"Reguta Chardonnay",pr:"24€",desc:"Disponibile anche al bicchiere — 4 bottiglie",det:["Quantità: 4x","Tipologia: Bianco","Prezzo bottiglia: 24€","Prezzo al bicchiere: 6€"]},
-  {id:10,cat:"bicchiere",tipo:"bianco",nome:"Reguta Sauvignon",pr:"24€",desc:"Disponibile anche al bicchiere — 8 bottiglie",det:["Quantità: 8x","Tipologia: Bianco","Prezzo bottiglia: 24€","Prezzo al bicchiere: 6€"]},
-  {id:11,cat:"bicchiere",tipo:"bianco",nome:"Reguta Pinot Grigio",pr:"24€",desc:"Disponibile anche al bicchiere — 7 bottiglie",det:["Quantità: 7x","Tipologia: Bianco","Prezzo bottiglia: 24€","Prezzo al bicchiere: 6€"]},
-  {id:12,cat:"bicchiere",tipo:"rosato",nome:"Tenuta Campomaccione Zingarelli",pr:"24€",desc:"Disponibile anche al bicchiere — 16 bottiglie",det:["Quantità: 16x","Tipologia: Rosato","Vitigno: 80% Sangiovese, 20% Syrah","Prezzo bottiglia: 24€","Prezzo al bicchiere: 6€"]},
+  {id:6,cat:"bicchiere",tipo:"bianco",nome:"Bisci Verdicchio di Matelica",pr:"26€",desc:"Disponibile anche al bicchiere — 3 bottiglie. 100% Verdicchio. Bicchiere 6€."},
+  {id:7,cat:"bicchiere",tipo:"bianco",nome:"Reguta Chardonnay",pr:"24€",desc:"Disponibile anche al bicchiere — 4 bottiglie. Bicchiere 6€."},
+  {id:8,cat:"bicchiere",tipo:"bianco",nome:"Reguta Pinot Grigio",pr:"24€",desc:"Disponibile anche al bicchiere — 7 bottiglie. Bicchiere 6€."},
+  {id:9,cat:"bicchiere",tipo:"bianco",nome:"Reguta Sauvignon",pr:"24€",desc:"Disponibile anche al bicchiere — 8 bottiglie. Bicchiere 6€."},
+  {id:10,cat:"bicchiere",tipo:"bianco",nome:"Reguta Traminer Aromatico",pr:"24€",desc:"Disponibile anche al bicchiere — 5 bottiglie. Bicchiere 6€."},
+  {id:11,cat:"bicchiere",tipo:"bianco",nome:"Tenuta Campomaccione Vermentino",pr:"26€",desc:"Disponibile anche al bicchiere — 4 bottiglie. 100% Vermentino. Bicchiere 6€."},
+  {id:12,cat:"bicchiere",tipo:"rosato",nome:"Tenuta Campomaccione Zingarelli",pr:"24€",desc:"Disponibile anche al bicchiere — 16 bottiglie. 80% Sangiovese, 20% Syrah. Bicchiere 6€."},
 
-  {id:13,cat:"nuovo",tipo:"bianco",nome:"IGT Fonteuva Bianco Colombaio",pr:"Da sostituire",desc:"Vino previsto nel nuovo menù ma non ancora presente",det:["Categoria: Bianco","Sostituzione suggerita: Reguta Pinot Grigio oppure Reguta Chardonnay"]},
-  {id:14,cat:"nuovo",tipo:"bianco",nome:"Lugana Capotesta Cascina Maddalena",pr:"Da sostituire",desc:"Vino previsto nel nuovo menù ma non ancora presente",det:["Categoria: Bianco","Sostituzione suggerita: Bisci Verdicchio di Matelica"]},
-  {id:15,cat:"nuovo",tipo:"bianco",nome:"Riesling Kerpen",pr:"Da sostituire",desc:"Vino previsto nel nuovo menù ma non ancora presente",det:["Categoria: Bianco","Sostituzione suggerita: Greco di Tufo Terre Diverse"]},
-  {id:16,cat:"nuovo",tipo:"bianco",nome:"Alto Adige (Chardonnay, Sauvignon, Gewurztraminer)",pr:"Da sostituire",desc:"Vini previsti nel nuovo menù ma non ancora presenti",det:["Categoria: Bianco","Indicazione: andare di Reguta"]},
-  {id:17,cat:"nuovo",tipo:"bianco",nome:"Alto Adige Kerner",pr:"Da sostituire",desc:"Vino previsto nel nuovo menù ma non ancora presente",det:["Categoria: Bianco","Sostituzione suggerita: Reguta Traminer Aromatico"]},
-  {id:18,cat:"nuovo",tipo:"rosso",nome:"Chianti Classico Riecine",pr:"Da sostituire",desc:"Rosso del nuovo menù non ancora presente",det:["Categoria: Rosso","Sostituzione suggerita: Ten. Carleone oppure Isole e Olena"]},
-  {id:19,cat:"nuovo",tipo:"rosso",nome:"Ciliegiolo Antonio Camillo",pr:"Non presente",desc:"Rosso del nuovo menù non ancora presente",det:["Categoria: Rosso","Nessuna sostituzione indicata nel testo allegato"]},
-  {id:20,cat:"nuovo",tipo:"bollicine",nome:"Crémant d’Alsace Millesime Brut",pr:"Da sostituire",desc:"Bollicina del nuovo menù non ancora presente",det:["Categoria: Bollicine","Sostituzione suggerita: Ferrari Maximum","Nota: nel testo è segnato con punto interrogativo"]},
-  {id:21,cat:"nuovo",tipo:"bollicine",nome:"Altalanga Extra Brut",pr:"Da sostituire",desc:"Bollicina del nuovo menù non ancora presente",det:["Categoria: Bollicine","Sostituzione suggerita: Ferrari Maximum oppure Champagne Rémi Couvreur"]},
-  {id:22,cat:"nuovo",tipo:"bollicine",nome:"Spumante Brut Lumis Rosé Colombaio",pr:"Non presente",desc:"Bollicina del nuovo menù non ancora presente",det:["Categoria: Bollicine","Nessuna sostituzione indicata nel testo allegato"]}
-];
-
-const NOTES = [
-  "La vista separa chiaramente stock vendibile e vini previsti ma non ancora arrivati.",
-  "La ricerca funziona su etichetta, tipologia, vitigno, prezzo e testo sostituzione.",
-  "Il tema light è ideale per uso diurno e stampa rapida, il dark per consultazione in sala.",
-  "Le card del nuovo menù sono pensate per leggere subito la sostituzione operativa."
+  {id:13,cat:"nuovo",tipo:"bianco",nome:"Alto Adige (Chardonnay, Sauvignon, Gewurztraminer)",pr:"Da sostituire",desc:"Non ancora disponibili.",sost:"Reguta"},
+  {id:14,cat:"nuovo",tipo:"bianco",nome:"Alto Adige Kerner",pr:"Da sostituire",desc:"Non ancora disponibile.",sost:"Reguta Traminer Aromatico"},
+  {id:15,cat:"nuovo",tipo:"rosso",nome:"Chianti Classico Riecine",pr:"Da sostituire",desc:"Non ancora disponibile.",sost:"Ten. Carleone oppure Isole e Olena"},
+  {id:16,cat:"nuovo",tipo:"rosso",nome:"Ciliegiolo Antonio Camillo",pr:"Non presente",desc:"Non ancora disponibile."},
+  {id:17,cat:"nuovo",tipo:"bollicine",nome:"Crémant d’Alsace Millesime Brut",pr:"Da sostituire",desc:"Non ancora disponibile.",sost:"Ferrari Maximum"},
+  {id:18,cat:"nuovo",tipo:"bianco",nome:"Lugana Capotesta Cascina Maddalena",pr:"Da sostituire",desc:"Non ancora disponibile.",sost:"Bisci Verdicchio di Matelica"},
+  {id:19,cat:"nuovo",tipo:"bianco",nome:"Riesling Kerpen",pr:"Da sostituire",desc:"Non ancora disponibile.",sost:"Greco di Tufo Terre Diverse"},
+  {id:20,cat:"nuovo",tipo:"bollicine",nome:"Altalanga Extra Brut",pr:"Da sostituire",desc:"Non ancora disponibile.",sost:"Ferrari Maximum / Champagne Rémi Couvreur"}
 ];
 
 const CATS = [
   {k:"bottiglia",label:"Solo bottiglia",copy:"Etichette vendibili solo in bottiglia"},
   {k:"bicchiere",label:"Anche al bicchiere",copy:"Etichette disponibili anche al calice"},
-  {k:"nuovo",label:"Nuovo menù",copy:"Vini non presenti con sostituzione consigliata"}
+  {k:"nuovo",label:"Vini non ancora disponibili",copy:"Etichette mancanti con eventuale sostituzione consigliata"}
 ];
 
 let curF="all", curS="";
@@ -746,29 +457,16 @@ function badgeTipo(t){
 function badgeCat(c){
   if(c==="bottiglia") return '<span class="badge stock">Solo bottiglia</span>';
   if(c==="bicchiere") return '<span class="badge stock">Al bicchiere</span>';
-  if(c==="nuovo") return '<span class="badge new">Sostituzione</span>';
   return '';
 }
 
-function arrHtml(arr){
-  if(!arr || !arr.length) return "";
-  let h="<ul>";
-  for(let i=0;i<arr.length;i++){
-    const item=String(arr[i]||"");
-    const parts=item.split(": ");
-    if(parts.length>1){
-      h+='<li><span class="pick-name">'+e(parts[0])+':</span> '+e(parts.slice(1).join(": "))+'</li>';
-    }else{
-      h+='<li>'+e(item)+'</li>';
-    }
-  }
-  h+="</ul>";
-  return h;
+function badgeSost(s){
+  return s ? '<span class="badge replace">' + e(s) + '</span>' : '';
 }
 
 function card(a){
   return `
-    <article class="card" id="c${a.id}">
+    <article class="card">
       <div class="card-top">
         <div class="card-title">
           <h4>${e(a.nome)}</h4>
@@ -780,36 +478,9 @@ function card(a){
       <div class="badges">
         ${badgeTipo(a.tipo)}
         ${badgeCat(a.cat)}
-      </div>
-
-      <div class="card-actions">
-        <button class="expand" onclick="tc(${a.id})" aria-expanded="false" id="btn${a.id}">
-          <span>Vedi dettaglio</span>
-          <span>▾</span>
-        </button>
-      </div>
-
-      <div class="detail" id="d${a.id}">
-        <div class="detail-inner">
-          <div class="info-block">
-            <div class="info-label">Scheda</div>
-            ${arrHtml(a.det)}
-          </div>
-        </div>
+        ${badgeSost(a.sost)}
       </div>
     </article>
-  `;
-}
-
-function renderNotes(){
-  const q=curS.toLowerCase().trim();
-  const list=NOTES.filter(n=>!q || n.toLowerCase().includes(q));
-  if(!list.length) return `<div class="empty">Nessuna nota trovata per “${e(curS)}”</div>`;
-  return `
-    <section class="notes">
-      <h3>Note operative</h3>
-      <ul>${list.map(n=>`<li>${e(n)}</li>`).join('')}</ul>
-    </section>
   `;
 }
 
@@ -817,21 +488,18 @@ function render(){
   const s=curS.toLowerCase().trim();
   let out="", tot=0;
 
-  if(curF==="note"){
-    document.getElementById("main").innerHTML=renderNotes();
-    return;
-  }
-
-  for(let ci=0;ci<CATS.length;ci++){
+  for(let ci=0; ci<CATS.length; ci++){
     const cat=CATS[ci];
     if(curF!=="all" && curF!==cat.k) continue;
 
-    const list=A.filter(a=>{
-      if(a.cat!==cat.k) return false;
-      if(!s) return true;
-      const hay=(a.nome+" "+a.desc+" "+(a.det||[]).join(" ")).toLowerCase();
-      return hay.includes(s);
-    });
+    const list=A
+      .filter(a=>{
+        if(a.cat!==cat.k) return false;
+        if(!s) return true;
+        const hay=(a.nome+" "+a.desc+" "+a.pr+" "+(a.sost||"")).toLowerCase();
+        return hay.includes(s);
+      })
+      .sort((a,b)=>a.nome.localeCompare(b.nome,'it',{sensitivity:'base'}));
 
     if(!list.length) continue;
     tot += list.length;
@@ -851,22 +519,8 @@ function render(){
     `;
   }
 
-  if(curF==="all") out += renderNotes();
-
-  if(!tot && curF!=="all") out=`<div class="empty">Nessun risultato per “${e(curS)}”</div>`;
-  if(!tot && curF==="all" && curS) out=`<div class="empty">Nessun risultato per “${e(curS)}”</div>`;
-
+  if(!tot) out=`<div class="empty">Nessun risultato per “${e(curS)}”</div>`;
   document.getElementById("main").innerHTML=out;
-}
-
-function tc(id){
-  const d=document.getElementById("d"+id);
-  const b=document.getElementById("btn"+id);
-  if(!d || !b) return;
-  const open=d.classList.contains("open");
-  d.classList.toggle("open");
-  b.setAttribute("aria-expanded", String(!open));
-  b.querySelector("span:last-child").textContent = open ? "▾" : "▴";
 }
 
 document.querySelectorAll(".tab").forEach(t=>{
@@ -878,8 +532,8 @@ document.querySelectorAll(".tab").forEach(t=>{
   });
 });
 
-document.getElementById("searchInput").addEventListener("input", e=>{
-  curS=e.target.value;
+document.getElementById("searchInput").addEventListener("input", ev=>{
+  curS=ev.target.value;
   render();
 });
 
@@ -890,6 +544,7 @@ const icon=document.getElementById("themeIcon");
 function syncThemeIcon(){
   icon.textContent = root.getAttribute("data-theme")==="dark" ? "☀️" : "🌙";
 }
+
 toggle.addEventListener("click", ()=>{
   const next = root.getAttribute("data-theme")==="dark" ? "light" : "dark";
   root.setAttribute("data-theme", next);
