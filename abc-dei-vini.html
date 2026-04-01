@@ -267,6 +267,8 @@ input{outline:none}
 }
 
 .section-head{
+  cursor:pointer;
+  user-select:none;
   display:flex;
   align-items:end;
   justify-content:space-between;
@@ -283,10 +285,28 @@ input{outline:none}
   font-size:.9rem;
 }
 
+.section-chevron{
+  font-size:1.1rem;
+  color:var(--text-faint);
+  transition:transform .25s ease;
+  flex-shrink:0;
+  align-self:center;
+  margin-left:auto;
+}
+.section-head.collapsed .section-chevron{
+  transform:rotate(-90deg);
+}
+.section-head:hover h3{
+  color:var(--accent);
+}
 .grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:14px;
+  transition:opacity .25s ease;
+}
+.grid.collapsed{
+  display:none;
 }
 
 .card{
@@ -562,6 +582,10 @@ input{outline:none}
   .card-top{padding:16px}
 }
 </style>
+
+<style>
+.wine-category{border:1px solid #ddd;border-radius:10px;margin:12px 0;background:#fff;overflow:hidden}.wine-category summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:700;background:#f7f7f7}.wine-category summary::-webkit-details-marker{display:none}.wine-category summary::after{content:"+";float:right;font-weight:700}.wine-category[open] summary::after{content:"−"}.wine-category .category-content{padding:12px 16px}
+</style>
 </head>
 <body>
 
@@ -804,6 +828,25 @@ function tc(id){
   }
 }
 
+var collapsedSections = {bollicine:true, bianchi:true, rosati:true, rossi:true, dolci:true, giacenze:true};
+
+function toggleSection(catKey){
+  var grid = document.getElementById('sec-' + catKey);
+  var head = document.getElementById('sh-' + catKey);
+  var chev = document.getElementById('sca-' + catKey);
+  if(!grid) return;
+  collapsedSections[catKey] = !collapsedSections[catKey];
+  if(collapsedSections[catKey]){
+    grid.classList.add('collapsed');
+    head.classList.add('collapsed');
+    if(chev) chev.textContent = '▸';
+  } else {
+    grid.classList.remove('collapsed');
+    head.classList.remove('collapsed');
+    if(chev) chev.textContent = '▾';
+  }
+}
+
 function render(){
   var s = curS.toLowerCase().trim();
   var out = "", tot = 0;
@@ -831,17 +874,24 @@ function render(){
     });
 
     if(!list.length) continue;
+
+    // Ordine alfabetico per nome
+    list.sort(function(a, b){
+      return (a.nome||"").localeCompare(b.nome||"", "it");
+    });
+
     tot += list.length;
 
     out += `
       <section>
-        <div class="section-head">
+        <div class="section-head collapsed" onclick="toggleSection('${cat.k}')" id="sh-${cat.k}">
           <div>
             <h3>${e(cat.label)}</h3>
             <p>${e(cat.copy)}</p>
           </div>
+          <span class="section-chevron" id="sca-${cat.k}">▸</span>
         </div>
-        <div class="grid">
+        <div class="grid collapsed" id="sec-${cat.k}">
           ${list.map(card).join("")}
         </div>
       </section>
