@@ -90,7 +90,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 12px;
+      padding: 18px 14px;
     }
 
     a {
@@ -107,7 +107,7 @@
     }
 
     .wrap {
-      width: min(980px, 100%);
+      width: min(760px, 100%);
     }
 
     .topbar {
@@ -137,20 +137,20 @@
     }
 
     .hero {
-      padding: 24px 18px 14px;
+      padding: 26px 18px 16px;
       text-align: center;
       border-bottom: 1px solid var(--line);
       background: linear-gradient(180deg, color-mix(in srgb, var(--panel-2) 62%, transparent), transparent);
     }
 
     .logo {
-      width: 68px;
-      height: 68px;
+      width: 72px;
+      height: 72px;
       margin: 0 auto 12px;
-      border-radius: 20px;
+      border-radius: 22px;
       display: grid;
       place-items: center;
-      font-size: 1.9rem;
+      font-size: 2rem;
       background: linear-gradient(135deg, var(--accent-soft), var(--panel));
       border: 1px solid var(--line);
       box-shadow: var(--shadow-md);
@@ -158,33 +158,35 @@
 
     .hero h1 {
       font-family: "Newsreader", serif;
-      font-size: clamp(2rem, 7vw, 3.3rem);
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
       line-height: .96;
       letter-spacing: -.05em;
+      text-align: center;
     }
 
     .tabs-section {
-      padding: 14px;
+      padding: 16px;
     }
 
     .tabs-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
 
     .tab-card {
-      min-height: 132px;
-      padding: 14px 12px;
+      aspect-ratio: 1 / 1;
       border-radius: var(--radius-md);
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel-2), color-mix(in srgb, var(--panel) 70%, transparent));
+      background: linear-gradient(180deg, var(--panel-2), color-mix(in srgb, var(--panel) 72%, transparent));
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       text-align: center;
+      padding: 16px 12px;
+      gap: 12px;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
 
@@ -194,57 +196,39 @@
       border-color: var(--line-strong);
     }
 
-    .tab-main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      flex: 1;
-    }
-
     .tab-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      font-size: 1.15rem;
+      font-size: 1.3rem;
       border: 1px solid transparent;
       flex-shrink: 0;
     }
 
     .tab-title {
       font-family: "Newsreader", serif;
-      font-size: clamp(1.05rem, 3.3vw, 1.3rem);
+      font-size: clamp(1.08rem, 2.4vw, 1.45rem);
       line-height: 1.08;
       letter-spacing: -.03em;
       text-align: center;
-      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 2.4em;
     }
 
-    .tab-bottom {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
     .tab-arrow {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 11px;
       display: grid;
       place-items: center;
       border: 1px solid var(--line);
       background: var(--panel);
       box-shadow: var(--shadow-sm);
-      font-size: .92rem;
+      font-size: .9rem;
       font-weight: 700;
     }
 
@@ -266,19 +250,10 @@
       border-color: color-mix(in srgb, var(--stock) 18%, transparent);
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 620px) {
       body {
+        padding: 12px 10px;
         align-items: flex-start;
-      }
-
-      .wrap {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 520px) {
-      body {
-        padding: 10px;
       }
 
       .topbar {
@@ -292,44 +267,39 @@
       }
 
       .hero {
-        padding: 18px 14px 10px;
+        padding: 20px 14px 12px;
       }
 
       .logo {
-        width: 58px;
-        height: 58px;
-        margin-bottom: 10px;
-        font-size: 1.6rem;
+        width: 60px;
+        height: 60px;
+        font-size: 1.7rem;
         border-radius: 18px;
+        margin-bottom: 10px;
       }
 
       .hero h1 {
-        font-size: clamp(1.9rem, 8vw, 2.5rem);
+        font-size: clamp(2rem, 8vw, 2.8rem);
       }
 
       .tabs-section {
-        padding: 10px;
+        padding: 12px;
       }
 
       .tabs-grid {
-        gap: 8px;
+        gap: 10px;
       }
 
       .tab-card {
-        min-height: 116px;
-        padding: 10px 8px;
-        border-radius: 18px;
-      }
-
-      .tab-main {
-        gap: 8px;
+        padding: 12px 8px;
+        gap: 9px;
       }
 
       .tab-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 12px;
-        font-size: 1rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 13px;
+        font-size: 1.05rem;
       }
 
       .tab-title {
@@ -341,30 +311,21 @@
         width: 26px;
         height: 26px;
         border-radius: 9px;
-        font-size: .82rem;
+        font-size: .8rem;
       }
     }
 
-    @media (max-width: 390px) {
-      .hero {
-        padding: 16px 12px 8px;
-      }
-
-      .tabs-section {
-        padding: 8px;
-      }
-
+    @media (max-width: 420px) {
       .tabs-grid {
-        gap: 7px;
+        gap: 8px;
       }
 
       .tab-card {
-        min-height: 108px;
-        padding: 8px 6px;
+        padding: 10px 6px;
       }
 
       .tab-title {
-        font-size: .92rem;
+        font-size: .9rem;
       }
     }
   </style>
@@ -386,33 +347,21 @@
       <section class="tabs-section">
         <nav class="tabs-grid" aria-label="Sezioni principali">
           <a class="tab-card wine-ui" href="abc-dei-vini.html">
-            <div class="tab-main">
-              <div class="tab-icon">🍷</div>
-              <h2 class="tab-title">ABC dei Vini</h2>
-            </div>
-            <div class="tab-bottom">
-              <span class="tab-arrow">→</span>
-            </div>
+            <div class="tab-icon">🍷</div>
+            <h2 class="tab-title">ABC dei Vini</h2>
+            <span class="tab-arrow">→</span>
           </a>
 
           <a class="tab-card food-ui" href="abbinamenti.html">
-            <div class="tab-main">
-              <div class="tab-icon">🍽️</div>
-              <h2 class="tab-title">Abbinamenti</h2>
-            </div>
-            <div class="tab-bottom">
-              <span class="tab-arrow">→</span>
-            </div>
+            <div class="tab-icon">🍽️</div>
+            <h2 class="tab-title">Abbinamenti</h2>
+            <span class="tab-arrow">→</span>
           </a>
 
           <a class="tab-card stock-ui" href="giacenze.html">
-            <div class="tab-main">
-              <div class="tab-icon">📦</div>
-              <h2 class="tab-title">Giacenze</h2>
-            </div>
-            <div class="tab-bottom">
-              <span class="tab-arrow">→</span>
-            </div>
+            <div class="tab-icon">📦</div>
+            <h2 class="tab-title">Giacenze</h2>
+            <span class="tab-arrow">→</span>
           </a>
         </nav>
       </section>
