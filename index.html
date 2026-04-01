@@ -37,9 +37,9 @@
       --shadow-md:0 8px 24px rgba(24,18,10,.07);
       --shadow-lg:0 18px 48px rgba(24,18,10,.10);
 
-      --radius-sm:18px;
-      --radius-md:24px;
-      --radius-lg:32px;
+      --radius-sm:16px;
+      --radius-md:22px;
+      --radius-lg:28px;
     }
 
     [data-theme="dark"] {
@@ -90,7 +90,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 12px;
     }
 
     a {
@@ -107,24 +107,25 @@
     }
 
     .wrap {
-      width: min(1040px, 100%);
+      width: min(980px, 100%);
     }
 
     .topbar {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .theme-toggle {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       border: 1px solid var(--line);
       background: color-mix(in srgb, var(--panel) 92%, transparent);
       box-shadow: var(--shadow-sm);
       display: grid;
       place-items: center;
+      font-size: .95rem;
     }
 
     .page {
@@ -136,20 +137,20 @@
     }
 
     .hero {
-      padding: 48px 24px 28px;
+      padding: 24px 18px 14px;
       text-align: center;
       border-bottom: 1px solid var(--line);
       background: linear-gradient(180deg, color-mix(in srgb, var(--panel-2) 62%, transparent), transparent);
     }
 
     .logo {
-      width: 92px;
-      height: 92px;
-      margin: 0 auto 18px;
-      border-radius: 26px;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 12px;
+      border-radius: 20px;
       display: grid;
       place-items: center;
-      font-size: 2.4rem;
+      font-size: 1.9rem;
       background: linear-gradient(135deg, var(--accent-soft), var(--panel));
       border: 1px solid var(--line);
       box-shadow: var(--shadow-md);
@@ -157,73 +158,93 @@
 
     .hero h1 {
       font-family: "Newsreader", serif;
-      font-size: clamp(2.6rem, 5vw, 4.6rem);
-      line-height: .95;
+      font-size: clamp(2rem, 7vw, 3.3rem);
+      line-height: .96;
       letter-spacing: -.05em;
     }
 
     .tabs-section {
-      padding: 22px;
+      padding: 14px;
     }
 
     .tabs-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      gap: 10px;
     }
 
     .tab-card {
-      min-height: 220px;
-      padding: 22px;
+      min-height: 132px;
+      padding: 14px 12px;
       border-radius: var(--radius-md);
       border: 1px solid var(--line);
       background: linear-gradient(180deg, var(--panel-2), color-mix(in srgb, var(--panel) 70%, transparent));
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: space-between;
+      text-align: center;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
 
     .tab-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       box-shadow: var(--shadow-md);
       border-color: var(--line-strong);
     }
 
+    .tab-main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      flex: 1;
+    }
+
     .tab-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 16px;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
-      font-size: 1.5rem;
+      font-size: 1.15rem;
       border: 1px solid transparent;
-      margin-bottom: 18px;
+      flex-shrink: 0;
     }
 
     .tab-title {
       font-family: "Newsreader", serif;
-      font-size: 1.7rem;
+      font-size: clamp(1.05rem, 3.3vw, 1.3rem);
       line-height: 1.08;
       letter-spacing: -.03em;
+      text-align: center;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.4em;
     }
 
     .tab-bottom {
-      margin-top: 18px;
+      width: 100%;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
+      margin-top: 8px;
     }
 
     .tab-arrow {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
       display: grid;
       place-items: center;
       border: 1px solid var(--line);
       background: var(--panel);
       box-shadow: var(--shadow-sm);
+      font-size: .92rem;
       font-weight: 700;
     }
 
@@ -245,33 +266,105 @@
       border-color: color-mix(in srgb, var(--stock) 18%, transparent);
     }
 
-    @media (max-width: 860px) {
-      .tabs-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 700px) {
+      body {
+        align-items: flex-start;
       }
 
-      .tab-card {
-        min-height: 180px;
+      .wrap {
+        width: 100%;
       }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 520px) {
       body {
-        padding: 14px;
+        padding: 10px;
+      }
+
+      .topbar {
+        margin-bottom: 8px;
+      }
+
+      .theme-toggle {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
       }
 
       .hero {
-        padding: 38px 18px 22px;
-      }
-
-      .tabs-section {
-        padding: 16px;
+        padding: 18px 14px 10px;
       }
 
       .logo {
-        width: 82px;
-        height: 82px;
-        font-size: 2.1rem;
+        width: 58px;
+        height: 58px;
+        margin-bottom: 10px;
+        font-size: 1.6rem;
+        border-radius: 18px;
+      }
+
+      .hero h1 {
+        font-size: clamp(1.9rem, 8vw, 2.5rem);
+      }
+
+      .tabs-section {
+        padding: 10px;
+      }
+
+      .tabs-grid {
+        gap: 8px;
+      }
+
+      .tab-card {
+        min-height: 116px;
+        padding: 10px 8px;
+        border-radius: 18px;
+      }
+
+      .tab-main {
+        gap: 8px;
+      }
+
+      .tab-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        font-size: 1rem;
+      }
+
+      .tab-title {
+        font-size: .98rem;
+        min-height: 2.2em;
+      }
+
+      .tab-arrow {
+        width: 26px;
+        height: 26px;
+        border-radius: 9px;
+        font-size: .82rem;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .hero {
+        padding: 16px 12px 8px;
+      }
+
+      .tabs-section {
+        padding: 8px;
+      }
+
+      .tabs-grid {
+        gap: 7px;
+      }
+
+      .tab-card {
+        min-height: 108px;
+        padding: 8px 6px;
+      }
+
+      .tab-title {
+        font-size: .92rem;
       }
     }
   </style>
@@ -293,7 +386,7 @@
       <section class="tabs-section">
         <nav class="tabs-grid" aria-label="Sezioni principali">
           <a class="tab-card wine-ui" href="abc-dei-vini.html">
-            <div>
+            <div class="tab-main">
               <div class="tab-icon">🍷</div>
               <h2 class="tab-title">ABC dei Vini</h2>
             </div>
@@ -303,7 +396,7 @@
           </a>
 
           <a class="tab-card food-ui" href="abbinamenti.html">
-            <div>
+            <div class="tab-main">
               <div class="tab-icon">🍽️</div>
               <h2 class="tab-title">Abbinamenti</h2>
             </div>
@@ -313,7 +406,7 @@
           </a>
 
           <a class="tab-card stock-ui" href="giacenze.html">
-            <div>
+            <div class="tab-main">
               <div class="tab-icon">📦</div>
               <h2 class="tab-title">Giacenze</h2>
             </div>
