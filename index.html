@@ -4,93 +4,124 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Poggio a Issi</title>
-  <meta name="description" content="Poggio a Issi - ABC dei Vini, Abbinamenti, Giacenze." />
+  <meta name="description" content="Poggio a Issi - ABC dei Vini, Abbinamenti, Giacenze, Guida Gin." />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+      --font-display: "Baloo 2", cursive;
+      --font-body: "Inter", sans-serif;
+    }
+
     :root,
     [data-theme="light"] {
-      --bg:#f6f4ef;
-      --panel:#fdfcf9;
-      --panel-2:#f1ede6;
-      --text:#1f1c17;
-      --text-soft:#6f6a61;
-      --line:#ded7cc;
-      --line-strong:#cfc5b6;
+      --color-bg: #eef1e8;
+      --color-surface: #f7f8f2;
+      --color-surface-2: #e6ebde;
+      --color-border: #bcc7b1;
+      --color-text: #2d3a23;
+      --color-text-muted: #55664a;
+      --color-text-faint: #87957d;
+      --color-primary: #7a8f49;
+      --color-primary-hover: #65793a;
+      --color-primary-highlight: #dde6c9;
 
-      --accent:#8b5e34;
-      --accent-soft:#efe1cf;
+      --color-wine: #81505b;
+      --color-wine-soft: #ead8dd;
 
-      --wine:#7e4950;
-      --wine-soft:#efdee1;
+      --color-food: #5c7650;
+      --color-food-soft: #dfe8d9;
 
-      --food:#51694d;
-      --food-soft:#dfe8dd;
+      --color-stock: #58758b;
+      --color-stock-soft: #dce7ef;
 
-      --stock:#3a6b8c;
-      --stock-soft:#dce7ef;
+      --color-gin: #768d45;
+      --color-gin-soft: #dfe7cc;
 
-      --shadow-sm:0 1px 2px rgba(24,18,10,.04);
-      --shadow-md:0 8px 24px rgba(24,18,10,.07);
-      --shadow-lg:0 18px 48px rgba(24,18,10,.10);
-
-      --radius-sm:16px;
-      --radius-md:22px;
-      --radius-lg:28px;
+      --shadow-sm: 0 1px 2px rgba(33,45,24,0.08);
+      --shadow-md: 0 10px 25px rgba(33,45,24,0.12);
+      --shadow-lg: 0 16px 40px rgba(33,45,24,0.14);
     }
 
     [data-theme="dark"] {
-      --bg:#111111;
-      --panel:#1b1b1b;
-      --panel-2:#232323;
-      --text:#f3efe7;
-      --text-soft:#b2aa9d;
-      --line:#2d2a26;
-      --line-strong:#3a352f;
+      --color-bg: #111611;
+      --color-surface: #1a2219;
+      --color-surface-2: #253026;
+      --color-border: #394738;
+      --color-text: #e6eadc;
+      --color-text-muted: #b4bea8;
+      --color-text-faint: #7f8b77;
+      --color-primary: #a6bf67;
+      --color-primary-hover: #bbd97a;
+      --color-primary-highlight: #2d3a24;
 
-      --accent:#d2a56a;
-      --accent-soft:#2d241a;
+      --color-wine: #d6a7b1;
+      --color-wine-soft: #2e2125;
 
-      --wine:#d2a0aa;
-      --wine-soft:#2a1d22;
+      --color-food: #a9c697;
+      --color-food-soft: #1f2a20;
 
-      --food:#9cc190;
-      --food-soft:#1e2920;
+      --color-stock: #9dbed0;
+      --color-stock-soft: #1b2730;
 
-      --stock:#92b7cf;
-      --stock-soft:#17232c;
+      --color-gin: #bfd78a;
+      --color-gin-soft: #24301d;
 
-      --shadow-sm:0 1px 2px rgba(0,0,0,.25);
-      --shadow-md:0 10px 28px rgba(0,0,0,.28);
-      --shadow-lg:0 20px 56px rgba(0,0,0,.34);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.24);
+      --shadow-md: 0 12px 32px rgba(0,0,0,0.38);
+      --shadow-lg: 0 18px 48px rgba(0,0,0,0.42);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
     }
 
     html {
+      scroll-behavior: smooth;
       -webkit-text-size-adjust: 100%;
     }
 
     body {
-      min-height: 100vh;
-      font-family: "Inter", sans-serif;
-      color: var(--text);
+      min-height: 100dvh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
       background:
-        radial-gradient(circle at top left, rgba(210,165,106,.08), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(126,73,80,.08), transparent 24%),
-        var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px 14px;
+        radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 32%),
+        radial-gradient(circle at right center, color-mix(in srgb, var(--color-surface-2) 55%, transparent), transparent 30%),
+        var(--color-bg);
+      line-height: 1.6;
     }
 
     a {
@@ -99,281 +130,362 @@
     }
 
     button {
-      font: inherit;
-      color: inherit;
-      border: 0;
-      background: none;
       cursor: pointer;
-    }
-
-    .wrap {
-      width: min(560px, 100%);
+      border: none;
+      background: none;
+      color: inherit;
+      font: inherit;
     }
 
     .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      background: color-mix(in srgb, var(--color-bg) 78%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+    }
+
+    .topbar-inner,
+    .hero,
+    .content,
+    .footer {
+      width: min(1100px, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .topbar-inner {
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+      backdrop-filter: blur(6px);
+      flex-shrink: 0;
+      font-size: 1.25rem;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-subtitle {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
     }
 
     .theme-toggle {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: var(--radius-full);
+      padding: var(--space-2);
+      border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+      background: var(--color-surface);
       box-shadow: var(--shadow-sm);
       display: grid;
       place-items: center;
-      font-size: .95rem;
-    }
-
-    .page {
-      background: color-mix(in srgb, var(--panel) 94%, transparent);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
     }
 
     .hero {
-      padding: 26px 18px 16px;
-      text-align: center;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, color-mix(in srgb, var(--panel-2) 62%, transparent), transparent);
+      padding: clamp(var(--space-8), 8vw, var(--space-16)) 0 var(--space-8);
+      display: grid;
+      gap: var(--space-6);
     }
 
-    .logo {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 12px;
-      border-radius: 22px;
-      display: grid;
-      place-items: center;
-      font-size: 2rem;
-      background: linear-gradient(135deg, var(--accent-soft), var(--panel));
-      border: 1px solid var(--line);
+    .hero-card {
+      background: linear-gradient(
+        135deg,
+        var(--color-surface),
+        color-mix(in srgb, var(--color-surface-2) 88%, var(--color-primary-highlight))
+      );
+      border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+      border-radius: 28px;
+      padding: clamp(var(--space-6), 4vw, var(--space-10));
       box-shadow: var(--shadow-md);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-4);
     }
 
     .hero h1 {
-      font-family: "Newsreader", serif;
-      font-size: clamp(2.2rem, 7vw, 3.6rem);
-      line-height: .96;
-      letter-spacing: -.05em;
-      text-align: center;
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 0.98;
+      max-width: 12ch;
+      margin-bottom: var(--space-4);
     }
 
-    .tabs-section {
-      padding: 16px;
+    .hero p {
+      color: var(--color-text-muted);
+      max-width: 72ch;
     }
 
-    .tabs-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .tab-card {
-      width: 100%;
-      aspect-ratio: 2.2 / 1;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel-2), color-mix(in srgb, var(--panel) 72%, transparent));
-      box-shadow: var(--shadow-sm);
+    .quick-tags {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 18px 16px;
-      gap: 12px;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
     }
 
-    .tab-card:hover {
+    .quick-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-full);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+
+    .content {
+      padding-bottom: var(--space-16);
+    }
+
+    .nav-grid {
+      display: grid;
+      gap: var(--space-4);
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    }
+
+    .nav-card {
+      min-height: 100%;
+      background: var(--color-surface);
+      border-radius: 24px;
+      padding: var(--space-5);
+      border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      gap: var(--space-4);
+      transition:
+        transform var(--transition-interactive),
+        box-shadow var(--transition-interactive),
+        border-color var(--transition-interactive),
+        background var(--transition-interactive);
+    }
+
+    .nav-card:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
-      border-color: var(--line-strong);
+      border-color: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
     }
 
-    .tab-icon {
+    .nav-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .nav-icon {
       width: 54px;
       height: 54px;
-      border-radius: 16px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       border: 1px solid transparent;
       flex-shrink: 0;
     }
 
-    .tab-title {
-      font-family: "Newsreader", serif;
-      font-size: clamp(1.28rem, 3vw, 1.75rem);
-      line-height: 1.08;
-      letter-spacing: -.03em;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.3em;
-    }
-
-    .tab-arrow {
-      width: 32px;
-      height: 32px;
-      border-radius: 11px;
+    .nav-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow-sm);
-      font-size: .9rem;
+      border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+      background: color-mix(in srgb, var(--color-surface-2) 70%, transparent);
+      color: var(--color-text-muted);
       font-weight: 700;
     }
 
-    .wine-ui .tab-icon {
-      background: var(--wine-soft);
-      color: var(--wine);
-      border-color: color-mix(in srgb, var(--wine) 18%, transparent);
+    .nav-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 1;
     }
 
-    .food-ui .tab-icon {
-      background: var(--food-soft);
-      color: var(--food);
-      border-color: color-mix(in srgb, var(--food) 18%, transparent);
+    .nav-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      max-width: 34ch;
     }
 
-    .stock-ui .tab-icon {
-      background: var(--stock-soft);
-      color: var(--stock);
-      border-color: color-mix(in srgb, var(--stock) 18%, transparent);
+    .wine-ui .nav-icon {
+      background: var(--color-wine-soft);
+      color: var(--color-wine);
+      border-color: color-mix(in srgb, var(--color-wine) 18%, transparent);
     }
 
-    @media (max-width: 560px) {
-      body {
-        padding: 12px 10px;
-        align-items: flex-start;
-      }
+    .food-ui .nav-icon {
+      background: var(--color-food-soft);
+      color: var(--color-food);
+      border-color: color-mix(in srgb, var(--color-food) 18%, transparent);
+    }
 
-      .topbar {
-        margin-bottom: 8px;
-      }
+    .stock-ui .nav-icon {
+      background: var(--color-stock-soft);
+      color: var(--color-stock);
+      border-color: color-mix(in srgb, var(--color-stock) 18%, transparent);
+    }
 
-      .theme-toggle {
-        width: 36px;
-        height: 36px;
-        border-radius: 11px;
-      }
+    .gin-ui .nav-icon {
+      background: var(--color-gin-soft);
+      color: var(--color-gin);
+      border-color: color-mix(in srgb, var(--color-gin) 18%, transparent);
+    }
 
-      .hero {
-        padding: 20px 14px 12px;
-      }
+    .footer {
+      padding: 0 0 var(--space-12);
+      color: var(--color-text-faint);
+      font-size: var(--text-sm);
+    }
 
-      .logo {
-        width: 60px;
-        height: 60px;
+    .footer p {
+      max-width: 60ch;
+    }
+
+    @media (max-width: 760px) {
+      .brand-title {
         font-size: 1.7rem;
-        border-radius: 18px;
-        margin-bottom: 10px;
       }
 
       .hero h1 {
-        font-size: clamp(2rem, 8vw, 2.8rem);
+        max-width: 100%;
       }
 
-      .tabs-section {
-        padding: 12px;
-      }
-
-      .tabs-grid {
-        gap: 10px;
-      }
-
-      .tab-card {
-        aspect-ratio: 1.5 / 1;
-        padding: 14px 12px;
-        gap: 10px;
-      }
-
-      .tab-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        font-size: 1.1rem;
-      }
-
-      .tab-title {
-        font-size: 1.08rem;
-      }
-
-      .tab-arrow {
-        width: 28px;
-        height: 28px;
-        border-radius: 9px;
-        font-size: .82rem;
+      .nav-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 390px) {
-      .hero {
-        padding: 18px 12px 10px;
-      }
-
-      .tabs-section {
-        padding: 10px;
-      }
-
-      .tab-card {
-        aspect-ratio: 1.6 / 1;
-        padding: 12px 10px;
-        gap: 8px;
-      }
-
-      .tab-title {
-        font-size: 1rem;
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">🐿️</div>
+        <div>
+          <div class="brand-title">Poggio a Issi</div>
+          <div class="brand-subtitle">Accesso rapido alle guide del locale</div>
+        </div>
+      </div>
+
       <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema">
         <span id="themeIcon">☀️</span>
       </button>
     </div>
+  </header>
 
-    <main class="page">
-      <section class="hero">
-        <div class="logo" aria-label="Logo scoiattolo">🐿️</div>
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Menu operativo</div>
         <h1>Poggio a Issi</h1>
-      </section>
+        <p>
+          Un accesso unico e ordinato per vino, abbinamenti, giacenze e guida gin,
+          con uno stile coerente con l’atmosfera del locale immerso nel bosco.
+        </p>
 
-      <section class="tabs-section">
-        <nav class="tabs-grid" aria-label="Sezioni principali">
-          <a class="tab-card wine-ui" href="abc-dei-vini.html">
-            <div class="tab-icon">🍷</div>
-            <h2 class="tab-title">ABC dei Vini</h2>
-            <span class="tab-arrow">→</span>
-          </a>
+        <div class="quick-tags">
+          <span>vini</span>
+          <span>abbinamenti</span>
+          <span>giacenze</span>
+          <span>gin</span>
+        </div>
+      </div>
+    </section>
 
-          <a class="tab-card food-ui" href="abbinamenti.html">
-            <div class="tab-icon">🍽️</div>
-            <h2 class="tab-title">Abbinamenti</h2>
-            <span class="tab-arrow">→</span>
-          </a>
+    <section class="content">
+      <nav class="nav-grid" aria-label="Sezioni principali">
+        <a class="nav-card wine-ui" href="abc-dei-vini.html">
+          <div class="nav-top">
+            <div class="nav-icon">🍷</div>
+            <span class="nav-arrow">→</span>
+          </div>
+          <div class="nav-title">ABC dei Vini</div>
+          <p class="nav-desc">Scheda rapida per consultare le informazioni principali sui vini.</p>
+        </a>
 
-          <a class="tab-card stock-ui" href="giacenze.html">
-            <div class="tab-icon">📦</div>
-            <h2 class="tab-title">Giacenze</h2>
-            <span class="tab-arrow">→</span>
-          </a>
-        </nav>
-      </section>
-    </main>
-  </div>
+        <a class="nav-card food-ui" href="abbinamenti.html">
+          <div class="nav-top">
+            <div class="nav-icon">🍽️</div>
+            <span class="nav-arrow">→</span>
+          </div>
+          <div class="nav-title">Abbinamenti</div>
+          <p class="nav-desc">Supporto veloce per suggerire pairing coerenti tra cucina e bottiglia.</p>
+        </a>
+
+        <a class="nav-card stock-ui" href="giacenze.html">
+          <div class="nav-top">
+            <div class="nav-icon">📦</div>
+            <span class="nav-arrow">→</span>
+          </div>
+          <div class="nav-title">Giacenze</div>
+          <p class="nav-desc">Controllo pratico delle disponibilità per servizio, ordine e rotazione.</p>
+        </a>
+
+        <a class="nav-card gin-ui" href="guida-gin-sala.html">
+          <div class="nav-top">
+            <div class="nav-icon">🍸</div>
+            <span class="nav-arrow">→</span>
+          </div>
+          <div class="nav-title">Guida Gin</div>
+          <p class="nav-desc">Profili aromatici, garnish consigliato e consultazione rapida per la sala.</p>
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Interfaccia interna pensata per il personale di sala e banco.</p>
+  </footer>
 
   <script>
     const root = document.documentElement;
