@@ -2,11 +2,14 @@
 <html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Guida Gin Sala</title>
+  <meta name="description" content="Guida gin per il personale di sala con profili aromatici e garnish consigliato." />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
@@ -15,15 +18,32 @@
       --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
       --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
       --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
-      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
-      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
-      --space-12: 3rem; --space-16: 4rem;
-      --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-full: 9999px;
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+
       --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
-      --font-display: 'Baloo 2', cursive;
-      --font-body: 'Inter', sans-serif;
+
+      --font-display: "Baloo 2", cursive;
+      --font-body: "Inter", sans-serif;
     }
-    :root, [data-theme="light"] {
+
+    :root,
+    [data-theme="light"] {
       --color-bg: #eef1e8;
       --color-surface: #f7f8f2;
       --color-surface-2: #e6ebde;
@@ -37,6 +57,7 @@
       --shadow-sm: 0 1px 2px rgba(33,45,24,0.08);
       --shadow-md: 0 10px 25px rgba(33,45,24,0.12);
     }
+
     [data-theme="dark"] {
       --color-bg: #111611;
       --color-surface: #1a2219;
@@ -51,8 +72,18 @@
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.24);
       --shadow-md: 0 12px 32px rgba(0,0,0,0.38);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       min-height: 100dvh;
       line-height: 1.6;
@@ -64,72 +95,125 @@
         radial-gradient(circle at right center, color-mix(in srgb, var(--color-surface-2) 55%, transparent), transparent 30%),
         var(--color-bg);
     }
-    img, svg { display: block; max-width: 100%; }
-    a, button, input {
-      transition: color var(--transition-interactive), background var(--transition-interactive), border-color var(--transition-interactive), box-shadow var(--transition-interactive), transform var(--transition-interactive);
+
+    button,
+    input,
+    select {
+      font: inherit;
+      color: inherit;
     }
-    button { cursor: pointer; border: none; background: none; color: inherit; }
-    .sr-only {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
     }
-    .skip-link {
-      position: absolute; left: -9999px; top: 0; background: var(--color-primary); color: #111;
-      padding: var(--space-3) var(--space-4); z-index: 1000;
+
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-    .skip-link:focus { left: var(--space-4); top: var(--space-4); border-radius: var(--radius-md); }
+
     .topbar {
-      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
       background: color-mix(in srgb, var(--color-bg) 78%, transparent);
       border-bottom: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
     }
-    .topbar-inner, .hero, .controls, .content, .footer {
-      width: min(1100px, calc(100% - 2rem)); margin-inline: auto;
+
+    .topbar-inner,
+    .hero,
+    .controls,
+    .content,
+    .footer {
+      width: min(1100px, calc(100% - 2rem));
+      margin-inline: auto;
     }
+
     .topbar-inner {
-      display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
       padding: var(--space-4) 0;
     }
+
     .brand {
-      display: flex; align-items: center; gap: var(--space-3);
-      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
     }
+
     .brand-mark {
-      width: 44px; height: 44px; border-radius: 14px; background: var(--color-primary-highlight);
-      color: var(--color-primary); display: grid; place-items: center; box-shadow: var(--shadow-sm); backdrop-filter: blur(6px);
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-sm);
       border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
-      flex-shrink: 0;
+      font-size: 1.2rem;
     }
+
     .brand h1 {
       font-family: var(--font-display);
       font-size: var(--text-xl);
       line-height: 0.95;
       letter-spacing: 0.02em;
     }
-    .brand p { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+    .brand p {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
     .theme-toggle {
-      min-width: 44px; min-height: 44px; border-radius: var(--radius-full); padding: var(--space-2);
+      min-width: 48px;
+      min-height: 48px;
+      border-radius: var(--radius-full);
+      padding: var(--space-2);
       border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
       background: var(--color-surface);
       box-shadow: var(--shadow-sm);
     }
+
     .hero {
       padding: clamp(var(--space-8), 8vw, var(--space-16)) 0 var(--space-8);
-      display: grid; gap: var(--space-6);
+      display: grid;
+      gap: var(--space-6);
     }
+
     .hero-card {
-      background: linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--color-surface-2) 88%, var(--color-primary-highlight)));
+      background: linear-gradient(
+        135deg,
+        var(--color-surface),
+        color-mix(in srgb, var(--color-surface-2) 88%, var(--color-primary-highlight))
+      );
       border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
       border-radius: 28px;
       padding: clamp(var(--space-6), 4vw, var(--space-10));
       box-shadow: var(--shadow-md);
     }
+
     .eyebrow {
-      display: inline-flex; align-items: center; gap: var(--space-2); border-radius: var(--radius-full);
-      padding: var(--space-2) var(--space-3); background: var(--color-primary-highlight);
-      color: var(--color-primary); font-weight: 700; font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       margin-bottom: var(--space-4);
     }
+
     .hero h2 {
       font-family: var(--font-display);
       font-size: var(--text-2xl);
@@ -137,153 +221,234 @@
       max-width: 12ch;
       margin-bottom: var(--space-4);
     }
+
     .hero p {
       color: var(--color-text-muted);
       max-width: 72ch;
     }
+
     .quick-tags {
-      display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
     }
-    .quick-tags span, .pill {
-      display: inline-flex; align-items: center; gap: var(--space-1); min-height: 36px;
-      padding: 0 var(--space-3); border-radius: var(--radius-full);
-      background: var(--color-surface-2); border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-      font-size: var(--text-sm); color: var(--color-text);
+
+    .quick-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-full);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+      font-size: var(--text-sm);
     }
+
     .controls {
-      display: grid; gap: var(--space-4); margin-bottom: var(--space-8);
+      display: grid;
+      gap: var(--space-4);
       grid-template-columns: 1fr;
+      padding-bottom: var(--space-8);
     }
-    .search-wrap, .filter-wrap {
-      background: var(--color-surface); border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
-      border-radius: 20px; padding: var(--space-4); box-shadow: var(--shadow-sm);
+
+    .search-wrap {
+      background: var(--color-surface);
+      border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+      border-radius: 20px;
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
     }
-    label { display: block; font-size: var(--text-sm); font-weight: 600; margin-bottom: var(--space-2); }
-    input[type="text"], select {
-      width: 100%; min-height: 48px; padding: 0 var(--space-4); border-radius: 14px;
+
+    label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 var(--space-4);
+      border-radius: 14px;
       border: 1px solid color-mix(in srgb, var(--color-border) 90%, transparent);
-      background: var(--color-bg); color: var(--color-text); outline: none;
+      background: var(--color-bg);
+      color: var(--color-text);
+      outline: none;
+      font-size: 16px;
     }
-    input[type="text"]:focus, select:focus, .theme-toggle:focus-visible {
+
+    input[type="text"]:focus,
+    .theme-toggle:focus-visible {
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 26%, transparent);
       border-color: var(--color-primary);
       outline: none;
     }
+
     .content {
-      display: grid; gap: var(--space-8);
+      display: grid;
+      gap: var(--space-4);
       padding-bottom: var(--space-16);
     }
+
     .category {
       background: color-mix(in srgb, var(--color-surface) 88%, transparent);
       border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
       border-radius: 26px;
       padding: clamp(var(--space-5), 3vw, var(--space-8));
       box-shadow: var(--shadow-sm);
-      content-visibility: auto;
     }
+
     .category-header {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3);
-      margin-bottom: var(--space-5); list-style: none; cursor: pointer;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+      list-style: none;
+      cursor: pointer;
+      min-height: 48px;
     }
-    .category-header::-webkit-details-marker { display: none; }
-    .category summary::after { content: "+"; font-size: 1.6rem; line-height: 1; color: var(--color-primary); margin-left: auto; font-weight: 700; }
-    .category[open] summary::after { content: "−"; }
-    .category:not([open]) { padding-bottom: var(--space-4); }
-    .category:not([open]) .gin-grid { display: none; }
+
+    .category-header::-webkit-details-marker {
+      display: none;
+    }
+
+    .category summary::after {
+      content: "+";
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--color-primary);
+      margin-left: auto;
+      font-weight: 700;
+    }
+
+    .category[open] summary::after {
+      content: "−";
+    }
+
+    .category:not([open]) {
+      padding-bottom: var(--space-4);
+    }
+
+    .category:not([open]) .gin-grid {
+      display: none;
+    }
+
     .category h3 {
       font-family: var(--font-display);
       font-size: var(--text-xl);
       line-height: 1;
     }
+
     .category-meta {
-      font-size: var(--text-sm); color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
     }
+
     .gin-grid {
-      display: grid; gap: var(--space-4);
+      display: grid;
+      gap: var(--space-4);
       grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     }
+
     .gin-card {
-      min-height: 100%;
       background: var(--color-surface);
       border-radius: 20px;
       padding: var(--space-4);
       border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
       box-shadow: var(--shadow-sm);
-      display: grid; gap: var(--space-3);
+      display: grid;
+      gap: var(--space-3);
     }
-    .gin-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-    .gin-top {
-      display: flex; gap: var(--space-3); align-items: start; justify-content: space-between;
-    }
+
     .gin-name {
-      font-size: var(--text-lg); font-weight: 700; line-height: 1.15;
+      font-size: var(--text-lg);
+      font-weight: 700;
+      line-height: 1.15;
     }
-    .price-badge {
-      white-space: nowrap; padding: 0.35rem 0.7rem; border-radius: var(--radius-full);
-      background: var(--color-primary-highlight); color: var(--color-primary); font-weight: 700; font-size: var(--text-sm);
+
+    .gin-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
     }
-    .gin-desc { color: var(--color-text-muted); font-size: var(--text-sm); }
-    .gin-garnish { font-size: var(--text-sm); color: var(--color-text); background: color-mix(in srgb, var(--color-primary-highlight) 55%, transparent); border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border)); padding: var(--space-2) var(--space-3); border-radius: 12px; }
-    .gin-garnish strong { color: var(--color-primary); }
-    .tag-row {
-      display: flex; flex-wrap: wrap; gap: var(--space-2);
+
+    .gin-garnish {
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      background: color-mix(in srgb, var(--color-primary-highlight) 55%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+      padding: var(--space-2) var(--space-3);
+      border-radius: 12px;
     }
-    .tag-row .pill { background: color-mix(in srgb, var(--color-surface-2) 92%, transparent); }
-    .empty-state {
-      display: none; text-align: center; padding: var(--space-10); background: var(--color-surface);
-      border-radius: 24px; border: 1px dashed var(--color-border); color: var(--color-text-muted);
+
+    .gin-garnish strong {
+      color: var(--color-primary);
     }
+
     .footer {
       padding: 0 0 var(--space-12);
       color: var(--color-text-faint);
       font-size: var(--text-sm);
     }
-    @media (min-width: 760px) {
-      .controls { grid-template-columns: 1.5fr 0.8fr; }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .hero,
+      .controls,
+      .content,
+      .footer {
+        width: min(100%, calc(100% - 1rem));
+      }
+
+      .brand h1 {
+        font-size: 1.7rem;
+      }
+
+      .hero h2 {
+        max-width: 100%;
+      }
     }
-    @media (max-width: 759px) {
-      .brand h1 { font-size: 1.7rem; }
-      .hero h2 { max-width: 100%; }
-      .topbar-inner { align-items: start; }
-    }
+
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
-
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Logo guida gin">
-            <path d="M7 3h10"/>
-            <path d="M9 3v5l-4 7a4 4 0 0 0 3.5 6h7A4 4 0 0 0 19 15l-4-7V3"/>
-            <path d="M8 12h8"/>
-          </svg>
-        </div>
+        <div class="brand-mark" aria-hidden="true">🍸</div>
         <div>
           <h1>Gin Tonic Guide</h1>
           <p>Supporto rapido per personale di sala e banco</p>
         </div>
       </div>
+
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Passa al tema chiaro">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span id="themeIcon">☀️</span>
       </button>
     </div>
   </header>
 
-  <main id="contenuto">
+  <main>
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Scheda operativa</div>
         <h2>Una guida veloce ai gin del locale</h2>
-        <p>Usa la ricerca per nome, aroma o botanica. Ogni scheda riassume stile aromatico, fascia sensoriale e, dove disponibile, il prezzo indicato nello screenshot della carta gin.</p>
+        <p>
+          Usa la ricerca per nome, aroma o botanica. Ogni scheda riassume stile aromatico e garnish consigliato.
+        </p>
+
         <div class="quick-tags">
           <span>agrumato</span>
           <span>floreale</span>
@@ -293,466 +458,469 @@
           <span>gineproso</span>
         </div>
       </div>
-    </details>
+    </section>
 
-    <section class="controls" aria-label="Strumenti di ricerca e filtro">
+    <section class="controls">
       <div class="search-wrap">
         <label for="searchInput">Cerca gin, botaniche o descrittori</label>
         <input id="searchInput" type="text" placeholder="Es. pompelmo, floreale, Monkey 47, salvia" />
       </div>
-      <div class="filter-wrap">
-        <label for="categorySelect">Filtra per categoria</label>
-        <select id="categorySelect">
-          <option value="all">Tutte le categorie</option>
-          <option value="agrumati">Agrumati e fruttati</option>
-          <option value="floreali">Floreali e morbidi</option>
-          <option value="erbacei">Erbacei e mediterranei</option>
-          <option value="sapidi">Sapidi e marini</option>
-          <option value="speziati">Speziati e orientali</option>
-          <option value="gineprosi">Secchi e gineprosi</option>
-          <option value="classici">Altri gin della carta</option>
-        </select>
-      </div>
-    </details>
+    </section>
 
     <section class="content" id="ginDirectory">
-      <div class="empty-state" id="emptyState">
-        <p>Nessun gin trovato con questi criteri. Prova con un nome, una botanica o una categoria diversa.</p>
-      </div>
 
-      <details class="category" data-category="agrumati">
-        <summary class="category-header"><h3>🍊 Agrumati e fruttati</h3><div class="category-meta">Gin luminosi, freschi, immediati</div></summary>
+      <details class="category" data-category="agrumati e fruttati">
+        <summary class="category-header">
+          <h3>🍊 Agrumati e fruttati</h3>
+          <div class="category-meta">11 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="aridium bacca rossa fruttato vinoso uva aglianico ginepro">
-            <div class="gin-top"><div class="gin-name">Aridium Bacca Rossa</div></div>
+          <article class="gin-card" data-search="aridium bacca rossa fruttato, vinoso. impronta di uva rossa aglianico con ginepro in supporto. acino d’uva rossa o scorza d’arancia.">
+            <div class="gin-name">Aridium Bacca Rossa</div>
             <p class="gin-desc">Fruttato, vinoso. Impronta di uva rossa Aglianico con ginepro in supporto.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Acino d’uva rossa o scorza d’arancia.</p>
-            <div class="tag-row"><span class="pill">fruttato</span><span class="pill">vinoso</span><span class="pill">uva rossa</span></div>
           </article>
-          <article class="gin-card" data-search="barbarasa london dry secco aromatico agrumato prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Barbarasa London Dry</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="barbarasa london dry secco, aromatico, agrumato. scorza di limone.">
+            <div class="gin-name">Barbarasa London Dry</div>
             <p class="gin-desc">Secco, aromatico, agrumato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
-            <div class="tag-row"><span class="pill">secco</span><span class="pill">aromatico</span><span class="pill">agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="boca mucho mas tropicale morbido fresco mango pesca fruttato">
-            <div class="gin-top"><div class="gin-name">Boca Mucho Mas</div></div>
+
+          <article class="gin-card" data-search="boca mucho mas tropicale, morbido, fresco. note evidenti di mango e pesca, molto dissetante. fetta di pesca o scorza di lime.">
+            <div class="gin-name">Boca Mucho Mas</div>
             <p class="gin-desc">Tropicale, morbido, fresco. Note evidenti di mango e pesca, molto dissetante.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pesca o scorza di lime.</p>
-            <div class="tag-row"><span class="pill">fruttato</span><span class="pill">tropicale</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="bombay sapphire premier cru agrumato elegante limone mandarino arancia">
-            <div class="gin-top"><div class="gin-name">Bombay Sapphire Premier Cru</div></div>
+
+          <article class="gin-card" data-search="bombay sapphire premier cru agrumato ampio ed elegante. limone murciano, mandarino e arancia in evidenza. twist di limone.">
+            <div class="gin-name">Bombay Sapphire Premier Cru</div>
             <p class="gin-desc">Agrumato ampio ed elegante. Limone murciano, mandarino e arancia in evidenza.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone.</p>
-            <div class="tag-row"><span class="pill">limone</span><span class="pill">mandarino</span><span class="pill">arancia</span></div>
           </article>
-          <article class="gin-card" data-search="ciauru gin pompelmo rosa fresco estivo prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Ciauru Gin</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="ciauru gin fresco, estivo, pompelmo rosa molto evidente. fetta di pompelmo rosa.">
+            <div class="gin-name">Ciauru Gin</div>
             <p class="gin-desc">Fresco, estivo, pompelmo rosa molto evidente.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
-            <div class="tag-row"><span class="pill">pompelmo rosa</span><span class="pill">fresco</span><span class="pill">estivo</span></div>
           </article>
-          <article class="gin-card" data-search="etsu double yuzu agrumato elegante yuzu limone pulito">
-            <div class="gin-top"><div class="gin-name">Etsu Double Yuzu</div></div>
+
+          <article class="gin-card" data-search="etsu double yuzu molto agrumato, fine ed elegante. yuzu e limone dominanti. twist di limone o yuzu disidratato.">
+            <div class="gin-name">Etsu Double Yuzu</div>
             <p class="gin-desc">Molto agrumato, fine ed elegante. Yuzu e limone dominanti.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o yuzu disidratato.</p>
-            <div class="tag-row"><span class="pill">yuzu</span><span class="pill">elegante</span><span class="pill">limone</span></div>
           </article>
-          <article class="gin-card" data-search="garnet gin floreale fruttato melograno rosa ibisco profumato morbido">
-            <div class="gin-top"><div class="gin-name">Garnet Gin</div></div>
+
+          <article class="gin-card" data-search="garnet gin floreale e fruttato. melograno, rosa e ibisco lo rendono morbido e profumato. chicchi di melograno o petali eduli.">
+            <div class="gin-name">Garnet Gin</div>
             <p class="gin-desc">Floreale e fruttato. Melograno, rosa e ibisco lo rendono morbido e profumato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Chicchi di melograno o petali eduli.</p>
-            <div class="tag-row"><span class="pill">melograno</span><span class="pill">floreale</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="malfy rosa succoso morbido pompelmo rosa amaricante">
-            <div class="gin-top"><div class="gin-name">Gin Malfy Rosa</div></div>
-            <p class="gin-desc">Succoso, morbido. Pompelmo rosa in primo piano con finale amaricante.</p>
-            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
-            <div class="tag-row"><span class="pill">succoso</span><span class="pill">agrumato</span><span class="pill">morbido</span></div>
-          </article>
-          <article class="gin-card" data-search="ginsanto e cantucci piatto al bicchiere old tom toscano cantucci vinsanto morbido dolce speziato">
-            <div class="gin-top"><div class="gin-name">Ginsanto e Cantucci Piatto al Bicchiere</div></div>
+
+          <article class="gin-card" data-search="ginsanto e cantucci piatto al bicchiere old tom toscano, morbido e avvolgente, con richiami dolci e gastronomici che ricordano cantucci e vinsanto. scorza d’arancia o piccola nota biscotto a lato servizio.">
+            <div class="gin-name">Ginsanto e Cantucci Piatto al Bicchiere</div>
             <p class="gin-desc">Old Tom toscano, morbido e avvolgente, con richiami dolci e gastronomici che ricordano cantucci e Vinsanto.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o piccola nota biscotto a lato servizio.</p>
-            <div class="tag-row"><span class="pill">old tom</span><span class="pill">gastronomico</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="j rose floreale fruttato leggermente agrumato speziato prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">J Rose</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="j rose floreale, fruttato, leggermente agrumato e speziato. petali di rosa o scorza di pompelmo.">
+            <div class="gin-name">J Rose</div>
             <p class="gin-desc">Floreale, fruttato, leggermente agrumato e speziato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Petali di rosa o scorza di pompelmo.</p>
-            <div class="tag-row"><span class="pill">floreale</span><span class="pill">fruttato</span><span class="pill">speziato</span></div>
           </article>
-          <article class="gin-card" data-search="paloma gin agrumato pulito pompelmo rosa fresco balsamico">
-            <div class="gin-top"><div class="gin-name">Paloma Gin</div></div>
+
+          <article class="gin-card" data-search="paloma gin agrumato e pulito. pompelmo rosa dominante con taglio fresco-balsamico. fetta di pompelmo rosa.">
+            <div class="gin-name">Paloma Gin</div>
             <p class="gin-desc">Agrumato e pulito. Pompelmo rosa dominante con taglio fresco-balsamico.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
-            <div class="tag-row"><span class="pill">agrumato</span><span class="pill">pompelmo rosa</span><span class="pill">fresco</span></div>
           </article>
-          <article class="gin-card" data-search="tanqueray ten secco pulito classico agrumato prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Tanqueray Ten</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="tanqueray ten secco, pulito, classico, agrumato. pompelmo rosa.">
+            <div class="gin-name">Tanqueray Ten</div>
             <p class="gin-desc">Secco, pulito, classico, agrumato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Pompelmo rosa.</p>
-            <div class="tag-row"><span class="pill">classico</span><span class="pill">pulito</span><span class="pill">agrumato</span></div>
           </article>
         </div>
       </details>
 
-      <details class="category" data-category="floreali">
-        <summary class="category-header"><h3>🌸 Floreali e morbidi</h3><div class="category-meta">Più rotondi, eleganti, profumati</div></summary>
+      <details class="category" data-category="floreali e morbidi">
+        <summary class="category-header">
+          <h3>🌸 Floreali e morbidi</h3>
+          <div class="category-meta">15 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="another hendrick's floreale morbido aromatico fresco rosa cetriolo cacao fiori d'arancio">
-            <div class="gin-top"><div class="gin-name">Another Hendrick’s</div></div>
+          <article class="gin-card" data-search="another hendrick’s floreale, aromatico e morbido, con firma fresca e profumata nello stile hendrick’s. cetriolo.">
+            <div class="gin-name">Another Hendrick’s</div>
             <p class="gin-desc">Floreale, aromatico e morbido, con firma fresca e profumata nello stile Hendrick’s.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Cetriolo.</p>
-            <div class="tag-row"><span class="pill">floreale</span><span class="pill">aromatico</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="bobby's floreale agrumato citronella spezie fini complesso">
-            <div class="gin-top"><div class="gin-name">Bobby’s</div></div>
+
+          <article class="gin-card" data-search="bobby’s floreale e agrumato. citronella e spezie fini, complesso ma leggibile. spicchio d’arancia con 3 chiodi di garofano.">
+            <div class="gin-name">Bobby’s</div>
             <p class="gin-desc">Floreale e agrumato. Citronella e spezie fini, complesso ma leggibile.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Spicchio d’arancia con 3 chiodi di garofano.</p>
-            <div class="tag-row"><span class="pill">citronella</span><span class="pill">floreale</span><span class="pill">agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="dr mason morbido rotondo mediterraneo salicornia tonka floreale salino">
-            <div class="gin-top"><div class="gin-name">Dr Mason</div></div>
+
+          <article class="gin-card" data-search="dr mason morbido e rotondo. mediterraneo con salicornia e fava tonka, chiusura leggermente salina. limone o salicornia se disponibile.">
+            <div class="gin-name">Dr Mason</div>
             <p class="gin-desc">Morbido e rotondo. Mediterraneo con salicornia e fava tonka, chiusura leggermente salina.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Limone o salicornia se disponibile.</p>
-            <div class="tag-row"><span class="pill">tonka</span><span class="pill">salicornia</span><span class="pill">rotondo</span></div>
           </article>
-          <article class="gin-card" data-search="frantuono morbido delicato mediterraneo sentori di oliva prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">Frantuono</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="frantuono morbido, delicato, mediterraneo, con sentori di oliva. oliva o scorza di limone.">
+            <div class="gin-name">Frantuono</div>
             <p class="gin-desc">Morbido, delicato, mediterraneo, con sentori di oliva.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Oliva o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">delicato</span><span class="pill">oliva</span><span class="pill">mediterraneo</span></div>
           </article>
-          <article class="gin-card" data-search="gin del professore la madame floreale speziato dolce cannella vaniglia agrumi morbido">
-            <div class="gin-top"><div class="gin-name">Gin del Professore La Madame</div></div>
+
+          <article class="gin-card" data-search="gin del professore la madame floreale, speziato dolce e morbido. cannella, vaniglia e agrumi, molto articolato. scorza d’arancia.">
+            <div class="gin-name">Gin del Professore La Madame</div>
             <p class="gin-desc">Floreale, speziato dolce e morbido. Cannella, vaniglia e agrumi, molto articolato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia.</p>
-            <div class="tag-row"><span class="pill">vaniglia</span><span class="pill">cannella</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="hendrick's fresco aromatico floreale prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Hendrick’s</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="gin malfy rosa succoso, morbido. pompelmo rosa in primo piano con finale amaricante. fetta di pompelmo rosa.">
+            <div class="gin-name">Gin Malfy Rosa</div>
+            <p class="gin-desc">Succoso, morbido. Pompelmo rosa in primo piano con finale amaricante.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
+          </article>
+
+          <article class="gin-card" data-search="hendrick’s fresco, aromatico, floreale. 3 rondelle sottili di cetriolo.">
+            <div class="gin-name">Hendrick’s</div>
             <p class="gin-desc">Fresco, aromatico, floreale.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> 3 rondelle sottili di cetriolo.</p>
-            <div class="tag-row"><span class="pill">fresco</span><span class="pill">floreale</span><span class="pill">aromatico</span></div>
           </article>
-          <article class="gin-card" data-search="kranebet botanic gin morbido aromatico ginepro genziana assenzio romano amaro dolce">
-            <div class="gin-top"><div class="gin-name">Kranebet Botanic Gin</div></div>
+
+          <article class="gin-card" data-search="kranebet botanic gin morbido e aromatico, con ginepro predominante e sfumature amaricanti di genziana e assenzio romano. scorza di limone o bacca di ginepro.">
+            <div class="gin-name">Kranebet Botanic Gin</div>
             <p class="gin-desc">Morbido e aromatico, con ginepro predominante e sfumature amaricanti di genziana e assenzio romano.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o bacca di ginepro.</p>
-            <div class="tag-row"><span class="pill">ginepro</span><span class="pill">morbido</span><span class="pill">amaricante</span></div>
           </article>
-          <article class="gin-card" data-search="malanova old tom rotondo dolce morbido speziato ginepro smussato">
-            <div class="gin-top"><div class="gin-name">Malanova Old Tom</div></div>
+
+          <article class="gin-card" data-search="malanova old tom stile old tom: rotondo, leggermente dolce. ginepro smussato con vena speziata. scorza d’arancia o fiore edule.">
+            <div class="gin-name">Malanova Old Tom</div>
             <p class="gin-desc">Stile Old Tom: rotondo, leggermente dolce. Ginepro smussato con vena speziata.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o fiore edule.</p>
-            <div class="tag-row"><span class="pill">old tom</span><span class="pill">rotondo</span><span class="pill">leggermente dolce</span></div>
           </article>
-          <article class="gin-card" data-search="monkey 47 complesso morbido speziato elegante prezzo 14 euro">
-            <div class="gin-top"><div class="gin-name">Monkey 47</div><div class="price-badge">14 €</div></div>
+
+          <article class="gin-card" data-search="monkey 47 complesso, morbido, speziato, elegante. scorza di pompelmo o limone.">
+            <div class="gin-name">Monkey 47</div>
             <p class="gin-desc">Complesso, morbido, speziato, elegante.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di pompelmo o limone.</p>
-            <div class="tag-row"><span class="pill">complesso</span><span class="pill">elegante</span><span class="pill">speziato</span></div>
           </article>
-          <article class="gin-card" data-search="nordes morbido fresco fruttato prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Nordes</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="nordes morbido, fresco, fruttato. uva bianca o scorza di limone.">
+            <div class="gin-name">Nordes</div>
             <p class="gin-desc">Morbido, fresco, fruttato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Uva bianca o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">morbido</span><span class="pill">fresco</span><span class="pill">fruttato</span></div>
           </article>
-          <article class="gin-card" data-search="oxley london dry cristallino morbido pompelmo cedro mandorla tostata">
-            <div class="gin-top"><div class="gin-name">Oxley London Dry Gin</div></div>
+
+          <article class="gin-card" data-search="oxley london dry gin cristallino e morbido. pompelmo, cedro e mandorla tostata; distillato a freddo. twist di pompelmo o cedro.">
+            <div class="gin-name">Oxley London Dry Gin</div>
             <p class="gin-desc">Cristallino e morbido. Pompelmo, cedro e mandorla tostata; distillato a freddo.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Twist di pompelmo o cedro.</p>
-            <div class="tag-row"><span class="pill">pompelmo</span><span class="pill">cedro</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="peter in florence fresco vellutato iris floreale agrumato">
-            <div class="gin-top"><div class="gin-name">Peter in Florence</div></div>
-            <p class="gin-desc">Fresco e vellutato. L'iris gli dà un tocco inconfondibilmente profumato.</p>
+
+          <article class="gin-card" data-search="peter in florence fresco e vellutato. l’iris gli dà un tocco inconfondibilmente profumato. bergamotto o scorza di limone.">
+            <div class="gin-name">Peter in Florence</div>
+            <p class="gin-desc">Fresco e vellutato. L’iris gli dà un tocco inconfondibilmente profumato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Bergamotto o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">iris</span><span class="pill">vellutato</span><span class="pill">floreale</span></div>
           </article>
-          <article class="gin-card" data-search="piero dry morbido elegante speziato prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">Piero Dry Gin</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="piero dry gin morbido, elegante, speziato. scorza di limone.">
+            <div class="gin-name">Piero Dry Gin</div>
             <p class="gin-desc">Morbido, elegante, speziato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
-            <div class="tag-row"><span class="pill">morbido</span><span class="pill">elegante</span><span class="pill">speziato</span></div>
           </article>
-          <article class="gin-card" data-search="silent pool complesso elegante lavanda camomilla sambuco miele floreale">
-            <div class="gin-top"><div class="gin-name">Silent Pool</div></div>
+
+          <article class="gin-card" data-search="silent pool complesso ed elegante. lavanda, camomilla, sambuco e un corpo ricco. scorza d’arancia o lavanda leggera.">
+            <div class="gin-name">Silent Pool</div>
             <p class="gin-desc">Complesso ed elegante. Lavanda, camomilla, sambuco e un corpo ricco.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o lavanda leggera.</p>
-            <div class="tag-row"><span class="pill">lavanda</span><span class="pill">sambuco</span><span class="pill">elegante</span></div>
           </article>
         </div>
       </details>
 
-      <details class="category" data-category="erbacei">
-        <summary class="category-header"><h3>🌿 Erbacei e mediterranei</h3><div class="category-meta">Territoriali, verdi, balsamici</div></summary>
+      <details class="category" data-category="erbacei e mediterranei">
+        <summary class="category-header">
+          <h3>🌿 Erbacei e mediterranei</h3>
+          <div class="category-meta">17 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="amazzoni dry gin erbaceo complesso agrumato balsamico vegetale">
-            <div class="gin-top"><div class="gin-name">Amazzoni Dry Gin</div></div>
+          <article class="gin-card" data-search="amazzoni dry gin erbaceo e complesso. agrumato e balsamico, con anima vegetale molto chiara. scorza di lime o foglia di alloro.">
+            <div class="gin-name">Amazzoni Dry Gin</div>
             <p class="gin-desc">Erbaceo e complesso. Agrumato e balsamico, con anima vegetale molto chiara.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di lime o foglia di alloro.</p>
-            <div class="tag-row"><span class="pill">erbaceo</span><span class="pill">balsamico</span><span class="pill">vegetale</span></div>
           </article>
-          <article class="gin-card" data-search="arcipelago mediterraneo limone rosmarino basilico timo elicriso">
-            <div class="gin-top"><div class="gin-name">Arcipelago</div></div>
+
+          <article class="gin-card" data-search="arcipelago mediterraneo netto. limone, rosmarino, basilico, timo ed elicriso toscano. scorza di limone o rametto di rosmarino.">
+            <div class="gin-name">Arcipelago</div>
             <p class="gin-desc">Mediterraneo netto. Limone, rosmarino, basilico, timo ed elicriso toscano.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o rametto di rosmarino.</p>
-            <div class="tag-row"><span class="pill">rosmarino</span><span class="pill">basilico</span><span class="pill">elicriso</span></div>
           </article>
-          <article class="gin-card" data-search="argintario macchia mediterranea lentisco finocchietto marittimo costiero balsamico">
-            <div class="gin-top"><div class="gin-name">Argintario</div></div>
+
+          <article class="gin-card" data-search="argintario macchia mediterranea. lentisco e finocchietto marittimo, costiero e balsamico. rosmarino o scorza di limone.">
+            <div class="gin-name">Argintario</div>
             <p class="gin-desc">Macchia mediterranea. Lentisco e finocchietto marittimo, costiero e balsamico.</p>
-            <div class="tag-row"><span class="pill">lentisco</span><span class="pill">finocchietto</span><span class="pill">balsamico</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
           </article>
-          <article class="gin-card" data-search="ariqatuono stile giapponese elegante pulito agrumato leggermente speziato prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">Arigatuono</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="arigatuono stile giapponese, elegante, pulito, agrumato, leggermente speziato. scorza di limone o yuzu disidratato.">
+            <div class="gin-name">Arigatuono</div>
             <p class="gin-desc">Stile giapponese, elegante, pulito, agrumato, leggermente speziato.</p>
-            <div class="tag-row"><span class="pill">stile giapponese</span><span class="pill">pulito</span><span class="pill">agrumato</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o yuzu disidratato.</p>
           </article>
-          <article class="gin-card" data-search="big gino gineproso morbido pomelo vegetale leggero">
-            <div class="gin-top"><div class="gin-name">Big Gino</div></div>
+
+          <article class="gin-card" data-search="big gino gineproso ma morbido. pomelo in evidenza con finale vegetale leggero. pompelo rosa o scorza di pomelo.">
+            <div class="gin-name">Big Gino</div>
             <p class="gin-desc">Gineproso ma morbido. Pomelo in evidenza con finale vegetale leggero.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Pompelo rosa o scorza di pomelo.</p>
-            <div class="tag-row"><span class="pill">pomelo</span><span class="pill">gineproso</span><span class="pill">morbido</span></div>
           </article>
-          <article class="gin-card" data-search="big gino pepino loco cetriolo limone menta vegetale fresco">
-            <div class="gin-top"><div class="gin-name">Big Gino Pepino Loco</div></div>
+
+          <article class="gin-card" data-search="big gino pepino loco vegetale e super fresco. cetriolo dominante, accompagnato da limone e menta. cetriolo e menta.">
+            <div class="gin-name">Big Gino Pepino Loco</div>
             <p class="gin-desc">Vegetale e super fresco. Cetriolo dominante, accompagnato da limone e menta.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Cetriolo e menta.</p>
-            <div class="tag-row"><span class="pill">cetriolo</span><span class="pill">menta</span><span class="pill">vegetale</span></div>
           </article>
-          <article class="gin-card" data-search="d'stillia vegetale resinoso pino rosmarino critmo pantelleria">
-            <div class="gin-top"><div class="gin-name">D’stillia</div></div>
+
+          <article class="gin-card" data-search="d’stillia vegetale e resinoso. pino, rosmarino e critmo: botaniche selvatiche di pantelleria. rosmarino o scorza di limone.">
+            <div class="gin-name">D’stillia</div>
             <p class="gin-desc">Vegetale e resinoso. Pino, rosmarino e critmo: botaniche selvatiche di Pantelleria.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">pino</span><span class="pill">critmo</span><span class="pill">resinoso</span></div>
           </article>
-          <article class="gin-card" data-search="dhea hops secco citrico luppolo pompia erbaceo">
-            <div class="gin-top"><div class="gin-name">Dhea Hops</div></div>
+
+          <article class="gin-card" data-search="dhea hops secco e citrico. forte firma di luppolo, resa tesa dalla pompìa. scorza di pompelmo o foglia aromatica fresca.">
+            <div class="gin-name">Dhea Hops</div>
             <p class="gin-desc">Secco e citrico. Forte firma di luppolo, resa tesa dalla Pompìa.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di pompelmo o foglia aromatica fresca.</p>
-            <div class="tag-row"><span class="pill">luppolo</span><span class="pill">pompìa</span><span class="pill">secco</span></div>
           </article>
-          <article class="gin-card" data-search="engine erbaceo fresco morbido salvia limone liquirizia">
-            <div class="gin-top"><div class="gin-name">Engine</div></div>
+
+          <article class="gin-card" data-search="engine erbaceo fresco e morbido. salvia e limone sono il cuore, con un tocco di liquirizia. scorza di limone e salvia.">
+            <div class="gin-name">Engine</div>
             <p class="gin-desc">Erbaceo fresco e morbido. Salvia e limone sono il cuore, con un tocco di liquirizia.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone e salvia.</p>
-            <div class="tag-row"><span class="pill">salvia</span><span class="pill">limone</span><span class="pill">liquirizia</span></div>
           </article>
-          <article class="gin-card" data-search="gin amiata montano boschivo abete bianco angelica timo resina">
-            <div class="gin-top"><div class="gin-name">Gin Amiata</div></div>
+
+          <article class="gin-card" data-search="gin amiata montano e boschivo. abete bianco, angelica e timo: profumi netti di montagna e resina. ago di rosmarino o scorza di limone.">
+            <div class="gin-name">Gin Amiata</div>
             <p class="gin-desc">Montano e boschivo. Abete bianco, angelica e timo: profumi netti di montagna e resina.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Ago di rosmarino o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">abete bianco</span><span class="pill">boschivo</span><span class="pill">resinoso</span></div>
           </article>
-          <article class="gin-card" data-search="lavico mangiantosa intenso secco rosmarino pepe nero maggiorana etneo">
-            <div class="gin-top"><div class="gin-name">Lavico Mangiantosa</div></div>
-            <p class="gin-desc">Intenso e secco. Rosmarino, pepe nero e maggiorana per un'impronta etnea.</p>
-            <div class="tag-row"><span class="pill">pepe nero</span><span class="pill">maggiorana</span><span class="pill">etneo</span></div>
+
+          <article class="gin-card" data-search="lavico mangiantosa intenso e secco. rosmarino, pepe nero e maggiorana per un’impronta etnea. rosmarino o scorza di limone.">
+            <div class="gin-name">Lavico Mangiantosa</div>
+            <p class="gin-desc">Intenso e secco. Rosmarino, pepe nero e maggiorana per un’impronta etnea.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
           </article>
-          <article class="gin-card" data-search="mediterraneo london dry gin mediterraneo agrumato erbaceo balsamico floreale morbido sapido">
-            <div class="gin-top"><div class="gin-name">Mediterraneo London Dry Gin</div></div>
+
+          <article class="gin-card" data-search="mediterraneo london dry gin mediterraneo, agrumato ed erbaceo, con equilibrio tra note balsamiche, morbidezza e lieve sapidità. rosmarino o zest di limone.">
+            <div class="gin-name">Mediterraneo London Dry Gin</div>
             <p class="gin-desc">Mediterraneo, agrumato ed erbaceo, con equilibrio tra note balsamiche, morbidezza e lieve sapidità.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o zest di limone.</p>
-            <div class="tag-row"><span class="pill">mediterraneo</span><span class="pill">erbaceo</span><span class="pill">balsamico</span></div>
           </article>
-          <article class="gin-card" data-search="milano elite dry gin elegante agrumato balsamico erbaceo secco armonioso speziato">
-            <div class="gin-top"><div class="gin-name">Milano Elite Dry Gin</div></div>
+
+          <article class="gin-card" data-search="milano elite dry gin elegante, secco e armonioso, con agrumi mediterranei, note erbacee, balsamiche e finale leggermente speziato. scorza di limone o arancia.">
+            <div class="gin-name">Milano Elite Dry Gin</div>
             <p class="gin-desc">Elegante, secco e armonioso, con agrumi mediterranei, note erbacee, balsamiche e finale leggermente speziato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o arancia.</p>
-            <div class="tag-row"><span class="pill">elegante</span><span class="pill">agrumato</span><span class="pill">erbaceo</span></div>
           </article>
-          <article class="gin-card" data-search="nevaio gin puro gineproso balsamico secco montano essenziale dolomitico">
-            <div class="gin-top"><div class="gin-name">Nevaio Gin</div></div>
+
+          <article class="gin-card" data-search="nevaio gin essenziale, puro e molto gineproso, con timbro balsamico, secco e montano. twist di limone o nessun garnish invasivo.">
+            <div class="gin-name">Nevaio Gin</div>
             <p class="gin-desc">Essenziale, puro e molto gineproso, con timbro balsamico, secco e montano.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o nessun garnish invasivo.</p>
-            <div class="tag-row"><span class="pill">gineproso</span><span class="pill">montano</span><span class="pill">essenziale</span></div>
           </article>
-          <article class="gin-card" data-search="punta mari gin mediterraneo fresco floreale agrumato mirto rosa canina balsamico">
-            <div class="gin-top"><div class="gin-name">Punta Mari</div></div>
+
+          <article class="gin-card" data-search="punta mari mediterraneo, fresco e avvolgente, con mirto, rosa canina e agrumi su fondo balsamico. rametto di mirto o scorza di limone.">
+            <div class="gin-name">Punta Mari</div>
             <p class="gin-desc">Mediterraneo, fresco e avvolgente, con mirto, rosa canina e agrumi su fondo balsamico.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Rametto di mirto o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">mirto</span><span class="pill">rosa canina</span><span class="pill">agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="rame italian dry alternativa italiana gin mare mediterraneo aromatico leggermente agrumato prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Rame Italian Dry</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="rame italian dry mediterraneo, aromatico, leggermente agrumato; proposto come alternativa italiana al gin mare. rosmarino o oliva.">
+            <div class="gin-name">Rame Italian Dry</div>
             <p class="gin-desc">Mediterraneo, aromatico, leggermente agrumato; proposto come alternativa italiana al Gin Mare.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o oliva.</p>
-            <div class="tag-row"><span class="pill">mediterraneo</span><span class="pill">aromatico</span><span class="pill">leggermente agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="upperhand fresco estivo morbido basilico limone prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Upperhand</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="upperhand fresco, estivo, morbido, con sentori di basilico e limone. basilico e scorza di limone.">
+            <div class="gin-name">Upperhand</div>
             <p class="gin-desc">Fresco, estivo, morbido, con sentori di basilico e limone.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Basilico e scorza di limone.</p>
-            <div class="tag-row"><span class="pill">basilico</span><span class="pill">limone</span><span class="pill">estivo</span></div>
           </article>
-          <article class="gin-card" data-search="xoriguer mahon mediterraneo resinoso base vinica erbaceo balsamico">
-            <div class="gin-top"><div class="gin-name">Xoriguer Mahon Gin</div></div>
+
+          <article class="gin-card" data-search="xoriguer mahon gin mediterraneo e resinoso. base di alcol vinico che lo rende rotondo, erbaceo e balsamico. scorza di limone.">
+            <div class="gin-name">Xoriguer Mahon Gin</div>
             <p class="gin-desc">Mediterraneo e resinoso. Base di alcol vinico che lo rende rotondo, erbaceo e balsamico.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
-            <div class="tag-row"><span class="pill">base vinica</span><span class="pill">resinoso</span><span class="pill">erbaceo</span></div>
           </article>
         </div>
       </details>
 
-      <details class="category" data-category="sapidi">
-        <summary class="category-header"><h3>🌊 Sapidi e marini</h3><div class="category-meta">Gastronomici, costieri, minerali</div></summary>
+      <details class="category" data-category="sapidi e marini">
+        <summary class="category-header">
+          <h3>🌊 Sapidi e marini</h3>
+          <div class="category-meta">7 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="bandito aromatico fresco erbaceo complesso richiamo mare">
-            <div class="gin-top"><div class="gin-name">Bandito</div></div>
+          <article class="gin-card" data-search="bandito aromatico e fresco. erbaceo e complesso con chiaro richiamo marino. zeste di limone o oliva delicata.">
+            <div class="gin-name">Bandito</div>
             <p class="gin-desc">Aromatico e fresco. Erbaceo e complesso con chiaro richiamo marino.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Zeste di limone o oliva delicata.</p>
-            <div class="tag-row"><span class="pill">marino</span><span class="pill">erbaceo</span><span class="pill">fresco</span></div>
           </article>
-          <article class="gin-card" data-search="capperi gin secco salino marino mediterraneo cappero">
-            <div class="gin-top"><div class="gin-name">Capperi Gin</div></div>
+
+          <article class="gin-card" data-search="capperi gin secco e salino. i fiori di cappero lo portano su un registro marino e mediterraneo. cappero in fiore o scorza di limone.">
+            <div class="gin-name">Capperi Gin</div>
             <p class="gin-desc">Secco e salino. I fiori di cappero lo portano su un registro marino e mediterraneo.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Cappero in fiore o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">cappero</span><span class="pill">salino</span><span class="pill">mediterraneo</span></div>
           </article>
-          <article class="gin-card" data-search="gin brace sapido affumicato bbq gastronomico speziato">
-            <div class="gin-top"><div class="gin-name">Gin Brace</div></div>
+
+          <article class="gin-card" data-search="gin brace sapido e affumicato. taglio da cucina/bbq, molto gastronomico e speziato. scorza di limone o rosmarino.">
+            <div class="gin-name">Gin Brace</div>
             <p class="gin-desc">Sapido e affumicato. Taglio da cucina/BBQ, molto gastronomico e speziato.</p>
-            <div class="tag-row"><span class="pill">sapido</span><span class="pill">affumicato</span><span class="pill">gastronomico</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o rosmarino.</p>
           </article>
-          <article class="gin-card" data-search="gin sale gineproso fresco sale marino finale salino balsamico">
-            <div class="gin-top"><div class="gin-name">Gin Sale</div></div>
+
+          <article class="gin-card" data-search="gin sale gineproso e fresco. sale marino, finale salino e balsamico. lemon zest o oliva verde delicata.">
+            <div class="gin-name">Gin Sale</div>
             <p class="gin-desc">Gineproso e fresco. Sale marino, finale salino e balsamico.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Lemon zest o oliva verde delicata.</p>
-            <div class="tag-row"><span class="pill">sale marino</span><span class="pill">gineproso</span><span class="pill">fresco</span></div>
           </article>
-          <article class="gin-card" data-search="laguna minerale contemporaneo salicornia asparago di mare lagunare">
-            <div class="gin-top"><div class="gin-name">Laguna</div></div>
+
+          <article class="gin-card" data-search="laguna minerale e contemporaneo. la salicornia gli dà un taglio lagunare molto chiaro. salicornia o scorza di limone.">
+            <div class="gin-name">Laguna</div>
             <p class="gin-desc">Minerale e contemporaneo. La salicornia gli dà un taglio lagunare molto chiaro.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Salicornia o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">salicornia</span><span class="pill">minerale</span><span class="pill">lagunare</span></div>
           </article>
-          <article class="gin-card" data-search="poseidon marino fresco agrumato prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">Poseidon</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="poseidon marino, fresco, agrumato. scorza di limone o nota marina discreta.">
+            <div class="gin-name">Poseidon</div>
             <p class="gin-desc">Marino, fresco, agrumato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o nota marina discreta.</p>
-            <div class="tag-row"><span class="pill">marino</span><span class="pill">fresco</span><span class="pill">agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="presobene london dry gin gastronomico mediterraneo limone capperi sale cervia minerale floreale balsamico">
-            <div class="gin-top"><div class="gin-name">Presobene</div></div>
+
+          <article class="gin-card" data-search="presobene gastronomico e mediterraneo, con limone, capperi e sale dolce di cervia; pulito, minerale e floreale. foglia di cappero, limone o oliva delicata.">
+            <div class="gin-name">Presobene</div>
             <p class="gin-desc">Gastronomico e mediterraneo, con limone, capperi e sale dolce di Cervia; pulito, minerale e floreale.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Foglia di cappero, limone o oliva delicata.</p>
-            <div class="tag-row"><span class="pill">gastronomico</span><span class="pill">capperi</span><span class="pill">minerale</span></div>
           </article>
         </div>
       </details>
 
-      <details class="category" data-category="speziati">
-        <summary class="category-header"><h3>🌶️ Speziati e orientali</h3><div class="category-meta">Più caldi, avvolgenti, decisi</div></summary>
+      <details class="category" data-category="speziati e orientali">
+        <summary class="category-header">
+          <h3>🌶️ Speziati e orientali</h3>
+          <div class="category-meta">7 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="gin del bisonte peperoncino trinidad perfume tropicale floreale agrumato balsamico intenso">
-            <div class="gin-top"><div class="gin-name">Il Gin del Bisonte</div></div>
+          <article class="gin-card" data-search="il gin del bisonte intenso e originale, con peperoncino trinidad perfume, sentori tropicali, floreali e agrumati senza vera piccantezza. scorza d’arancia o pompelmo.">
+            <div class="gin-name">Il Gin del Bisonte</div>
             <p class="gin-desc">Intenso e originale, con peperoncino Trinidad Perfume, sentori tropicali, floreali e agrumati senza vera piccantezza.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o pompelmo.</p>
-            <div class="tag-row"><span class="pill">peperoncino</span><span class="pill">tropicale</span><span class="pill">agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="maite fiamma secco complesso leggermente affumicato prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">Maite Fiamma</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="maite fiamma secco, complesso, leggermente affumicato. scorza d’arancia.">
+            <div class="gin-name">Maite Fiamma</div>
             <p class="gin-desc">Secco, complesso, leggermente affumicato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia.</p>
-            <div class="tag-row"><span class="pill">secco</span><span class="pill">complesso</span><span class="pill">affumicato</span></div>
           </article>
-          <article class="gin-card" data-search="maite furia agrumato pepato pepe etiope balsamico persistente">
-            <div class="gin-top"><div class="gin-name">Maite Furia</div></div>
+
+          <article class="gin-card" data-search="maite furia agrumato e pepato. il pepe etiope aggiunge una speziatura fruttata pungente. pepe rosa o zeste d’arancia.">
+            <div class="gin-name">Maite Furia</div>
             <p class="gin-desc">Agrumato e pepato. Il pepe etiope aggiunge una speziatura fruttata pungente.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Pepe rosa o zeste d’arancia.</p>
-            <div class="tag-row"><span class="pill">pepato</span><span class="pill">balsamico</span><span class="pill">persistente</span></div>
           </article>
-          <article class="gin-card" data-search="maite spiaggialunga aromatico mediterraneo leggermente speziato prezzo 12 euro">
-            <div class="gin-top"><div class="gin-name">Maite Spiaggialunga</div><div class="price-badge">12 €</div></div>
+
+          <article class="gin-card" data-search="maite spiaggialunga aromatico, mediterraneo, leggermente speziato. rosmarino o scorza di limone.">
+            <div class="gin-name">Maite Spiaggialunga</div>
             <p class="gin-desc">Aromatico, mediterraneo, leggermente speziato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">aromatico</span><span class="pill">mediterraneo</span><span class="pill">leggermente speziato</span></div>
           </article>
-          <article class="gin-card" data-search="opihr orientale terroso cumino cardamomo pepe nero">
-            <div class="gin-top"><div class="gin-name">Opihr</div></div>
+
+          <article class="gin-card" data-search="opihr orientale e terroso. cumino, cardamomo e pepe nero dominano la scena. scorza d’arancia o cardamomo.">
+            <div class="gin-name">Opihr</div>
             <p class="gin-desc">Orientale e terroso. Cumino, cardamomo e pepe nero dominano la scena.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o cardamomo.</p>
-            <div class="tag-row"><span class="pill">cumino</span><span class="pill">cardamomo</span><span class="pill">pepe nero</span></div>
           </article>
-          <article class="gin-card" data-search="piero xmas caldo avvolgente cannella zenzero arancia balsamico natalizio">
-            <div class="gin-top"><div class="gin-name">Piero Xmas</div></div>
+
+          <article class="gin-card" data-search="piero xmas caldo e avvolgente. cannella, zenzero e arancia per un chiaro profilo natalizio. arancia disidratata e cannella.">
+            <div class="gin-name">Piero Xmas</div>
             <p class="gin-desc">Caldo e avvolgente. Cannella, zenzero e arancia per un chiaro profilo natalizio.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Arancia disidratata e cannella.</p>
-            <div class="tag-row"><span class="pill">cannella</span><span class="pill">zenzero</span><span class="pill">arancia</span></div>
           </article>
-          <article class="gin-card" data-search="rame london dry secco speziato pepato prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Rame London Dry</div><div class="price-badge">10 €</div></div>
+
+          <article class="gin-card" data-search="rame london dry secco, speziato, pepato. pepe nero leggero o scorza di limone.">
+            <div class="gin-name">Rame London Dry</div>
             <p class="gin-desc">Secco, speziato, pepato.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Pepe nero leggero o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">secco</span><span class="pill">speziato</span><span class="pill">pepato</span></div>
           </article>
         </div>
       </details>
 
-      <details class="category" data-category="gineprosi">
-        <summary class="category-header"><h3>🌲 Secchi e gineprosi</h3><div class="category-meta">Puliti, strutturati, da miscelazione classica</div></summary>
+      <details class="category" data-category="secchi e gineprosi">
+        <summary class="category-header">
+          <h3>🌲 Secchi e gineprosi</h3>
+          <div class="category-meta">6 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="bombay dry secco classico pulito prezzo 8 euro">
-            <div class="gin-top"><div class="gin-name">Bombay Dry</div><div class="price-badge">8 €</div></div>
+          <article class="gin-card" data-search="bombay dry secco, classico, pulito. lemon twist.">
+            <div class="gin-name">Bombay Dry</div>
             <p class="gin-desc">Secco, classico, pulito.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Lemon twist.</p>
-            <div class="tag-row"><span class="pill">secco</span><span class="pill">classico</span><span class="pill">pulito</span></div>
           </article>
-          <article class="gin-card" data-search="bombay sapphire secco speziato leggermente agrumato floreale prezzo 9 euro">
-            <div class="gin-top"><div class="gin-name">Bombay Sapphire</div><div class="price-badge">9 €</div></div>
+
+          <article class="gin-card" data-search="bombay sapphire secco, speziato, leggermente agrumato e floreale. spicchio di lime o zest di limone.">
+            <div class="gin-name">Bombay Sapphire</div>
             <p class="gin-desc">Secco, speziato, leggermente agrumato e floreale.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Spicchio di lime o zest di limone.</p>
-            <div class="tag-row"><span class="pill">secco</span><span class="pill">floreale</span><span class="pill">leggermente agrumato</span></div>
           </article>
-          <article class="gin-card" data-search="piucinque ultra secco classico ginepro salvia bergamotto angelica">
-            <div class="gin-top"><div class="gin-name">PiuCinque</div></div>
+
+          <article class="gin-card" data-search="piucinque ultra secco e classico. ginepro deciso, rifinito da salvia, bergamotto e angelica. scorza di bergamotto o limone.">
+            <div class="gin-name">PiuCinque</div>
             <p class="gin-desc">Ultra secco e classico. Ginepro deciso, rifinito da salvia, bergamotto e angelica.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di bergamotto o limone.</p>
-            <div class="tag-row"><span class="pill">ultra secco</span><span class="pill">salvia</span><span class="pill">bergamotto</span></div>
           </article>
-          <article class="gin-card" data-search="sipsmith vjop estremamente gineproso overproof resinoso secco cedro">
-            <div class="gin-top"><div class="gin-name">Sipsmith V.J.O.P.</div></div>
+
+          <article class="gin-card" data-search="sipsmith v.j.o.p. estremamente gineproso. overproof potente, resinoso e secco con note di legno di cedro. zest di lime o limone, molto essenziale.">
+            <div class="gin-name">Sipsmith V.J.O.P.</div>
             <p class="gin-desc">Estremamente gineproso. Overproof potente, resinoso e secco con note di legno di cedro.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Zest di lime o limone, molto essenziale.</p>
-            <div class="tag-row"><span class="pill">overproof</span><span class="pill">cedro</span><span class="pill">resinoso</span></div>
           </article>
-          <article class="gin-card" data-search="tarquin's cornish dry ginepro netto agrumi fresco secco pulito">
-            <div class="gin-top"><div class="gin-name">Tarquin’s Cornish Dry Gin</div></div>
+
+          <article class="gin-card" data-search="tarquin’s cornish dry gin ginepro netto e agrumi. partenza di foresta di pini, chiusura secca e pulita. twist di limone o pompelmo.">
+            <div class="gin-name">Tarquin’s Cornish Dry Gin</div>
             <p class="gin-desc">Ginepro netto e agrumi. Partenza di foresta di pini, chiusura secca e pulita.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o pompelmo.</p>
-            <div class="tag-row"><span class="pill">gineproso</span><span class="pill">secco</span><span class="pill">pulito</span></div>
           </article>
-          <article class="gin-card" data-search="boatyard old tom gin vellutato complesso frutta secca uvetta fico arancia caramellata speziato balsamico">
-            <div class="gin-top"><div class="gin-name">The Boatyard Old Tom</div></div>
+
+          <article class="gin-card" data-search="the boatyard old tom vellutato e complesso, con frutta secca, uvetta, scorza d’agrumi e finale setoso di arancia caramellata. twist d’arancia.">
+            <div class="gin-name">The Boatyard Old Tom</div>
             <p class="gin-desc">Vellutato e complesso, con frutta secca, uvetta, scorza d’agrumi e finale setoso di arancia caramellata.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Twist d’arancia.</p>
-            <div class="tag-row"><span class="pill">frutta secca</span><span class="pill">vellutato</span><span class="pill">caramellato</span></div>
           </article>
         </div>
-      </section>
+      </details>
 
-      <details class="category" data-category="classici">
-        <summary class="category-header"><h3>📋 Altri gin della carta</h3><div class="category-meta">Inseriti dalla schermata allegata</div></summary>
+      <details class="category" data-category="altri gin della carta">
+        <summary class="category-header">
+          <h3>📋 Altri gin della carta</h3>
+          <div class="category-meta">2 gin</div>
+        </summary>
         <div class="gin-grid">
-          <article class="gin-card" data-search="brockman's morbido frutti rossi prezzo 10 euro">
-            <div class="gin-top"><div class="gin-name">Brockman’s</div><div class="price-badge">10 €</div></div>
+          <article class="gin-card" data-search="brockman’s morbido, con frutti rossi in evidenza. frutti rossi o scorza d’arancia.">
+            <div class="gin-name">Brockman’s</div>
             <p class="gin-desc">Morbido, con frutti rossi in evidenza.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Frutti rossi o scorza d’arancia.</p>
-            <div class="tag-row"><span class="pill">morbido</span><span class="pill">frutti rossi</span></div>
           </article>
-          <article class="gin-card" data-search="ginecologo sensualmente gin fresco sensuale ginepro rosa limone pepe rosa agrumato">
-            <div class="gin-top"><div class="gin-name">Ginecologo Sensualmente</div></div>
+
+          <article class="gin-card" data-search="ginecologo sensualmente fresco e seducente, con ginepro, petali di rosa, scorza di limone e un tocco speziato di pepe rosa. petali di rosa o scorza di limone.">
+            <div class="gin-name">Ginecologo Sensualmente</div>
             <p class="gin-desc">Fresco e seducente, con ginepro, petali di rosa, scorza di limone e un tocco speziato di pepe rosa.</p>
             <p class="gin-garnish"><strong>Garnish:</strong> Petali di rosa o scorza di limone.</p>
-            <div class="tag-row"><span class="pill">rosa</span><span class="pill">limone</span><span class="pill">pepe rosa</span></div>
           </article>
         </div>
-      </section>
+      </details>
+
     </section>
   </main>
 
@@ -762,62 +930,51 @@
 
   <script>
     (() => {
-      const themeToggle = document.querySelector('[data-theme-toggle]');
       const root = document.documentElement;
-      let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.setAttribute('data-theme', theme);
-      const setIcon = () => {
-        themeToggle.innerHTML = theme === 'dark'
-          ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
-          : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-        themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro');
-      };
+      const t = document.querySelector("[data-theme-toggle]");
+      const icon = document.getElementById("themeIcon");
+
+      let theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      root.setAttribute("data-theme", theme);
+
+      function setIcon() {
+        icon.textContent = theme === "dark" ? "☀️" : "🌙";
+        t.setAttribute("aria-label", theme === "dark" ? "Passa al tema chiaro" : "Passa al tema scuro");
+      }
+
       setIcon();
-      themeToggle.addEventListener('click', () => {
-        theme = theme === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', theme);
+
+      t.addEventListener("click", () => {
+        theme = theme === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", theme);
         setIcon();
       });
 
-      const searchInput = document.getElementById('searchInput');
-      const categorySelect = document.getElementById('categorySelect');
-      const categories = Array.from(document.querySelectorAll('.category'));
-      const emptyState = document.getElementById('emptyState');
+      const q = document.getElementById("searchInput");
+      const cats = [...document.querySelectorAll(".category")];
 
-      function filterGin() {
-        const q = searchInput.value.trim().toLowerCase();
-        const cat = categorySelect.value;
-        let totalVisible = 0;
+      function filter() {
+        const v = q.value.trim().toLowerCase();
 
-        categories.forEach(section => {
-          const sectionCategory = section.dataset.category;
-          const cards = Array.from(section.querySelectorAll('.gin-card'));
-          let visibleInSection = 0;
-
-          const categoryMatches = cat === 'all' || cat === sectionCategory;
+        cats.forEach(section => {
+          const cards = [...section.querySelectorAll(".gin-card")];
+          let visible = 0;
 
           cards.forEach(card => {
-            const haystack = (card.dataset.search + ' ' + card.innerText).toLowerCase();
-            const matchesText = !q || haystack.includes(q);
-            const show = categoryMatches && matchesText;
-            card.style.display = show ? 'grid' : 'none';
-            if (show) {
-              visibleInSection += 1;
-              totalVisible += 1;
-            }
+            const show = !v || card.dataset.search.includes(v);
+            card.style.display = show ? "grid" : "none";
+            if (show) visible += 1;
           });
 
-          section.style.display = visibleInSection > 0 ? 'block' : 'none';
-          if (visibleInSection > 0 && (q || cat !== 'all')) { section.open = true; }
-          if (!q && cat === 'all') { section.open = false; }
-        });
+          section.style.display = visible > 0 ? "block" : "none";
+          section.open = !!v;
 
-        emptyState.style.display = totalVisible === 0 ? 'block' : 'none';
+          if (!v) section.open = false;
+        });
       }
 
-      searchInput.addEventListener('input', filterGin);
-      categorySelect.addEventListener('change', filterGin);
-      filterGin();
+      q.addEventListener("input", filter);
+      filter();
     })();
   </script>
 </body>
