@@ -2178,641 +2178,150 @@
 
   <button class="scroll-top" id="scrollTopBtn" aria-label="Torna su">↑</button>
 
-  <script>
-    const root = document.documentElement;
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const scrollTopBtn = document.getElementById('scrollTopBtn');
+ <script>
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
 
-    let currentLang = 'it';
-    let currentMeal = 'pranzo';
+  let currentLang = 'it';
+  let currentMeal = 'pranzo';
 
-    const translations = {
-      it: {
-        heroTitle: "Poggio a Issi",
-        heroSubtitle: "Menù 2026 · Gusto, Natura & Arte del Drink",
-        chipCuisine: "Cucina Toscana",
-        chipGrill: "Griglia",
-        chipPinsa: "Pinse Artigianali",
-        chipBurger: "Hamburger",
-        chipGin: "Gin Tonic",
-        chipMixology: "Mixology",
+  function syncThemeIcon() {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    themeIcon.textContent = isDark ? '🌙' : '☀️';
+  }
 
-        mealLunch: "Pranzo",
-        mealDinner: "Cena",
-        mealDrinks: "Bevande",
+  const savedTheme = localStorage.getItem('poggio-theme');
+  root.setAttribute('data-theme', savedTheme || 'light');
+  syncThemeIcon();
 
-        tabShareLunch: "Condividi",
-        tabShareDinner: "Condividi",
-        tabPrimi: "Primi",
-        tabSalads: "Insalatone",
-        tabGrill: "Griglia",
-        tabSides: "Contorni",
-        tabDesserts: "Dolci",
-        tabAllergens: "Allergeni",
-        tabBurger: "Hamburger",
-        tabPinsa: "Pinse",
-        tabCoffee: "Caffetteria",
-        tabCocktails: "Cocktail",
-        tabGin: "Gin Tonic",
-        tabWine: "Vini",
-        tabBeer: "Birre",
+  themeToggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('poggio-theme', next);
+    syncThemeIcon();
+  });
 
-        secLunchShare: "Condividi Light Lunch",
-        secDinnerShare: "Condividi",
-        secPrimi: "Primi",
-        secSalads: "Insalatone",
-        secGrill: "Griglia",
-        secSides: "Contorni",
-        secDesserts: "Dolci",
-        secAllergens: "Allergeni",
-        secBurger: "Hamburger",
-        secPinsa: "Pinse",
-        secCoffee: "Caffetteria & Digestivi",
-        secCocktails: "Cocktail",
-        secGin: "Gin Tonic · Selezione del Gingegnere",
-        secWine: "Carta dei Vini",
-        secBeer: "Birre & Bevande",
+  function applyTranslations(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'it' ? 'it' : 'en';
 
-        cocktail_badge: "Classici · Premium · Analcolici",
-        wine_badge: "La nostra cantina",
-        beer_badge: "Birre · Soft Drink",
-        badgeCoffee: "Caffè · Amari · Distillati",
+    document.querySelectorAll('[data-lang]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
 
-        subCoffee: "Caffetteria",
-        subGrappa: "Grappe",
-        subAmari: "Amari",
-        subLiqueurs: "Liquori",
-        subWhisky: "Whisky",
-        subAgaveRum: "Agave & Rum",
-        subOther: "Altro",
-        subClassic: "Classici",
-        subPremium: "I Premium del Poggio",
-        subAlcoholFree: "Analcolici",
-
-        beer_draft: "Birre alla spina",
-        beer_local: "Birrificio San Gimignano",
-        beer_bottles: "Bottiglie 33cl",
-        beer_na: "Corona Analcolica",
-        soft_title: "Acqua & Soft Drink",
-
-        wine_sparkling: "Bollicine",
-        wine_white: "Bianchi",
-        wine_red: "Rossi",
-
-        pairing_title: "Abbinamenti consigliati dal Gingegnere",
-        pairing_share_1: "Carpaccio di Manzo · G&T con Rame Italian Dry",
-        pairing_share_2: "Frittino del Poggio · G&T con Barbarasa London Dry",
-        pairing_burger_1: "Polpo Burger · G&T con Poseidon Gin",
-        pairing_burger_2: "Chicken Burger · G&T con Arigatuono Gin",
-        pairing_pinsa_1: "La Pacco da Gi · Spicy Paloma",
-        pairing_pinsa_2: "La Stracciamare · Basil Smash",
-        pairing_grill_1: "Arrosticini · G&T con Upperhand Gin",
-
-        burger_note_title: "Tutti accompagnati da patate fritte",
-        burger_note_desc: "Allergeni 1, 3, 5, 6, 7, 8, 10, 11",
-        pinsa_note_title: "Impasto artigianale di nostra produzione",
-        pinsa_note_desc: "Allergeni 1, 5, 6, 7, 8, 9, 11",
-        gin_note_title: "Selezione del Gingegnere",
-        gin_note_desc: "Tutti i gin sono serviti con tonica artigianale italiana Dandy Classic Touch, disponibile anche Dandy Zero Zuccheri.",
-
-        gin_extra_title: "Selezione del Gingegnere",
-        gin_extra_desc: "Tanti altri gin in costante aggiornamento: chiedi e scegli quello che fa per te.",
-
-        badge_territoriale: "Territoriale",
-        badge_gin_pairing: "Gin pairing",
-        badge_sala: "Sala",
-        badge_premium: "Premium",
-        badge_signature: "Signature",
-
-        footer_note: "Interfaccia mobile-first pensata per lettura rapida in sala e su iPhone.",
-
-        dish_carpaccio_bosco: "Carpaccio del Bosco",
-        desc_carpaccio_bosco: "Carpaccio di manzo al ginepro e odori toscani, ricotta condita, capperi in fiore e salsa di mele e senape.",
-        dish_battute: "Degustazione di Battute al Coltello",
-        desc_battute: "Maionese all'aglio nero e cipolla croccante, burrata e tartufo nero.",
-        dish_caprese: "Pimp My Caprese",
-        desc_caprese: "Caprese di bufala, pomodorini gialli e rossi, chips di basilico e pesto di basilico.",
-        dish_melanzana: "Melanzana alla Issi",
-        desc_melanzana: "Barchetta di melanzana alla parmigiana con provola affumicata e pesto verde.",
-        dish_burro_acciughe: "Burro e Acciughe 2.0",
-        desc_burro_acciughe: "Pan bauletto croccante dorato nel burro, alici sotto pesto e salsa agli agrumi.",
-        dish_tagliere: "Gran Tagliere del Poggio",
-        desc_tagliere: "Selezione di salumi e pecorini con mostarde, assaggio dei nostri antipasti e tipicità del luogo.",
-        dish_coccole: "Coccole, Crudo & Burrata",
-        desc_coccole: "Coccole, prosciutto crudo stagionato e burratina.",
-        dish_frittino: "Frittino del Poggio",
-        desc_frittino: "Fiori di zucca ripieni di ricotta e mentuccia, salvia fritta, pane toscano, pappa al pomodoro, pollo crispy alla paprika con mayo al gin e pepe rosa.",
-
-        dish_pici: "Pici al Ragù Toscano",
-        desc_pici: "Pici fatti a mano con ragù di carne toscano.",
-        dish_gnocchi_rosso: "Gnocchi di Patate al Pesto Rosso",
-        desc_gnocchi_rosso: "Pesto di pomodori secchi e frutta secca.",
-        dish_pappardelle: "Pappardelle al Cinghiale e Cioccolato",
-        desc_pappardelle: "Ragù di cinghiale con tocco di cioccolato fondente.",
-        dish_spaghettone: "Spaghettone al Pomodoro Fresco e Origano",
-        desc_spaghettone: "Pomodoro fresco di stagione, origano aromatico.",
-        dish_gnudi: "Gnudi di Ricotta e Spinaci",
-        desc_gnudi: "Crema di pomodorini gialli, ricotta salata grattugiata.",
-
-        dish_ins_poggio: "Insalatona del Poggio",
-        desc_ins_poggio: "Cavolo viola, pecorino, noci, miele.",
-        dish_ins_tonno: "Insalatona di Tonno",
-        desc_ins_tonno: "Tonno, pomodorini, olive.",
-        dish_ins_greca: "Insalatona Greca",
-        desc_ins_greca: "Feta, mais, olive, mozzarelline.",
-        dish_ins_orto: "Insalatona dell'Orto",
-        desc_ins_orto: "Pomodorini, carote, cetrioli, olive, pane croccante.",
-
-        dish_pollaccio: "Il Pollaccio",
-        desc_pollaccio: "Galletto CBT alle erbe con il suo ristretto.",
-        dish_rostinciane: "Le Rostinciane",
-        desc_rostinciane: "Costine di maiale in salsa BBQ.",
-        dish_tagliata_rg: "La Tagliata R&G",
-        desc_tagliata_rg: "Tagliata di manzo con rucola e salsa di grana.",
-        dish_tagliata_poggio: "La Tagliata del Poggio",
-        desc_tagliata_poggio: "Tagliata di manzo con lardo e rosmarino.",
-        dish_picanha: "La Picanha",
-        desc_picanha: "Picanha di manzo CBT con il suo ristretto.",
-        dish_arrosticini: "Gli Arrosticini",
-        desc_arrosticini: "Arrosticini di pecora con BBQ alla birra e salsa tzatziki.",
-
-        side_roast: "Patate arrosto (a spicchi)",
-        side_fries: "Patate fritte",
-        side_salad: "Insalata mista",
-        side_spinach: "Spinacino saltato",
-
-        dessert_tiramisu: "Tiramisù del Poggio",
-        dessert_tiramisu_desc: "Il nostro tiramisù della casa.",
-        dessert_pear: "Tortino Pere e Cannella",
-        dessert_pear_desc: "Con salsa al caramello salato.",
-        dessert_latte: "Latte in Piedi",
-        dessert_latte_desc: "Tradizionale budino di crema alla vaniglia.",
-        dessert_mango: "Cremoso al Mango",
-        dessert_mango_desc: "Cremoso al mango con croccante alle mandorle.",
-
-        all_1: "Cereali contenenti glutine e derivati",
-        all_2: "Crostacei e prodotti derivati",
-        all_3: "Uova e prodotti a base di uova",
-        all_4: "Pesce e prodotti derivati",
-        all_5: "Arachidi e prodotti derivati",
-        all_6: "Soia e prodotti derivati",
-        all_7: "Latte e derivati (incluso lattosio)",
-        all_8: "Frutta a guscio",
-        all_9: "Sedano e prodotti derivati",
-        all_10: "Senape e prodotti derivati",
-        all_11: "Semi di sesamo e derivati",
-        all_12: "Anidride solforosa e solfiti",
-        all_13: "Lupini e prodotti derivati",
-        all_14: "Molluschi e prodotti derivati",
-
-        burger_polpo: "Polpo Burger",
-        burger_polpo_desc: "Polpo piastrato, spinacino fresco, mayo al gin e pepe rosa, carpaccio di cavolo verza, soia e limone.",
-        burger_issi: "Issi Burger",
-        burger_issi_desc: "180g di hamburger di scottona, provola affumicata, cipolla caramellata, rigatino croccante, salsa BBQ alla birra e insalatina croccante.",
-        burger_chicken: "Chicken Burger",
-        burger_chicken_desc: "Pollo croccante alla paprika e pepe rosa, zabaione al gin e agrumi, cavolo viola e pomodorini.",
-        burger_veggie: "Veggie Burger",
-        burger_veggie_desc: "Pulled pork vegetariano BBQ con salsa di carote e zenzero, cavolo viola marinato, pomodori secchi e cipolla caramellata.",
-        burger_tartar: "Tartar Burger",
-        burger_tartar_desc: "150g di battuta di manzo, salsa tzatziki, cipolla caramellata, lattughino croccante e pomodori secchi.",
-
-        pinsa_mortazza: "La Mortazza 2.0",
-        pinsa_mortazza_desc: "Schiacciata, mortadella, stracciatella, pistacchi e cipolle caramellate.",
-        pinsa_tartara: "La Tartara",
-        pinsa_tartara_desc: "Schiacciata con tartar, pomodorini freschi, stracciatella, pesto rosso e granella di nocciole.",
-        pinsa_contadina: "La Contadina",
-        pinsa_contadina_desc: "Pomodoro, mozzarella, salsiccia, ricotta, melanzane condite alla mentuccia e mandorle.",
-        pinsa_figa: "La Figa & il Manzo",
-        pinsa_figa_desc: "Schiacciata con fichi semi-canditi, carpaccio di manzo, pecorino romano, salsa pomodorini gialli e rucola.",
-        pinsa_scarpetta: "La Scarpetta",
-        pinsa_scarpetta_desc: "Mozzarella, ragù toscano, provola affumicata e pecorino romano.",
-        pinsa_4formaggi: "La 4 Formaggi Pro",
-        pinsa_4formaggi_desc: "Mozzarella, gorgonzola, pecorino fresco, pecorino romano, ricotta e cipolle caramellate.",
-        pinsa_fresca: "La Fresca di Zona",
-        pinsa_fresca_desc: "Pomodoro, mozzarella, pomodorini, pesto di basilico, stracciatella, rucola e pecorino romano.",
-        pinsa_stracciamare: "La Stracciamare",
-        pinsa_stracciamare_desc: "Schiacciata con stracciatella, alici sotto pesto, pomodorini e basilico.",
-        pinsa_pacco: "La Pacco da Gi",
-        pinsa_pacco_desc: "Pomodoro, mozzarella, 'nduja, peperone crusco e provola affumicata.",
-
-        coffee_1: "Caffè espresso",
-        coffee_2: "Cappuccino",
-        coffee_3: "Caffè Americano",
-        coffee_4: "Caffè latte / Latte macchiato",
-        coffee_5: "Tè caldo / Tisana",
-        coffee_6: "Caffè shakerato",
-        grappa_1: "Grappa di Vernaccia Il Colombaio",
-        grappa_2: "Grappa Riserva Il Colombaio",
-        amari_artigianali: "Amari artigianali",
-
-        cocktail_sprissi_desc: "Bitter Martini Riserva, pompelmo rosa Dandy, Spumante Lumis.",
-        cocktail_spritz_desc: "Il classico aperitivo italiano.",
-        cocktail_hugo_desc: "St. Germain, prosecco, soda, menta fresca.",
-        cocktail_americano_desc: "Bitter Martini Riserva, Vermouth rosso Martini, soda.",
-        cocktail_negroni_desc: "Bombay Sapphire, Bitter Martini Riserva, Vermouth rosso Martini.",
-        cocktail_basil_desc: "Bombay Sapphire, limone, zucchero, basilico fresco.",
-        cocktail_paloma_desc: "Tequila Cazadores, lime, sciroppo d'agave, pompelmo rosa Dandy, crusta di sale.",
-        cocktail_margarita_desc: "Tequila Cazadores, Triple sec, lime, sciroppo d'agave.",
-        cocktail_mojito_desc: "Rum Bacardi Carta Blanca, lime, menta fresca, zucchero, soda.",
-        cocktail_daiquiri_desc: "Rum Bacardi Carta Blanca, lime, purea di mango e passion fruit.",
-        cocktail_pina_desc: "Rum Bacardi Carta Oro, ananas, cocco, lime.",
-        cocktail_mule_desc: "Vodka Eristoff, lime, Ginger Beer Dandy.",
-        cocktail_whiskysour_desc: "Bulleit Rye, limone, zucchero, foamer.",
-        cocktail_fernandito_desc: "Fernet Branca, Coca Cola, lime.",
-
-        premium_martini: "Sua Maestà il Martini",
-        premium_martini_desc: "Frantuono gin all'olio d'oliva, Vermouth ambrato Martini Riserva, olive.",
-        premium_negroni: "Negroni Fumé",
-        premium_negroni_desc: "Maite Fiamma Gin, Mezcal, Bitter Martini Riserva, Vermouth Martini Rubino Riserva, rosmarino affumicato.",
-        premium_paloma_desc: "Tequila Patron Reposado, liquore allo Jalapeño, lime, agave, pompelmo rosa Dandy, tabasco verde.",
-        premium_issi_marg_desc: "Tequila Patron Reposado, Mezcal, lime, sciroppo d'agave.",
-        premium_jungle_desc: "Rum giamaicano, bitter Fusetti alla banana, ananas, zucchero, lime.",
-        premium_mentini: "Espresso Mentini",
-        premium_mentini_desc: "Grey Goose Vodka, caffè espresso, Patron XO, zucchero, menta fresca.",
-        premium_issi_sour_desc: "Wild Turkey 101 Bourbon, limone, zucchero, Chianti di San Gimignano, foamer.",
-        premium_paper_desc: "Bulleit Bourbon, limone, Aperol, Amaro Jefferson.",
-
-        zero_sprissi_desc: "Bitter Martini Vibrante, soda pompelmo.",
-        zero_floreale: "Il Floreale",
-        zero_floreale_desc: "Bitter Martini Floreale, mela verde, soda.",
-        zero_fruttato: "Il Fruttato",
-        zero_fruttato_desc: "Arancia, ananas, granatina.",
-        zero_mojito_desc: "Lime, menta, ginger beer, soda.",
-
-        gin_1_desc: "Secco, classico, pulito",
-        gin_2_desc: "Secco, speziato, leggermente agrumato e floreale",
-        gin_3_desc: "Secco, pulito, classico, agrumato",
-        gin_4_desc: "Complesso, morbido, speziato, elegante",
-        gin_5_desc: "Fresco, estivo, pompelmo rosa vero",
-        gin_6_desc: "Mediterraneo, aromatico, leggermente agrumato",
-        gin_7_desc: "Secco, speziato, pepato",
-        gin_8_desc: "Morbido, elegante, speziato",
-        gin_9_desc: "Secco, aromatico, agrumato",
-        gin_10_desc: "Secco, deciso, molto agrumato",
-        gin_11_desc: "Aromatico, mediterraneo, leggermente speziato",
-        gin_12_desc: "Secco, complesso, leggermente affumicato",
-        gin_13_desc: "Fresco, estivo, morbido, sentori di basilico e limone",
-        gin_14_desc: "Fresco, aromatico, floreale",
-        gin_15_desc: "Morbido, fresco, fruttato",
-        gin_16_desc: "Floreale, fruttato, leggermente agrumato e speziato",
-        gin_17_desc: "Marino, fresco, agrumato",
-        gin_18_desc: "Morbido, frutti rossi",
-        gin_19_desc: "Stile giapponese elegante, pulito, agrumato, speziato",
-        gin_20_desc: "Morbido, delicato, mediterraneo, sentori di oliva",
-
-        soft_1: "Acqua 1 lt nat / gass",
-        soft_2: "Acqua 1/2 lt nat / gass",
-        soft_3: "Bibite lattina",
-        soft_4: "Tonica Dandy / Dandy Zero",
-        soft_5: "Ginger Beer Dandy",
-        soft_6: "Red Bull"
-      },
-
-      en: {
-        heroTitle: "Poggio a Issi",
-        heroSubtitle: "Menu 2026 · Taste, Nature & The Art of Drinking",
-        chipCuisine: "Tuscan Cuisine",
-        chipGrill: "Grill",
-        chipPinsa: "Artisan Pinsa",
-        chipBurger: "Burgers",
-        chipGin: "Gin Tonic",
-        chipMixology: "Mixology",
-
-        mealLunch: "Lunch",
-        mealDinner: "Dinner",
-        mealDrinks: "Drinks",
-
-        tabShareLunch: "To Share",
-        tabShareDinner: "To Share",
-        tabPrimi: "First Courses",
-        tabSalads: "Salads",
-        tabGrill: "Grill",
-        tabSides: "Sides",
-        tabDesserts: "Desserts",
-        tabAllergens: "Allergens",
-        tabBurger: "Burgers",
-        tabPinsa: "Pinsa",
-        tabCoffee: "Coffee",
-        tabCocktails: "Cocktails",
-        tabGin: "Gin Tonic",
-        tabWine: "Wine",
-        tabBeer: "Beer",
-
-        secLunchShare: "Light Lunch to Share",
-        secDinnerShare: "To Share",
-        secPrimi: "First Courses",
-        secSalads: "Salads",
-        secGrill: "Grill",
-        secSides: "Sides",
-        secDesserts: "Desserts",
-        secAllergens: "Allergens",
-        secBurger: "Burgers",
-        secPinsa: "Pinsa",
-        secCoffee: "Coffee & After Dinner",
-        secCocktails: "Cocktails",
-        secGin: "Gin Tonic · The Gingegnere Selection",
-        secWine: "Wine List",
-        secBeer: "Beer & Soft Drinks",
-
-        cocktail_badge: "Classics · Premium · Alcohol-Free",
-        wine_badge: "Our cellar",
-        beer_badge: "Beer · Soft Drinks",
-        badgeCoffee: "Coffee · Bitters · Spirits",
-
-        subCoffee: "Coffee",
-        subGrappa: "Grappa",
-        subAmari: "Bitters",
-        subLiqueurs: "Liqueurs",
-        subWhisky: "Whisky",
-        subAgaveRum: "Agave & Rum",
-        subOther: "Other Spirits",
-        subClassic: "Classics",
-        subPremium: "Poggio Premium",
-        subAlcoholFree: "Alcohol-Free",
-
-        beer_draft: "Draft Beer",
-        beer_local: "San Gimignano Brewery",
-        beer_bottles: "33cl Bottles",
-        beer_na: "Alcohol-Free Corona",
-        soft_title: "Water & Soft Drinks",
-
-        wine_sparkling: "Sparkling",
-        wine_white: "White",
-        wine_red: "Red",
-
-        pairing_title: "Recommended pairings by the Gingegnere",
-        pairing_share_1: "Beef Carpaccio · G&T with Rame Italian Dry",
-        pairing_share_2: "Poggio Fritto · G&T with Barbarasa London Dry",
-        pairing_burger_1: "Octopus Burger · G&T with Poseidon Gin",
-        pairing_burger_2: "Chicken Burger · G&T with Arigatuono Gin",
-        pairing_pinsa_1: "La Pacco da Gi · Spicy Paloma",
-        pairing_pinsa_2: "La Stracciamare · Basil Smash",
-        pairing_grill_1: "Arrosticini · G&T with Upperhand Gin",
-
-        burger_note_title: "All served with French fries",
-        burger_note_desc: "Allergens 1, 3, 5, 6, 7, 8, 10, 11",
-        pinsa_note_title: "House-made artisan dough",
-        pinsa_note_desc: "Allergens 1, 5, 6, 7, 8, 9, 11",
-        gin_note_title: "The Gingegnere Selection",
-        gin_note_desc: "All gins are served with Italian artisan tonic Dandy Classic Touch, also available in Dandy Zero Sugar.",
-
-        gin_extra_title: "The Gingegnere Selection",
-        gin_extra_desc: "Many more gins constantly rotating: ask us and choose the one that suits you best.",
-
-        badge_territoriale: "Local",
-        badge_gin_pairing: "Gin pairing",
-        badge_sala: "Dining room",
-        badge_premium: "Premium",
-        badge_signature: "Signature",
-
-        footer_note: "Mobile-first interface designed for quick reading in the dining room and on iPhone.",
-
-        dish_carpaccio_bosco: "Forest Carpaccio",
-        desc_carpaccio_bosco: "Juniper beef carpaccio with Tuscan herbs, seasoned ricotta, flowering capers and apple-mustard sauce.",
-        dish_battute: "Knife-Cut Tartare Tasting",
-        desc_battute: "Black garlic mayo, crispy onion, burrata and black truffle.",
-        dish_caprese: "Pimp My Caprese",
-        desc_caprese: "Buffalo mozzarella caprese, yellow and red cherry tomatoes, basil chips and basil pesto.",
-        dish_melanzana: "Issi Eggplant",
-        desc_melanzana: "Eggplant parmigiana boat with smoked provola and green pesto.",
-        dish_burro_acciughe: "Butter & Anchovies 2.0",
-        desc_burro_acciughe: "Golden toasted bread, anchovies under pesto and citrus sauce.",
-        dish_tagliere: "Grand Poggio Board",
-        desc_tagliere: "Selection of cured meats and pecorino cheeses with mustards, a tasting of our starters and local specialties.",
-        dish_coccole: "Coccole, Ham & Burrata",
-        desc_coccole: "Fried coccole bread, aged prosciutto and burratina.",
-        dish_frittino: "Poggio Fried Selection",
-        desc_frittino: "Zucchini flowers stuffed with ricotta and mint, fried sage, Tuscan bread, pappa al pomodoro, crispy paprika chicken with gin and pink pepper mayo.",
-
-        dish_pici: "Pici with Tuscan Ragù",
-        desc_pici: "Handmade pici pasta with Tuscan meat ragù.",
-        dish_gnocchi_rosso: "Potato Gnocchi with Red Pesto",
-        desc_gnocchi_rosso: "Sun-dried tomato and dried fruit pesto.",
-        dish_pappardelle: "Pappardelle with Wild Boar & Chocolate",
-        desc_pappardelle: "Wild boar ragù with a touch of dark chocolate.",
-        dish_spaghettone: "Spaghettone with Fresh Tomato & Oregano",
-        desc_spaghettone: "Seasonal fresh tomato and aromatic oregano.",
-        dish_gnudi: "Ricotta & Spinach Gnudi",
-        desc_gnudi: "Yellow cherry tomato cream and grated salted ricotta.",
-
-        dish_ins_poggio: "Poggio Salad",
-        desc_ins_poggio: "Purple cabbage, pecorino, walnuts, honey.",
-        dish_ins_tonno: "Tuna Salad",
-        desc_ins_tonno: "Tuna, cherry tomatoes, olives.",
-        dish_ins_greca: "Greek Salad",
-        desc_ins_greca: "Feta, corn, olives, mini mozzarella.",
-        dish_ins_orto: "Garden Salad",
-        desc_ins_orto: "Cherry tomatoes, carrots, cucumbers, olives, crispy bread.",
-
-        dish_pollaccio: "Herb Roasted Cockerel",
-        desc_pollaccio: "Low-temperature cooked cockerel with herbs and its jus.",
-        dish_rostinciane: "Pork Ribs",
-        desc_rostinciane: "Pork ribs with BBQ sauce.",
-        dish_tagliata_rg: "Tagliata R&G",
-        desc_tagliata_rg: "Sliced beef with rocket and parmesan sauce.",
-        dish_tagliata_poggio: "Poggio Tagliata",
-        desc_tagliata_poggio: "Sliced beef with cured pork fat and rosemary.",
-        dish_picanha: "Picanha",
-        desc_picanha: "Low-temperature cooked beef picanha with its jus.",
-        dish_arrosticini: "Arrosticini",
-        desc_arrosticini: "Lamb skewers with beer BBQ and tzatziki sauce.",
-
-        side_roast: "Roasted potatoes (wedges)",
-        side_fries: "French fries",
-        side_salad: "Mixed salad",
-        side_spinach: "Sautéed baby spinach",
-
-        dessert_tiramisu: "Poggio Tiramisù",
-        dessert_tiramisu_desc: "Our house tiramisù.",
-        dessert_pear: "Pear & Cinnamon Cake",
-        dessert_pear_desc: "With salted caramel sauce.",
-        dessert_latte: "Latte in Piedi",
-        dessert_latte_desc: "Traditional vanilla cream pudding.",
-        dessert_mango: "Mango Cream Dessert",
-        dessert_mango_desc: "Mango cream with almond crunch.",
-
-        all_1: "Cereals containing gluten and derivatives",
-        all_2: "Crustaceans and derivatives",
-        all_3: "Eggs and egg products",
-        all_4: "Fish and derivatives",
-        all_5: "Peanuts and derivatives",
-        all_6: "Soy and derivatives",
-        all_7: "Milk and dairy (including lactose)",
-        all_8: "Tree nuts",
-        all_9: "Celery and derivatives",
-        all_10: "Mustard and derivatives",
-        all_11: "Sesame seeds and derivatives",
-        all_12: "Sulphur dioxide and sulphites",
-        all_13: "Lupin and derivatives",
-        all_14: "Molluscs and derivatives",
-
-        burger_polpo: "Octopus Burger",
-        burger_polpo_desc: "Griddled octopus, baby spinach, gin and pink pepper mayo, cabbage carpaccio, soy and lemon.",
-        burger_issi: "Issi Burger",
-        burger_issi_desc: "180g beef burger, smoked provola, caramelized onion, crispy bacon, beer BBQ sauce and crunchy salad.",
-        burger_chicken: "Chicken Burger",
-        burger_chicken_desc: "Crispy paprika and pink pepper chicken, gin and citrus sabayon, purple cabbage and cherry tomatoes.",
-        burger_veggie: "Veggie Burger",
-        burger_veggie_desc: "Vegetarian BBQ pulled pork, carrot and ginger sauce, marinated purple cabbage, sun-dried tomatoes and caramelized onion.",
-        burger_tartar: "Tartare Burger",
-        burger_tartar_desc: "150g beef tartare, tzatziki sauce, caramelized onion, crunchy lettuce and sun-dried tomatoes.",
-
-        pinsa_mortazza: "La Mortazza 2.0",
-        pinsa_mortazza_desc: "Flatbread, mortadella, stracciatella, pistachios and caramelized onions.",
-        pinsa_tartara: "La Tartara",
-        pinsa_tartara_desc: "Flatbread with tartare, fresh cherry tomatoes, stracciatella, red pesto and hazelnut crumble.",
-        pinsa_contadina: "La Contadina",
-        pinsa_contadina_desc: "Tomato, mozzarella, sausage, ricotta, eggplant with mint and almonds.",
-        pinsa_figa: "Fig & Beef",
-        pinsa_figa_desc: "Flatbread with semi-candied figs, beef carpaccio, pecorino romano, yellow tomato sauce and rocket.",
-        pinsa_scarpetta: "La Scarpetta",
-        pinsa_scarpetta_desc: "Mozzarella, Tuscan ragù, smoked provola and pecorino romano.",
-        pinsa_4formaggi: "4 Cheese Pro",
-        pinsa_4formaggi_desc: "Mozzarella, gorgonzola, fresh pecorino, pecorino romano, ricotta and caramelized onions.",
-        pinsa_fresca: "Fresh from the Garden",
-        pinsa_fresca_desc: "Tomato, mozzarella, cherry tomatoes, basil pesto, stracciatella, rocket and pecorino romano.",
-        pinsa_stracciamare: "La Stracciamare",
-        pinsa_stracciamare_desc: "Flatbread with stracciatella, anchovies under pesto, cherry tomatoes and basil.",
-        pinsa_pacco: "La Pacco da Gi",
-        pinsa_pacco_desc: "Tomato, mozzarella, 'nduja, crispy pepper and smoked provola.",
-
-        coffee_1: "Espresso",
-        coffee_2: "Cappuccino",
-        coffee_3: "Americano",
-        coffee_4: "Latte / Latte macchiato",
-        coffee_5: "Hot tea / Herbal tea",
-        coffee_6: "Shaken coffee",
-        grappa_1: "Vernaccia Grappa Il Colombaio",
-        grappa_2: "Reserve Grappa Il Colombaio",
-        amari_artigianali: "Artisan bitters",
-
-        cocktail_sprissi_desc: "Martini Riserva Bitter, Dandy pink grapefruit, Lumis sparkling wine.",
-        cocktail_spritz_desc: "The classic Italian aperitif.",
-        cocktail_hugo_desc: "St. Germain, prosecco, soda, fresh mint.",
-        cocktail_americano_desc: "Martini Riserva Bitter, Martini rosso vermouth, soda.",
-        cocktail_negroni_desc: "Bombay Sapphire, Martini Riserva Bitter, Martini rosso vermouth.",
-        cocktail_basil_desc: "Bombay Sapphire, lemon, sugar, fresh basil.",
-        cocktail_paloma_desc: "Tequila Cazadores, lime, agave syrup, Dandy pink grapefruit, salt rim.",
-        cocktail_margarita_desc: "Tequila Cazadores, Triple sec, lime, agave syrup.",
-        cocktail_mojito_desc: "Bacardi Carta Blanca rum, lime, fresh mint, sugar, soda.",
-        cocktail_daiquiri_desc: "Bacardi Carta Blanca rum, lime, mango and passion fruit puree.",
-        cocktail_pina_desc: "Bacardi Carta Oro rum, pineapple, coconut, lime.",
-        cocktail_mule_desc: "Eristoff vodka, lime, Dandy Ginger Beer.",
-        cocktail_whiskysour_desc: "Bulleit Rye, lemon, sugar, foamer.",
-        cocktail_fernandito_desc: "Fernet Branca, Coca Cola, lime.",
-
-        premium_martini: "His Majesty the Martini",
-        premium_martini_desc: "Frantuono olive oil gin, Martini Riserva amber vermouth, olives.",
-        premium_negroni: "Smoked Negroni",
-        premium_negroni_desc: "Maite Fiamma Gin, mezcal, Martini Riserva Bitter, Martini Rubino Riserva vermouth, smoked rosemary.",
-        premium_paloma_desc: "Patron Reposado tequila, Jalapeño liqueur, lime, agave, Dandy pink grapefruit, green tabasco.",
-        premium_issi_marg_desc: "Patron Reposado tequila, mezcal, lime, agave syrup.",
-        premium_jungle_desc: "Jamaican rum, banana Fusetti bitter, pineapple, sugar, lime.",
-        premium_mentini: "Espresso Mentini",
-        premium_mentini_desc: "Grey Goose vodka, espresso coffee, Patron XO, sugar, fresh mint.",
-        premium_issi_sour_desc: "Wild Turkey 101 bourbon, lemon, sugar, Chianti from San Gimignano, foamer.",
-        premium_paper_desc: "Bulleit Bourbon, lemon, Aperol, Jefferson Amaro.",
-
-        zero_sprissi_desc: "Martini Vibrante bitter, grapefruit soda.",
-        zero_floreale: "The Floral",
-        zero_floreale_desc: "Martini Floreale bitter, green apple, soda.",
-        zero_fruttato: "The Fruity",
-        zero_fruttato_desc: "Orange, pineapple, grenadine.",
-        zero_mojito_desc: "Lime, mint, ginger beer, soda.",
-
-        gin_1_desc: "Dry, classic, clean",
-        gin_2_desc: "Dry, spicy, lightly citrusy and floral",
-        gin_3_desc: "Dry, clean, classic, citrusy",
-        gin_4_desc: "Complex, smooth, spicy, elegant",
-        gin_5_desc: "Fresh, summery, true pink grapefruit",
-        gin_6_desc: "Mediterranean, aromatic, lightly citrusy",
-        gin_7_desc: "Dry, spicy, peppery",
-        gin_8_desc: "Smooth, elegant, spicy",
-        gin_9_desc: "Dry, aromatic, citrusy",
-        gin_10_desc: "Dry, bold, very citrusy",
-        gin_11_desc: "Aromatic, Mediterranean, lightly spicy",
-        gin_12_desc: "Dry, complex, lightly smoky",
-        gin_13_desc: "Fresh, summery, smooth, notes of basil and lemon",
-        gin_14_desc: "Fresh, aromatic, floral",
-        gin_15_desc: "Smooth, fresh, fruity",
-        gin_16_desc: "Floral, fruity, lightly citrusy and spicy",
-        gin_17_desc: "Marine, fresh, citrusy",
-        gin_18_desc: "Smooth, red fruit",
-        gin_19_desc: "Elegant Japanese style, clean, citrusy, spicy",
-        gin_20_desc: "Smooth, delicate, Mediterranean, olive notes",
-
-        soft_1: "Water 1 lt still / sparkling",
-        soft_2: "Water 1/2 lt still / sparkling",
-        soft_3: "Soft drinks can",
-        soft_4: "Dandy Tonic / Dandy Zero",
-        soft_5: "Dandy Ginger Beer",
-        soft_6: "Red Bull"
-      }
-    };
-
-    function applyTranslations(lang) {
-      currentLang = lang;
-      document.documentElement.lang = lang === 'it' ? 'it' : 'en';
-      document.querySelectorAll('[data-lang]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
-      });
-
+    if (typeof translations !== 'undefined' && translations[lang]) {
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if (translations[lang] && translations[lang][key]) {
+        if (translations[lang][key]) {
           el.textContent = translations[lang][key];
         }
       });
     }
+  }
 
-    function syncThemeIcon() {
-      themeIcon.textContent = root.getAttribute('data-theme') === 'dark' ? '🌙' : '☀️';
-    }
+  function switchLang(lang) {
+    applyTranslations(lang);
+  }
 
-    const savedTheme = localStorage.getItem('poggio-theme');
-    root.setAttribute('data-theme', savedTheme || 'light');
-    syncThemeIcon();
+  function switchMeal(meal) {
+    currentMeal = meal;
 
-    themeToggle.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('poggio-theme', next);
-      syncThemeIcon();
+    document.querySelectorAll('.meal-panel').forEach(panel => {
+      panel.classList.toggle('active', panel.id === `panel-${meal}`);
     });
 
-    function switchLang(lang) {
-      applyTranslations(lang);
+    document.querySelectorAll('.meal-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.meal === meal);
+    });
+
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.classList.toggle('hidden', group.dataset.meal !== meal);
+    });
+
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+
+    const firstTab = document.querySelector(`.nav-group[data-meal="${meal}"] .nav-tab`);
+    if (firstTab) firstTab.classList.add('active');
+
+    const activePanel = document.getElementById(`panel-${meal}`);
+    if (activePanel) {
+      activePanel.querySelectorAll('.section').forEach((section, index) => {
+        section.classList.toggle('open', index === 0);
+      });
     }
 
-    function switchMeal(meal) {
-      currentMeal = meal;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-      document.querySelectorAll('.meal-panel').forEach(panel => {
-        panel.classList.toggle('active', panel.id === `panel-${meal}`);
-      });
+  function toggleSection(button) {
+    const section = button.closest('.section');
+    if (!section) return;
 
-      document.querySelectorAll('.meal-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.meal === meal);
-      });
+    const panel = section.closest('.meal-panel');
+    if (!panel) return;
 
-      document.querySelectorAll('.nav-group').forEach(group => {
-        group.classList.toggle('hidden', group.dataset.meal !== meal);
-      });
+    const isOpen = section.classList.contains('open');
 
+    panel.querySelectorAll('.section').forEach(item => {
+      item.classList.remove('open');
+    });
+
+    if (!isOpen) {
+      section.classList.add('open');
+      setTimeout(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }
+
+  function toggleSub(btn, event) {
+    if (event) event.stopPropagation();
+
+    const body = btn.nextElementSibling;
+    if (!body || !body.classList.contains('sub-body')) return;
+
+    const wrap = btn.closest('.sub-accordion');
+    const isOpen = btn.classList.contains('open');
+
+    wrap.querySelectorAll('.sub-trigger').forEach(item => item.classList.remove('open'));
+    wrap.querySelectorAll('.sub-body').forEach(item => item.style.display = 'none');
+
+    if (!isOpen) {
+      btn.classList.add('open');
+      body.style.display = 'block';
+    }
+  }
+
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      const firstTab = document.querySelector(`.nav-group[data-meal="${meal}"] .nav-tab`);
-      if (firstTab) firstTab.classList.add('active');
+      tab.classList.add('active');
 
-      const activePanel = document.getElementById(`panel-${meal}`);
-      if (activePanel) {
-        activePanel.querySelectorAll('.section').forEach((section, idx) => {
-          section.classList.toggle('open', idx === 0);
-        });
-      }
+      const target = document.getElementById(tab.dataset.target);
+      if (!target) return;
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+      const panel = target.closest('.meal-panel');
+      if (!panel) return;
 
-    function toggleSection(button) {
-      const section = button.closest('.section
+      panel.querySelectorAll('.section').forEach(item => item.classList.remove('open'));
+      target.classList.add('open');
+
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
+  });
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  applyTranslations('it');
+  switchMeal('pranzo');
+</script>
