@@ -1078,6 +1078,12 @@
       color: var(--color-text);
     }
     .wine-toast-text span { display: none; }
+    /* ── Show the correct language span inside the toast ── */
+    html[data-lang="it"] .wine-toast-text .lang-it,
+    html[data-lang="en"] .wine-toast-text .lang-en,
+    html[data-lang="fr"] .wine-toast-text .lang-fr,
+    html[data-lang="es"] .wine-toast-text .lang-es,
+    html[data-lang="de"] .wine-toast-text .lang-de { display: inline; }
     .wine-toast-close-btn {
       margin-top: 4px;
       padding: 9px 26px;
@@ -1491,13 +1497,27 @@
     // Hook su toggleSub: scatta solo nei vini dentro Bevande
     var origToggleSub = window.toggleSub;
     window.toggleSub = function(btn) {
+      var wasOpen = btn.classList.contains('open');
       origToggleSub(btn);
-      var viniSection    = document.getElementById('vini');
-      var beveragePanel  = document.getElementById('panel-bevande');
-      if (viniSection && viniSection.contains(btn) &&
-          beveragePanel && beveragePanel.classList.contains('active') &&
-          btn.classList.contains('open')) {
+      // Dopo origToggleSub: se era chiuso (wasOpen=false) ed ora è aperto = primo click
+      var viniSection   = document.getElementById('vini');
+      var beveragePanel = document.getElementById('panel-bevande');
+      var isNowOpen     = btn.classList.contains('open');
+      if (!wasOpen && isNowOpen &&
+          viniSection && viniSection.contains(btn) &&
+          beveragePanel && beveragePanel.classList.contains('active')) {
         showToast();
+        // Espandi automaticamente il primo wine-item nella sub-body aperta
+        var subBody = btn.nextElementSibling;
+        if (subBody && subBody.classList.contains('sub-body')) {
+          var firstWineItem = subBody.querySelector('.wine-item');
+          if (firstWineItem && !firstWineItem.classList.contains('wd-open')) {
+            setTimeout(function() {
+              firstWineItem.classList.add('wd-open');
+              firstWineItem.setAttribute('aria-expanded', 'true');
+            }, 320); // piccolo delay per lasciar finire l'animazione accordion
+          }
+        }
       }
     };
   })();
