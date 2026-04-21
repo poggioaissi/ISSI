@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="format-detection" content="telephone=no" />
+<title>Guida Gin — Poggio a Issi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+  --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
+  --transition-interactive:180ms cubic-bezier(0.16,1,0.3,1);
+  --font-display:"Baloo 2",cursive;
+  --font-body:"Inter",sans-serif;
+}
+:root,[data-theme="light"]{
+  --color-bg:#eef1e8;--color-surface:#f7f8f2;--color-surface-2:#e6ebde;--color-border:#bcc7b1;
+  --color-text:#2d3a23;--color-text-muted:#55664a;--color-text-faint:#87957d;
+  --color-primary:#7a8f49;--color-primary-hover:#65793a;--color-primary-highlight:#dde6c9;
+  --color-ok:#5f7a56;--color-ok-soft:#dfe8d9;
+  --color-blue:#58758b;--color-blue-soft:#dce7ef;
+  --color-red:#9a6660;--color-red-soft:#efdfdb;
+  --color-rose:#81505b;--color-rose-soft:#ead8dd;
+  --color-gold:#9a7a39;--color-gold-soft:#eee2bf;
+  --color-replace:#79649b;--color-replace-soft:#e7e0f0;
+  --color-warn:#a06a45;--color-warn-soft:#efdfd3;
+  --color-bubble:#7f9baa;--color-bubble-soft:#dbe5ea;
+  --color-amber:#a85a2a;--color-amber-soft:#f3e0d2;
+  --color-violet:#6e4bb8;--color-violet-soft:#e7def8;
+  --shadow-sm:0 1px 2px rgba(33,45,24,.08);
+  --shadow-md:0 10px 25px rgba(33,45,24,.12);
+  --shadow-lg:0 16px 40px rgba(33,45,24,.14);
+}
+[data-theme="dark"]{
+  --color-bg:#111611;--color-surface:#1a2219;--color-surface-2:#253026;--color-border:#394738;
+  --color-text:#e6eadc;--color-text-muted:#b4bea8;--color-text-faint:#7f8b77;
+  --color-primary:#a6bf67;--color-primary-hover:#bbd97a;--color-primary-highlight:#2d3a24;
+  --color-ok:#a9c697;--color-ok-soft:#1f2a20;
+  --color-blue:#9dbed0;--color-blue-soft:#1b2730;
+  --color-red:#d7a094;--color-red-soft:#2d211d;
+  --color-rose:#d6a7b1;--color-rose-soft:#2e2125;
+  --color-gold:#d8c07e;--color-gold-soft:#2c2718;
+  --color-replace:#bda9de;--color-replace-soft:#241f31;
+  --color-warn:#d8a07a;--color-warn-soft:#2d221c;
+  --color-bubble:#a9c1cc;--color-bubble-soft:#1c262b;
+  --color-amber:#e2a16e;--color-amber-soft:#2b2018;
+  --color-violet:#b89cff;--color-violet-soft:#231c33;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.24);
+  --shadow-md:0 12px 32px rgba(0,0,0,.38);
+  --shadow-lg:0 18px 48px rgba(0,0,0,.42);
+}
+
+/* ── Shared topbar ── */
+.topbar{position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--color-bg) 78%,transparent);border-bottom:1px solid color-mix(in srgb,var(--color-border) 75%,transparent)}
+.topbar-inner{width:min(1100px,calc(100% - 2rem));margin:0 auto;padding:var(--space-4) 0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)}
+.brand{display:flex;align-items:center;gap:var(--space-3);min-width:0}
+.brand-back{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;flex-shrink:0;border:1px solid color-mix(in srgb,var(--color-border) 80%,transparent);background:var(--color-surface);color:var(--color-text-muted);font-size:1.1rem;font-weight:700;box-shadow:var(--shadow-sm);transition:background var(--transition-interactive),color var(--transition-interactive);text-decoration:none}
+.brand-back:hover{background:var(--color-surface-2);color:var(--color-text)}
+.brand-mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--color-primary-highlight);border:1px solid color-mix(in srgb,var(--color-primary) 18%,var(--color-border));box-shadow:var(--shadow-sm);color:var(--color-primary);font-size:1.15rem;flex-shrink:0}
+.brand-copy .brand-title{font-family:var(--font-display);font-size:var(--text-xl);line-height:.95;letter-spacing:.02em}
+.brand-copy .brand-subtitle{font-size:var(--text-sm);color:var(--color-text-muted);margin-top:2px}
+.theme-toggle{min-width:48px;min-height:48px;border-radius:var(--radius-full);border:1px solid color-mix(in srgb,var(--color-border) 80%,transparent);background:var(--color-surface);box-shadow:var(--shadow-sm);display:grid;place-items:center;touch-action:manipulation;cursor:pointer}
+@media(max-width:760px){.topbar-inner{width:min(100%,calc(100% - 1rem))}.brand-copy .brand-title{font-size:1.5rem}}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100dvh;
+      line-height: 1.6;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 32%),
+        radial-gradient(circle at right center, color-mix(in srgb, var(--color-surface-2) 55%, transparent), transparent 30%),
+        var(--color-bg);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      background: color-mix(in srgb, var(--color-bg) 78%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+    }
+
+    .topbar-inner,
+    .hero,
+    .controls,
+    .content,
+    .footer {
+      width: min(1100px, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+      font-size: 1.2rem;
+    }
+
+    .brand h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+    }
+
+    .brand p {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .theme-toggle {
+      min-width: 48px;
+      min-height: 48px;
+      border-radius: var(--radius-full);
+      padding: var(--space-2);
+      border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16)) 0 var(--space-8);
+      display: grid;
+      gap: var(--space-6);
+    }
+
+    .hero-card {
+      background: linear-gradient(
+        135deg,
+        var(--color-surface),
+        color-mix(in srgb, var(--color-surface-2) 88%, var(--color-primary-highlight))
+      );
+      border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+      border-radius: 28px;
+      padding: clamp(var(--space-6), 4vw, var(--space-10));
+      box-shadow: var(--shadow-md);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-4);
+    }
+
+    .hero h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 0.98;
+      max-width: 12ch;
+      margin-bottom: var(--space-4);
+    }
+
+    .hero p {
+      color: var(--color-text-muted);
+      max-width: 72ch;
+    }
+
+    .quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
+    }
+
+    .quick-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-full);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+      font-size: var(--text-sm);
+    }
+
+    .controls {
+      display: grid;
+      gap: var(--space-4);
+      grid-template-columns: 1fr;
+      padding-bottom: var(--space-8);
+    }
+
+    .search-wrap {
+      background: var(--color-surface);
+      border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+      border-radius: 20px;
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+    }
+
+    label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 var(--space-4);
+      border-radius: 14px;
+      border: 1px solid color-mix(in srgb, var(--color-border) 90%, transparent);
+      background: var(--color-bg);
+      color: var(--color-text);
+      outline: none;
+      font-size: 16px;
+    }
+
+    input[type="text"]:focus,
+    .theme-toggle:focus-visible {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 26%, transparent);
+      border-color: var(--color-primary);
+      outline: none;
+    }
+
+    .content {
+      display: grid;
+      gap: var(--space-4);
+      padding-bottom: var(--space-16);
+    }
+
+    .category {
+      background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+      border-radius: 26px;
+      padding: clamp(var(--space-5), 3vw, var(--space-8));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .category-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+      list-style: none;
+      cursor: pointer;
+      min-height: 48px;
+    }
+
+    .category-header::-webkit-details-marker {
+      display: none;
+    }
+
+    .category summary::after {
+      content: "+";
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--color-primary);
+      margin-left: auto;
+      font-weight: 700;
+    }
+
+    .category[open] summary::after {
+      content: "−";
+    }
+
+    .category:not([open]) {
+      padding-bottom: var(--space-4);
+    }
+
+    .category:not([open]) .gin-grid {
+      display: none;
+    }
+
+    .category h3 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 1;
+    }
+
+    .category-meta {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .gin-grid {
+      display: grid;
+      gap: var(--space-4);
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    }
+
+    .gin-card {
+      background: var(--color-surface);
+      border-radius: 20px;
+      padding: var(--space-4);
+      border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .gin-name {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .gin-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .gin-garnish {
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      background: color-mix(in srgb, var(--color-primary-highlight) 55%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+      padding: var(--space-2) var(--space-3);
+      border-radius: 12px;
+    }
+
+    .gin-garnish strong {
+      color: var(--color-primary);
+    }
+
+    .gin-card.esaurito {
+      opacity: 0.72;
+      position: relative;
+    }
+
+    .badge-esaurito {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3em;
+      padding: 0.2em 0.65em;
+      border-radius: var(--radius-full);
+      background: var(--color-red-soft);
+      color: var(--color-red);
+      border: 1px solid color-mix(in srgb, var(--color-red) 22%, var(--color-border));
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .gin-name-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .gin-similar {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      background: color-mix(in srgb, var(--color-surface-2) 60%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+      padding: var(--space-2) var(--space-3);
+      border-radius: 10px;
+      line-height: 1.5;
+    }
+
+    .gin-similar strong {
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .footer {
+      padding: 0 0 var(--space-12);
+      color: var(--color-text-faint);
+      font-size: var(--text-sm);
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .hero,
+      .controls,
+      .content,
+      .footer {
+        width: min(100%, calc(100% - 1rem));
+      }
+
+      .brand h1 {
+        font-size: 1.7rem;
+      }
+
+      .hero h2 {
+        max-width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a href="index.html" class="brand-back" aria-label="Torna alla home">←</a>
+      <div class="brand-mark" aria-hidden="true">🍸</div>
+      <div class="brand-copy">
+        <div class="brand-title">Guida Gin</div>
+        <div class="brand-subtitle">Profili aromatici e supporto per sala e banco</div>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambia tema">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+  <main>
+
+    <section class="controls">
+      <div class="search-wrap">
+        <label for="searchInput">Cerca gin, botaniche o descrittori</label>
+        <input id="searchInput" type="text" placeholder="Es. pompelmo, floreale, Monkey 47, salvia" />
+      </div>
+    </section>
+
+    <section class="content" id="ginDirectory">
+
+      <details class="category" data-category="agrumati e fruttati">
+        <summary class="category-header">
+          <h3>🍊 Agrumati e fruttati</h3>
+          <div class="category-meta">12 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="aridium bacca rossa fruttato, vinoso. impronta di uva rossa aglianico con ginepro in supporto. acino d’uva rossa o scorza d’arancia.">
+            <div class="gin-name">Aridium Bacca Rossa</div>
+            <p class="gin-desc">Fruttato, vinoso. Impronta di uva rossa Aglianico con ginepro in supporto.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Acino d’uva rossa o scorza d’arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Garnet Gin (fruttato e floreale), J Rose (floreale e fruttato), Boca Mucho Mas (tropicale e morbido)</p>
+          </article>
+
+          <article class="gin-card" data-search="barbarasa london dry secco, aromatico, agrumato. scorza di limone.">
+            <div class="gin-name">Barbarasa London Dry</div>
+            <p class="gin-desc">Secco, aromatico, agrumato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Tanqueray Ten (secco e agrumato), Cor l'Agrumato (agrumato strutturato), Bombay Sapphire Premier Cru (agrumato elegante)</p>
+          </article>
+
+          <article class="gin-card" data-search="boca mucho mas tropicale, morbido, fresco. note evidenti di mango e pesca, molto dissetante. fetta di pesca o scorza di lime.">
+            <div class="gin-name">Boca Mucho Mas</div>
+            <p class="gin-desc">Tropicale, morbido, fresco. Note evidenti di mango e pesca, molto dissetante.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pesca o scorza di lime.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Ciauru Gin (estivo e pompelmo), Paloma Gin (agrumato fresco), Garnet Gin (fruttato e morbido)</p>
+          </article>
+
+          <article class="gin-card" data-search="bombay sapphire premier cru agrumato ampio ed elegante. limone murciano, mandarino e arancia in evidenza. twist di limone.">
+            <div class="gin-name">Bombay Sapphire Premier Cru</div>
+            <p class="gin-desc">Agrumato ampio ed elegante. Limone murciano, mandarino e arancia in evidenza.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Tanqueray Ten (secco e agrumato), Barbarasa London Dry (secco e agrumato), Etsu Double Yuzu (agrumato fine)</p>
+          </article>
+
+          <article class="gin-card" data-search="ciauru gin fresco, estivo, pompelmo rosa molto evidente. fetta di pompelmo rosa.">
+            <div class="gin-name">Ciauru Gin</div>
+            <p class="gin-desc">Fresco, estivo, pompelmo rosa molto evidente.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Paloma Gin (pompelmo dominante), Gin Malfy Rosa (morbido e pompelmo), Boca Mucho Mas (fresco e fruttato)</p>
+          </article>
+
+          <article class="gin-card" data-search="etsu double yuzu molto agrumato, fine ed elegante. yuzu e limone dominanti. twist di limone o yuzu disidratato.">
+            <div class="gin-name">Etsu Double Yuzu</div>
+            <p class="gin-desc">Molto agrumato, fine ed elegante. Yuzu e limone dominanti.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o yuzu disidratato.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Arigatuono (stile giapponese e agrumato), Cor l'Agrumato (agrumato intenso), Oxley London Dry Gin (cristallino e morbido)</p>
+          </article>
+
+          <article class="gin-card" data-search="garnet gin floreale e fruttato. melograno, rosa e ibisco lo rendono morbido e profumato. chicchi di melograno o petali eduli.">
+            <div class="gin-name">Garnet Gin</div>
+            <p class="gin-desc">Floreale e fruttato. Melograno, rosa e ibisco lo rendono morbido e profumato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Chicchi di melograno o petali eduli.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> J Rose (floreale e fruttato), Aridium Bacca Rossa (fruttato e vinoso), Nordes (morbido e fruttato)</p>
+          </article>
+
+          <article class="gin-card" data-search="ginsanto e cantucci piatto al bicchiere old tom toscano, morbido e avvolgente, con richiami dolci e gastronomici che ricordano cantucci e vinsanto. scorza d’arancia o piccola nota biscotto a lato servizio.">
+            <div class="gin-name">Ginsanto e Cantucci Piatto al Bicchiere</div>
+            <p class="gin-desc">Old Tom toscano, morbido e avvolgente, con richiami dolci e gastronomici che ricordano cantucci e Vinsanto.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o piccola nota biscotto a lato servizio.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Malanova Old Tom (old tom dolce), Garnet Gin (morbido e fruttato), Gin del Professore La Madame (dolce e speziato)</p>
+          </article>
+
+          <article class="gin-card" data-search="j rose floreale, fruttato, leggermente agrumato e speziato. petali di rosa o scorza di pompelmo.">
+            <div class="gin-name">J Rose</div>
+            <p class="gin-desc">Floreale, fruttato, leggermente agrumato e speziato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Petali di rosa o scorza di pompelmo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Garnet Gin (floreale e fruttato), Ginecologo Sensualmente (floreale con rosa), Silent Pool (floreale ed elegante)</p>
+          </article>
+
+          <article class="gin-card" data-search="paloma gin agrumato e pulito. pompelmo rosa dominante con taglio fresco-balsamico. fetta di pompelmo rosa.">
+            <div class="gin-name">Paloma Gin</div>
+            <p class="gin-desc">Agrumato e pulito. Pompelmo rosa dominante con taglio fresco-balsamico.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Ciauru Gin (pompelmo rosa), Gin Malfy Rosa (morbido e pompelmo), Tanqueray Ten (pulito e agrumato)</p>
+          </article>
+
+          <article class="gin-card" data-search="tanqueray ten secco, pulito, classico, agrumato. pompelmo rosa.">
+            <div class="gin-name">Tanqueray Ten</div>
+            <p class="gin-desc">Secco, pulito, classico, agrumato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Pompelmo rosa.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Barbarasa London Dry (secco e agrumato), Bombay Dry (secco e classico), PiuCinque (ultra secco e classico)</p>
+          </article>
+
+          <article class="gin-card" data-search="cor l'agrumato ginglimo agrumato fresco strutturato intenso. lime limone cedro bergamotto pompelmo rosa arancio dolce liquirizia rotondità persistenza elegante. scorza di lime o twist di limone.">
+            <div class="gin-name">Cor l'Agrumato</div>
+            <p class="gin-desc">Agrumato intenso e strutturato. Apertura luminosa di lime, limone, cedro, bergamotto e pompelmo rosa; la liquirizia in radice lega tutto con rotondità e persistenza elegante.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di lime o twist di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Etsu Double Yuzu (agrumato fine), Bombay Sapphire Premier Cru (agrumato elegante), Barbarasa London Dry (agrumato secco)</p>
+          </article>
+        </div>
+      </details>
+
+      <details class="category" data-category="floreali e morbidi">
+        <summary class="category-header">
+          <h3>🌸 Floreali e morbidi</h3>
+          <div class="category-meta">15 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="another hendrick’s floreale, aromatico e morbido, con firma fresca e profumata nello stile hendrick’s. cetriolo.">
+            <div class="gin-name">Another Hendrick’s</div>
+            <p class="gin-desc">Floreale, aromatico e morbido, con firma fresca e profumata nello stile Hendrick’s.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Cetriolo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Hendrick’s (floreale e cetriolo), Big Gino Pepino Loco (cetriolo e freschezza), Bobby’s (floreale e agrumato)</p>
+          </article>
+
+          <article class="gin-card" data-search="bobby’s floreale e agrumato. citronella e spezie fini, complesso ma leggibile. spicchio d’arancia con 3 chiodi di garofano.">
+            <div class="gin-name">Bobby’s</div>
+            <p class="gin-desc">Floreale e agrumato. Citronella e spezie fini, complesso ma leggibile.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Spicchio d’arancia con 3 chiodi di garofano.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Monkey 47 (complesso e speziato), Another Hendrick’s (floreale), Silent Pool (elegante e floreale)</p>
+          </article>
+
+          <article class="gin-card esaurito" data-search="dr mason morbido e rotondo. mediterraneo con salicornia e fava tonka, chiusura leggermente salina. limone o salicornia se disponibile.">
+            <div class="gin-name-row">
+              <div class="gin-name">Dr Mason</div>
+              <span class="badge-esaurito">⛔ Esaurito</span>
+            </div>
+            <p class="gin-desc">Morbido e rotondo. Mediterraneo con salicornia e fava tonka, chiusura leggermente salina.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Limone o salicornia se disponibile.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Frantuono (morbido e mediterraneo), Nordes (morbido e fruttato), Silent Pool (corpo ricco ed elegante)</p>
+          </article>
+
+          <article class="gin-card" data-search="frantuono morbido, delicato, mediterraneo, con sentori di oliva. oliva o scorza di limone.">
+            <div class="gin-name">Frantuono</div>
+            <p class="gin-desc">Morbido, delicato, mediterraneo, con sentori di oliva.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Oliva o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Dr Mason (morbido e mediterraneo), Bandito (aromatico e mediterraneo), Presobene (gastronomico e mediterraneo)</p>
+          </article>
+
+          <article class="gin-card esaurito" data-search="gin del professore la madame floreale, speziato dolce e morbido. cannella, vaniglia e agrumi, molto articolato. scorza d’arancia.">
+            <div class="gin-name-row">
+              <div class="gin-name">Gin del Professore La Madame</div>
+              <span class="badge-esaurito">⛔ Esaurito</span>
+            </div>
+            <p class="gin-desc">Floreale, speziato dolce e morbido. Cannella, vaniglia e agrumi, molto articolato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Silent Pool (floreale e complesso), Malanova Old Tom (dolce e speziato), Monkey 47 (complesso e aromatico)</p>
+          </article>
+
+          <article class="gin-card" data-search="gin malfy rosa succoso, morbido. pompelmo rosa in primo piano con finale amaricante. fetta di pompelmo rosa.">
+            <div class="gin-name">Gin Malfy Rosa</div>
+            <p class="gin-desc">Succoso, morbido. Pompelmo rosa in primo piano con finale amaricante.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di pompelmo rosa.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Ciauru Gin (fresco e pompelmo), Paloma Gin (agrumato pulito), Nordes (morbido e fruttato)</p>
+          </article>
+
+          <article class="gin-card" data-search="hendrick’s fresco, aromatico, floreale. 3 rondelle sottili di cetriolo.">
+            <div class="gin-name">Hendrick’s</div>
+            <p class="gin-desc">Fresco, aromatico, floreale.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> 3 rondelle sottili di cetriolo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Another Hendrick’s (stesso stile), Big Gino Pepino Loco (cetriolo dominante), Silent Pool (floreale ed elegante)</p>
+          </article>
+
+          <article class="gin-card" data-search="kranebet botanic gin morbido e aromatico, con ginepro predominante e sfumature amaricanti di genziana e assenzio romano. scorza di limone o bacca di ginepro.">
+            <div class="gin-name">Kranebet Botanic Gin</div>
+            <p class="gin-desc">Morbido e aromatico, con ginepro predominante e sfumature amaricanti di genziana e assenzio romano.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o bacca di ginepro.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Monkey 47 (complesso e aromatico), Silent Pool (elegante e floreale), Frantuono (morbido e botanico)</p>
+          </article>
+
+          <article class="gin-card" data-search="malanova old tom stile old tom: rotondo, leggermente dolce. ginepro smussato con vena speziata. scorza d’arancia o fiore edule.">
+            <div class="gin-name">Malanova Old Tom</div>
+            <p class="gin-desc">Stile Old Tom: rotondo, leggermente dolce. Ginepro smussato con vena speziata.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o fiore edule.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Ginsanto e Cantucci Piatto al Bicchiere (old tom toscano), The Boatyard Old Tom (vellutato e complesso), Gin del Professore La Madame (dolce e speziato)</p>
+          </article>
+
+          <article class="gin-card" data-search="monkey 47 complesso, morbido, speziato, elegante. scorza di pompelmo o limone.">
+            <div class="gin-name">Monkey 47</div>
+            <p class="gin-desc">Complesso, morbido, speziato, elegante.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di pompelmo o limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Silent Pool (complesso ed elegante), Bobby's (speziato e floreale), Kranebet Botanic Gin (aromatico e botanico)</p>
+          </article>
+
+          <article class="gin-card" data-search="nordes morbido, fresco, fruttato. uva bianca o scorza di limone.">
+            <div class="gin-name">Nordes</div>
+            <p class="gin-desc">Morbido, fresco, fruttato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Uva bianca o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Malfy Rosa (morbido e fruttato), Frantuono (morbido e delicato), Boca Mucho Mas (morbido e fresco)</p>
+          </article>
+
+          <article class="gin-card" data-search="oxley london dry gin cristallino e morbido. pompelmo, cedro e mandorla tostata; distillato a freddo. twist di pompelmo o cedro.">
+            <div class="gin-name">Oxley London Dry Gin</div>
+            <p class="gin-desc">Cristallino e morbido. Pompelmo, cedro e mandorla tostata; distillato a freddo.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist di pompelmo o cedro.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Etsu Double Yuzu (cristallino e agrumato), Peter in Florence (fresco e vellutato), Monkey 47 (complesso e morbido)</p>
+          </article>
+
+          <article class="gin-card" data-search="peter in florence fresco e vellutato. l’iris gli dà un tocco inconfondibilmente profumato. bergamotto o scorza di limone.">
+            <div class="gin-name">Peter in Florence</div>
+            <p class="gin-desc">Fresco e vellutato. L’iris gli dà un tocco inconfondibilmente profumato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Bergamotto o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Hendrick's (floreale e profumato), Another Hendrick's (floreale), Oxley London Dry Gin (fresco e vellutato)</p>
+          </article>
+
+          <article class="gin-card" data-search="piero dry gin morbido, elegante, speziato. scorza di limone.">
+            <div class="gin-name">Piero Dry Gin</div>
+            <p class="gin-desc">Morbido, elegante, speziato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Monkey 47 (morbido e speziato), Piero Xmas (stesso produttore), Silent Pool (elegante e complesso)</p>
+          </article>
+
+          <article class="gin-card" data-search="silent pool complesso ed elegante. lavanda, camomilla, sambuco e un corpo ricco. scorza d’arancia o lavanda leggera.">
+            <div class="gin-name">Silent Pool</div>
+            <p class="gin-desc">Complesso ed elegante. Lavanda, camomilla, sambuco e un corpo ricco.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o lavanda leggera.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Monkey 47 (complesso ed elegante), Gin del Professore La Madame (floreale e aromatico), Bobby's (floreale e fine)</p>
+          </article>
+        </div>
+      </details>
+
+      <details class="category" data-category="erbacei e mediterranei">
+        <summary class="category-header">
+          <h3>🌿 Erbacei e mediterranei</h3>
+          <div class="category-meta">19 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="amazzoni dry gin erbaceo e complesso. agrumato e balsamico, con anima vegetale molto chiara. scorza di lime o foglia di alloro.">
+            <div class="gin-name">Amazzoni Dry Gin</div>
+            <p class="gin-desc">Erbaceo e complesso. Agrumato e balsamico, con anima vegetale molto chiara.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di lime o foglia di alloro.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Arcipelago (erbaceo e mediterraneo), Argintario (erbaceo e balsamico), D'stillia (vegetale e resinoso)</p>
+          </article>
+
+          <article class="gin-card" data-search="arcipelago mediterraneo netto. limone, rosmarino, basilico, timo ed elicriso toscano. scorza di limone o rametto di rosmarino.">
+            <div class="gin-name">Arcipelago</div>
+            <p class="gin-desc">Mediterraneo netto. Limone, rosmarino, basilico, timo ed elicriso toscano.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o rametto di rosmarino.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Argintario (macchia mediterranea), Amazzoni Dry Gin (erbaceo e balsamico), Punta Mari (mediterraneo e balsamico)</p>
+          </article>
+
+          <article class="gin-card" data-search="argintario macchia mediterranea. lentisco e finocchietto marittimo, costiero e balsamico. rosmarino o scorza di limone.">
+            <div class="gin-name">Argintario</div>
+            <p class="gin-desc">Macchia mediterranea. Lentisco e finocchietto marittimo, costiero e balsamico.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Arcipelago (mediterraneo con erbe), Selvatiq Mediterranean (mediterraneo costiero), Punta Mari (mirto e balsamico)</p>
+          </article>
+
+          <article class="gin-card" data-search="arigatuono stile giapponese, elegante, pulito, agrumato, leggermente speziato. scorza di limone o yuzu disidratato.">
+            <div class="gin-name">Arigatuono</div>
+            <p class="gin-desc">Stile giapponese, elegante, pulito, agrumato, leggermente speziato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o yuzu disidratato.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Etsu Double Yuzu (stile giapponese e agrumato), Milano Elite Dry Gin (elegante e secco), Amazzoni Dry Gin (erbaceo e pulito)</p>
+          </article>
+
+          <article class="gin-card" data-search="big gino gineproso ma morbido. pomelo in evidenza con finale vegetale leggero. pompelo rosa o scorza di pomelo.">
+            <div class="gin-name">Big Gino</div>
+            <p class="gin-desc">Gineproso ma morbido. Pomelo in evidenza con finale vegetale leggero.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Pompelo rosa o scorza di pomelo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Amazzoni Dry Gin (gineproso ma morbido), Arcipelago (vegetale e fresco), Nevaio Gin (gineproso e balsamico)</p>
+          </article>
+
+          <article class="gin-card" data-search="big gino pepino loco vegetale e super fresco. cetriolo dominante, accompagnato da limone e menta. cetriolo e menta.">
+            <div class="gin-name">Big Gino Pepino Loco</div>
+            <p class="gin-desc">Vegetale e super fresco. Cetriolo dominante, accompagnato da limone e menta.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Cetriolo e menta.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Hendrick's (cetriolo e freschezza), Another Hendrick's (fresco e cetriolo), Upperhand (fresco ed erbaceo)</p>
+          </article>
+
+          <article class="gin-card" data-search="d’stillia vegetale e resinoso. pino, rosmarino e critmo: botaniche selvatiche di pantelleria. rosmarino o scorza di limone.">
+            <div class="gin-name">D’stillia</div>
+            <p class="gin-desc">Vegetale e resinoso. Pino, rosmarino e critmo: botaniche selvatiche di Pantelleria.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Argintario (vegetale e resinoso), Selvatiq Mediterranean (botaniche selvatiche), Lavico Mangiantosa (resinoso e secco)</p>
+          </article>
+
+          <article class="gin-card" data-search="dhea hops secco e citrico. forte firma di luppolo, resa tesa dalla pompìa. scorza di pompelmo o foglia aromatica fresca.">
+            <div class="gin-name">Dhea Hops</div>
+            <p class="gin-desc">Secco e citrico. Forte firma di luppolo, resa tesa dalla Pompìa.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di pompelmo o foglia aromatica fresca.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Amazzoni Dry Gin (secco e citrico), Rame Italian Dry (secco e erbaceo), Nevaio Gin (secco e gineproso)</p>
+          </article>
+
+          <article class="gin-card" data-search="engine erbaceo fresco e morbido. salvia e limone sono il cuore, con un tocco di liquirizia. scorza di limone e salvia.">
+            <div class="gin-name">Engine</div>
+            <p class="gin-desc">Erbaceo fresco e morbido. Salvia e limone sono il cuore, con un tocco di liquirizia.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone e salvia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Upperhand (fresco e erbaceo), Amazzoni Dry Gin (erbaceo e balsamico), Big Gino Pepino Loco (fresco e vegetale)</p>
+          </article>
+
+          <article class="gin-card" data-search="gin amiata montano e boschivo. abete bianco, angelica e timo: profumi netti di montagna e resina. ago di rosmarino o scorza di limone.">
+            <div class="gin-name">Gin Amiata</div>
+            <p class="gin-desc">Montano e boschivo. Abete bianco, angelica e timo: profumi netti di montagna e resina.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Ago di rosmarino o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Nevaio Gin (montano e balsamico), D'stillia (resinoso e vegetale), Selvatiq Desert (resinoso e terroso)</p>
+          </article>
+
+          <article class="gin-card" data-search="lavico mangiantosa intenso e secco. rosmarino, pepe nero e maggiorana per un’impronta etnea. rosmarino o scorza di limone.">
+            <div class="gin-name">Lavico Mangiantosa</div>
+            <p class="gin-desc">Intenso e secco. Rosmarino, pepe nero e maggiorana per un’impronta etnea.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Rame London Dry (speziato e pepato), Selvatiq Desert (resinoso e terroso), Gin Brace (sapido e speziato)</p>
+          </article>
+
+          <article class="gin-card" data-search="mediterraneo london dry gin mediterraneo, agrumato ed erbaceo, con equilibrio tra note balsamiche, morbidezza e lieve sapidità. rosmarino o zest di limone.">
+            <div class="gin-name">Mediterraneo London Dry Gin</div>
+            <p class="gin-desc">Mediterraneo, agrumato ed erbaceo, con equilibrio tra note balsamiche, morbidezza e lieve sapidità.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o zest di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Rame Italian Dry (mediterraneo e agrumato), Arcipelago (mediterraneo), Milano Elite Dry Gin (elegante e mediterraneo)</p>
+          </article>
+
+          <article class="gin-card" data-search="milano elite dry gin elegante, secco e armonioso, con agrumi mediterranei, note erbacee, balsamiche e finale leggermente speziato. scorza di limone o arancia.">
+            <div class="gin-name">Milano Elite Dry Gin</div>
+            <p class="gin-desc">Elegante, secco e armonioso, con agrumi mediterranei, note erbacee, balsamiche e finale leggermente speziato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Barbarasa London Dry (secco e agrumato), Mediterraneo London Dry Gin (mediterraneo e erbaceo), Arigatuono (elegante e pulito)</p>
+          </article>
+
+          <article class="gin-card" data-search="nevaio gin essenziale, puro e molto gineproso, con timbro balsamico, secco e montano. twist di limone o nessun garnish invasivo.">
+            <div class="gin-name">Nevaio Gin</div>
+            <p class="gin-desc">Essenziale, puro e molto gineproso, con timbro balsamico, secco e montano.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o nessun garnish invasivo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Amiata (montano e gineproso), Sipsmith V.J.O.P. (resinoso e secco), PiuCinque (ultra secco e gineproso)</p>
+          </article>
+
+          <article class="gin-card" data-search="punta mari mediterraneo, fresco e avvolgente, con mirto, rosa canina e agrumi su fondo balsamico. rametto di mirto o scorza di limone.">
+            <div class="gin-name">Punta Mari</div>
+            <p class="gin-desc">Mediterraneo, fresco e avvolgente, con mirto, rosa canina e agrumi su fondo balsamico.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rametto di mirto o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Argintario (mediterraneo e balsamico), Selvatiq Mediterranean (mirto e marino), Arcipelago (mediterraneo)</p>
+          </article>
+
+          <article class="gin-card" data-search="rame italian dry mediterraneo, aromatico, leggermente agrumato; proposto come alternativa italiana al gin mare. rosmarino o oliva.">
+            <div class="gin-name">Rame Italian Dry</div>
+            <p class="gin-desc">Mediterraneo, aromatico, leggermente agrumato; proposto come alternativa italiana al Gin Mare.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o oliva.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Mediterraneo London Dry Gin (mediterraneo e erbaceo), Arcipelago (erbaceo e mediterraneo), Xoriguer Mahon Gin (resinoso e rotondo)</p>
+          </article>
+
+          <article class="gin-card" data-search="upperhand fresco, estivo, morbido, con sentori di basilico e limone. basilico e scorza di limone.">
+            <div class="gin-name">Upperhand</div>
+            <p class="gin-desc">Fresco, estivo, morbido, con sentori di basilico e limone.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Basilico e scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Engine (fresco e erbaceo), Big Gino Pepino Loco (fresco e vegetale), Amazzoni Dry Gin (erbaceo e fresco)</p>
+          </article>
+
+          <article class="gin-card" data-search="xoriguer mahon gin mediterraneo e resinoso. base di alcol vinico che lo rende rotondo, erbaceo e balsamico. scorza di limone.">
+            <div class="gin-name">Xoriguer Mahon Gin</div>
+            <p class="gin-desc">Mediterraneo e resinoso. Base di alcol vinico che lo rende rotondo, erbaceo e balsamico.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Rame Italian Dry (resinoso e balsamico), Argintario (erbaceo e balsamico), Mediterraneo London Dry Gin (mediterraneo e rotondo)</p>
+          </article>
+
+          <article class="gin-card" data-search="selvatiq desert resinoso terroso desertico. ginepro dello utah artemisia sagebrush salvia bianca sommacco. finale secco leggermente affumicato e pepato. scorza di limone o nessun garnish invasivo.">
+            <div class="gin-name">Selvatiq Desert</div>
+            <p class="gin-desc">Resinoso, terroso, selvatico. Il ginepro dello Utah (Juniperus Osteosperma) domina con carattere arido e pepato; sagebrush e salvia bianca aggiungono profondità erbacea e un finale asciutto e leggermente affumicato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o nessun garnish invasivo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Amiata (resinoso e botaniche selvatiche), Lavico Mangiantosa (terroso e secco), Gin Brace (affumicato e speziato)</p>
+          </article>
+
+          <article class="gin-card" data-search="selvatiq mediterranean mediterraneo costiero balsamico. ginepro sardo oxycedrus mirto selvatico arancia amara foglie di fico timo sardegna la maddalena. scorza di limone o rametto di mirto.">
+            <div class="gin-name">Selvatiq Mediterranean</div>
+            <p class="gin-desc">Mediterraneo costiero e balsamico. Ginepro coccolone della Sardegna (Juniperus Oxycedrus) con mirto selvatico, arancia amara, foglie di fico e timo: macchia sarda raccolta a mano tra La Maddalena e Caprera.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o rametto di mirto.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Argintario (macchia sarda), Punta Mari (mirto e balsamico), Selvatiq Desert (stesso produttore)</p>
+          </article>
+        </div>
+      </details>
+
+      <details class="category" data-category="sapidi e marini">
+        <summary class="category-header">
+          <h3>🌊 Sapidi e marini</h3>
+          <div class="category-meta">8 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="bandito aromatico e fresco. erbaceo e complesso con chiaro richiamo marino. zeste di limone o oliva delicata.">
+            <div class="gin-name">Bandito</div>
+            <p class="gin-desc">Aromatico e fresco. Erbaceo e complesso con chiaro richiamo marino.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Zeste di limone o oliva delicata.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Capperi Gin (marino e mediterraneo), Presobene (gastronomico e mediterraneo), Gin Sale (gineproso e salino)</p>
+          </article>
+
+          <article class="gin-card" data-search="capperi gin secco e salino. i fiori di cappero lo portano su un registro marino e mediterraneo. cappero in fiore o scorza di limone.">
+            <div class="gin-name">Capperi Gin</div>
+            <p class="gin-desc">Secco e salino. I fiori di cappero lo portano su un registro marino e mediterraneo.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Cappero in fiore o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Presobene (capperi e salino), Bandito (marino e aromatico), Gin Sale (salino e marino)</p>
+          </article>
+
+          <article class="gin-card" data-search="gin brace sapido e affumicato. taglio da cucina/bbq, molto gastronomico e speziato. scorza di limone o rosmarino.">
+            <div class="gin-name">Gin Brace</div>
+            <p class="gin-desc">Sapido e affumicato. Taglio da cucina/BBQ, molto gastronomico e speziato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o rosmarino.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Selvatiq Desert (affumicato e terroso), Lavico Mangiantosa (speziato e secco), Maite Fiamma (affumicato e complesso)</p>
+          </article>
+
+          <article class="gin-card" data-search="gin sale gineproso e fresco. sale marino, finale salino e balsamico. lemon zest o oliva verde delicata.">
+            <div class="gin-name">Gin Sale</div>
+            <p class="gin-desc">Gineproso e fresco. Sale marino, finale salino e balsamico.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Lemon zest o oliva verde delicata.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Capperi Gin (salino e marino), Bandito (marino e aromatico), Laguna (minerale e lagunare)</p>
+          </article>
+
+          <article class="gin-card" data-search="laguna minerale e contemporaneo. la salicornia gli dà un taglio lagunare molto chiaro. salicornia o scorza di limone.">
+            <div class="gin-name">Laguna</div>
+            <p class="gin-desc">Minerale e contemporaneo. La salicornia gli dà un taglio lagunare molto chiaro.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Salicornia o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Sale (salino e minerale), Capperi Gin (marino e secco), Neverin (sapido e veneziano)</p>
+          </article>
+
+          <article class="gin-card" data-search="poseidon marino, fresco, agrumato. scorza di limone o nota marina discreta.">
+            <div class="gin-name">Poseidon</div>
+            <p class="gin-desc">Marino, fresco, agrumato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o nota marina discreta.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Capperi Gin (marino e agrumato), Bandito (marino e fresco), Gin Sale (salino e fresco)</p>
+          </article>
+
+          <article class="gin-card" data-search="presobene gastronomico e mediterraneo, con limone, capperi e sale dolce di cervia; pulito, minerale e floreale. foglia di cappero, limone o oliva delicata.">
+            <div class="gin-name">Presobene</div>
+            <p class="gin-desc">Gastronomico e mediterraneo, con limone, capperi e sale dolce di Cervia; pulito, minerale e floreale.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Foglia di cappero, limone o oliva delicata.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Capperi Gin (capperi e salino), Bandito (gastronomico e mediterraneo), Frantuono (morbido e mediterraneo)</p>
+          </article>
+
+          <article class="gin-card" data-search="neverin veneziano compound gineproso balsamico speziato sapido. acqua di mare adriatico vino bianco ricetta 1724 frati cappuccini venezia. venti botaniche salvia rosmarino cardamomo pepe timut scorza di limone o oliva delicata.">
+            <div class="gin-name">Neverin</div>
+            <p class="gin-desc">Gineproso e balsamico con anima veneziana. Compound premium ispirato a una ricetta conventuale del 1724: oltre venti botaniche — salvia, alloro, cardamomo, pepe di Timut e molte altre — legate da acqua di mare dell'Adriatico e vino bianco, per una struttura secca, sapida e persistente.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o oliva delicata.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Sale (sapido e balsamico), Laguna (veneziano e minerale), Capperi Gin (marino e gineproso)</p>
+          </article>
+        </div>
+      </details>
+
+      <details class="category" data-category="speziati e orientali">
+        <summary class="category-header">
+          <h3>🌶️ Speziati e orientali</h3>
+          <div class="category-meta">7 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="il gin del bisonte intenso e originale, con peperoncino trinidad perfume, sentori tropicali, floreali e agrumati senza vera piccantezza. scorza d’arancia o pompelmo.">
+            <div class="gin-name">Il Gin del Bisonte</div>
+            <p class="gin-desc">Intenso e originale, con peperoncino Trinidad Perfume, sentori tropicali, floreali e agrumati senza vera piccantezza.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o pompelmo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Maite Furia (speziato e fruttato), Opihr (orientale e speziato), Bobby's (speziato e complesso)</p>
+          </article>
+
+          <article class="gin-card" data-search="maite fiamma secco, complesso, leggermente affumicato. scorza d’arancia.">
+            <div class="gin-name">Maite Fiamma</div>
+            <p class="gin-desc">Secco, complesso, leggermente affumicato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Brace (affumicato e speziato), Selvatiq Desert (secco e resinoso), Lavico Mangiantosa (secco e speziato)</p>
+          </article>
+
+          <article class="gin-card" data-search="maite furia agrumato e pepato. il pepe etiope aggiunge una speziatura fruttata pungente. pepe rosa o zeste d’arancia.">
+            <div class="gin-name">Maite Furia</div>
+            <p class="gin-desc">Agrumato e pepato. Il pepe etiope aggiunge una speziatura fruttata pungente.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Pepe rosa o zeste d’arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Il Gin del Bisonte (fruttato e speziato), Opihr (speziato e pepato), Rame London Dry (pepato e speziato)</p>
+          </article>
+
+          <article class="gin-card" data-search="maite spiaggialunga aromatico, mediterraneo, leggermente speziato. rosmarino o scorza di limone.">
+            <div class="gin-name">Maite Spiaggialunga</div>
+            <p class="gin-desc">Aromatico, mediterraneo, leggermente speziato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Rosmarino o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Arcipelago (aromatico e mediterraneo), Rame Italian Dry (mediterraneo e speziato), Punta Mari (aromatico e balsamico)</p>
+          </article>
+
+          <article class="gin-card" data-search="opihr orientale e terroso. cumino, cardamomo e pepe nero dominano la scena. scorza d’arancia o cardamomo.">
+            <div class="gin-name">Opihr</div>
+            <p class="gin-desc">Orientale e terroso. Cumino, cardamomo e pepe nero dominano la scena.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d’arancia o cardamomo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Maite Furia (speziato e orientale), Il Gin del Bisonte (speziato e fruttato), Rame London Dry (speziato e pepato)</p>
+          </article>
+
+          <article class="gin-card" data-search="piero xmas caldo e avvolgente. cannella, zenzero e arancia per un chiaro profilo natalizio. arancia disidratata e cannella.">
+            <div class="gin-name">Piero Xmas</div>
+            <p class="gin-desc">Caldo e avvolgente. Cannella, zenzero e arancia per un chiaro profilo natalizio.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Arancia disidratata e cannella.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Ginsanto e Cantucci Piatto al Bicchiere (avvolgente e gastronomico), Malanova Old Tom (dolce e caldo), Mosi Gin — Eldfell (caldo e resinoso)</p>
+          </article>
+
+          <article class="gin-card" data-search="rame london dry secco, speziato, pepato. pepe nero leggero o scorza di limone.">
+            <div class="gin-name">Rame London Dry</div>
+            <p class="gin-desc">Secco, speziato, pepato.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Pepe nero leggero o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Opihr (speziato e pepato), Lavico Mangiantosa (speziato e secco), Maite Furia (pepato e speziato)</p>
+          </article>
+        </div>
+      </details>
+
+      <details class="category" data-category="secchi e gineprosi">
+        <summary class="category-header">
+          <h3>🌲 Secchi e gineprosi</h3>
+          <div class="category-meta">6 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="bombay dry secco, classico, pulito. lemon twist.">
+            <div class="gin-name">Bombay Dry</div>
+            <p class="gin-desc">Secco, classico, pulito.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Lemon twist.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Bombay Sapphire (stesso produttore, più floreale), PiuCinque (ultra secco), Tarquin's Cornish Dry Gin (secco e pulito)</p>
+          </article>
+
+          <article class="gin-card" data-search="bombay sapphire secco, speziato, leggermente agrumato e floreale. spicchio di lime o zest di limone.">
+            <div class="gin-name">Bombay Sapphire</div>
+            <p class="gin-desc">Secco, speziato, leggermente agrumato e floreale.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Spicchio di lime o zest di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Bombay Dry (stesso produttore, più secco), Bombay Sapphire Premier Cru (versione agrumata premium), Tanqueray Ten (secco e agrumato)</p>
+          </article>
+
+          <article class="gin-card" data-search="piucinque ultra secco e classico. ginepro deciso, rifinito da salvia, bergamotto e angelica. scorza di bergamotto o limone.">
+            <div class="gin-name">PiuCinque</div>
+            <p class="gin-desc">Ultra secco e classico. Ginepro deciso, rifinito da salvia, bergamotto e angelica.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di bergamotto o limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Nevaio Gin (gineproso e balsamico), Bombay Dry (secco e classico), Sipsmith V.J.O.P. (gineproso overproof)</p>
+          </article>
+
+          <article class="gin-card esaurito" data-search="sipsmith v.j.o.p. estremamente gineproso. overproof potente, resinoso e secco con note di legno di cedro. zest di lime o limone, molto essenziale.">
+            <div class="gin-name-row">
+              <div class="gin-name">Sipsmith V.J.O.P.</div>
+              <span class="badge-esaurito">⛔ Esaurito</span>
+            </div>
+            <p class="gin-desc">Estremamente gineproso. Overproof potente, resinoso e secco con note di legno di cedro.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Zest di lime o limone, molto essenziale.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> PiuCinque (ultra secco e gineproso), Nevaio Gin (gineproso e balsamico), Tarquin's Cornish Dry Gin (ginepro e agrumi)</p>
+          </article>
+
+          <article class="gin-card" data-search="tarquin’s cornish dry gin ginepro netto e agrumi. partenza di foresta di pini, chiusura secca e pulita. twist di limone o pompelmo.">
+            <div class="gin-name">Tarquin’s Cornish Dry Gin</div>
+            <p class="gin-desc">Ginepro netto e agrumi. Partenza di foresta di pini, chiusura secca e pulita.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o pompelmo.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> PiuCinque (ginepro netto e secco), Bombay Dry (secco e classico), Nevaio Gin (gineproso e balsamico)</p>
+          </article>
+
+          <article class="gin-card" data-search="the boatyard old tom vellutato e complesso, con frutta secca, uvetta, scorza d’agrumi e finale setoso di arancia caramellata. twist d’arancia.">
+            <div class="gin-name">The Boatyard Old Tom</div>
+            <p class="gin-desc">Vellutato e complesso, con frutta secca, uvetta, scorza d’agrumi e finale setoso di arancia caramellata.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist d’arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Malanova Old Tom (old tom speziato), Ginsanto e Cantucci Piatto al Bicchiere (old tom dolce), Nordes (morbido e fruttato)</p>
+          </article>
+        </div>
+      </details>
+
+      <details class="category" data-category="altri gin della carta">
+        <summary class="category-header">
+          <h3>📋 Altri gin della carta</h3>
+          <div class="category-meta">4 gin</div>
+        </summary>
+        <div class="gin-grid">
+          <article class="gin-card" data-search="brockman’s morbido, con frutti rossi in evidenza. frutti rossi o scorza d’arancia.">
+            <div class="gin-name">Brockman’s</div>
+            <p class="gin-desc">Morbido, con frutti rossi in evidenza.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Frutti rossi o scorza d’arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Garnet Gin (frutti rossi e floreale), Aridium Bacca Rossa (fruttato e vinoso), Nordes (morbido e fruttato)</p>
+          </article>
+
+          <article class="gin-card" data-search="ginecologo sensualmente fresco e seducente, con ginepro, petali di rosa, scorza di limone e un tocco speziato di pepe rosa. petali di rosa o scorza di limone.">
+            <div class="gin-name">Ginecologo Sensualmente</div>
+            <p class="gin-desc">Fresco e seducente, con ginepro, petali di rosa, scorza di limone e un tocco speziato di pepe rosa.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Petali di rosa o scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Peter in Florence (floreale e profumato), Hendrick's (fresco e floreale), J Rose (floreale con rosa)</p>
+          </article>
+
+          <article class="gin-card" data-search="mosi gin eldfell islanda vulcano invecchiato barrel aged fuoco caldo speziato resinoso terroso. scorza di arancia o nessun garnish.">
+            <div class="gin-name">Mosi Gin — Eldfell</div>
+            <p class="gin-desc">Invecchiato sulle pendici vulcaniche di Eldfell (Isole Westman, Islanda). Il calore geotermico e il sale marino accelerano l'estrazione dal legno, regalando un gin caldo, resinoso e speziato con sentori tostati e un finale lungo.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza d'arancia o nessun garnish che copra il legno.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Mosi Gin — Langjökull (stesso produttore), The Boatyard Old Tom (barrel aged), Gin Brace (caldo e resinoso)</p>
+          </article>
+
+          <article class="gin-card" data-search="mosi gin langjokull islanda ghiacciaio invecchiato barrel aged freddo pulito fresco minerale artico. twist di limone o scorza di lime.">
+            <div class="gin-name">Mosi Gin — Langjökull</div>
+            <p class="gin-desc">Invecchiato nel cuore del ghiacciaio Langjökull (Islanda). Il freddo estremo rallenta l'estrazione e preserva la freschezza: gin pulito, minerale e artico, con note delicate di legno e un timbro glaciale inconfondibile.</p>
+            <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone o scorza di lime.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Mosi Gin — Eldfell (stesso produttore), Nevaio Gin (puro e minerale), Laguna (minerale e fresco)</p>
+          </article>
+        </div>
+      </details>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Guida interna per il servizio. I profili sono sintetici e pensati per aiutare il personale a orientare rapidamente il cliente in base al gusto cercato.</p>
+  </footer>
+
+  <script>
+  (function () {
+    var root = document.documentElement;
+
+    // ── Tema ──
+    var saved = localStorage.getItem('poggio-theme');
+    if (saved) root.setAttribute('data-theme', saved);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var toggle = document.getElementById('themeToggle');
+      var icon   = document.getElementById('themeIcon');
+
+      function syncIcon() {
+        icon.textContent = root.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+      }
+      syncIcon();
+
+      toggle.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('poggio-theme', next);
+        syncIcon();
+      });
+
+      // ── Ricerca ──
+      var q    = document.getElementById('searchInput');
+      var cats = Array.prototype.slice.call(document.querySelectorAll('.category'));
+
+      function filter() {
+        var v = q.value.trim().toLowerCase();
+
+        cats.forEach(function (section) {
+          var cards   = Array.prototype.slice.call(section.querySelectorAll('.gin-card'));
+          var visible = 0;
+
+          cards.forEach(function (card) {
+            var show = !v || card.dataset.search.includes(v);
+            card.style.display = show ? 'grid' : 'none';
+            if (show) visible++;
+          });
+
+          section.style.display = visible > 0 ? 'block' : 'none';
+          section.open = !!v;
+        });
+      }
+
+      q.addEventListener('input', filter);
+      filter();
+    });
+  })();
+  </script>
+</body>
+</html>
