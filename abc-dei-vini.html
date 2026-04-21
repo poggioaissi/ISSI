@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="format-detection" content="telephone=no" />
+<title>ABC dei Vini — Poggio a Issi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+  --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
+  --transition-interactive:180ms cubic-bezier(0.16,1,0.3,1);
+  --font-display:"Baloo 2",cursive;
+  --font-body:"Inter",sans-serif;
+}
+:root,[data-theme="light"]{
+  --color-bg:#eef1e8;--color-surface:#f7f8f2;--color-surface-2:#e6ebde;--color-border:#bcc7b1;
+  --color-text:#2d3a23;--color-text-muted:#55664a;--color-text-faint:#87957d;
+  --color-primary:#7a8f49;--color-primary-hover:#65793a;--color-primary-highlight:#dde6c9;
+  --color-ok:#5f7a56;--color-ok-soft:#dfe8d9;
+  --color-blue:#58758b;--color-blue-soft:#dce7ef;
+  --color-red:#9a6660;--color-red-soft:#efdfdb;
+  --color-rose:#81505b;--color-rose-soft:#ead8dd;
+  --color-gold:#9a7a39;--color-gold-soft:#eee2bf;
+  --color-replace:#79649b;--color-replace-soft:#e7e0f0;
+  --color-warn:#a06a45;--color-warn-soft:#efdfd3;
+  --color-bubble:#7f9baa;--color-bubble-soft:#dbe5ea;
+  --color-amber:#a85a2a;--color-amber-soft:#f3e0d2;
+  --color-violet:#6e4bb8;--color-violet-soft:#e7def8;
+  --shadow-sm:0 1px 2px rgba(33,45,24,.08);
+  --shadow-md:0 10px 25px rgba(33,45,24,.12);
+  --shadow-lg:0 16px 40px rgba(33,45,24,.14);
+}
+[data-theme="dark"]{
+  --color-bg:#111611;--color-surface:#1a2219;--color-surface-2:#253026;--color-border:#394738;
+  --color-text:#e6eadc;--color-text-muted:#b4bea8;--color-text-faint:#7f8b77;
+  --color-primary:#a6bf67;--color-primary-hover:#bbd97a;--color-primary-highlight:#2d3a24;
+  --color-ok:#a9c697;--color-ok-soft:#1f2a20;
+  --color-blue:#9dbed0;--color-blue-soft:#1b2730;
+  --color-red:#d7a094;--color-red-soft:#2d211d;
+  --color-rose:#d6a7b1;--color-rose-soft:#2e2125;
+  --color-gold:#d8c07e;--color-gold-soft:#2c2718;
+  --color-replace:#bda9de;--color-replace-soft:#241f31;
+  --color-warn:#d8a07a;--color-warn-soft:#2d221c;
+  --color-bubble:#a9c1cc;--color-bubble-soft:#1c262b;
+  --color-amber:#e2a16e;--color-amber-soft:#2b2018;
+  --color-violet:#b89cff;--color-violet-soft:#231c33;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.24);
+  --shadow-md:0 12px 32px rgba(0,0,0,.38);
+  --shadow-lg:0 18px 48px rgba(0,0,0,.42);
+}
+
+/* ── Shared topbar ── */
+.topbar{position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--color-bg) 78%,transparent);border-bottom:1px solid color-mix(in srgb,var(--color-border) 75%,transparent)}
+.topbar-inner{width:min(1100px,calc(100% - 2rem));margin:0 auto;padding:var(--space-4) 0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)}
+.brand{display:flex;align-items:center;gap:var(--space-3);min-width:0}
+.brand-back{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;flex-shrink:0;border:1px solid color-mix(in srgb,var(--color-border) 80%,transparent);background:var(--color-surface);color:var(--color-text-muted);font-size:1.1rem;font-weight:700;box-shadow:var(--shadow-sm);transition:background var(--transition-interactive),color var(--transition-interactive);text-decoration:none}
+.brand-back:hover{background:var(--color-surface-2);color:var(--color-text)}
+.brand-mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--color-primary-highlight);border:1px solid color-mix(in srgb,var(--color-primary) 18%,var(--color-border));box-shadow:var(--shadow-sm);color:var(--color-primary);font-size:1.15rem;flex-shrink:0}
+.brand-copy .brand-title{font-family:var(--font-display);font-size:var(--text-xl);line-height:.95;letter-spacing:.02em}
+.brand-copy .brand-subtitle{font-size:var(--text-sm);color:var(--color-text-muted);margin-top:2px}
+.theme-toggle{min-width:48px;min-height:48px;border-radius:var(--radius-full);border:1px solid color-mix(in srgb,var(--color-border) 80%,transparent);background:var(--color-surface);box-shadow:var(--shadow-sm);display:grid;place-items:center;touch-action:manipulation;cursor:pointer}
+@media(max-width:760px){.topbar-inner{width:min(100%,calc(100% - 1rem))}.brand-copy .brand-title{font-size:1.5rem}}
+
+button,input{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+input{outline:none}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(14px);
+  background:color-mix(in srgb, var(--color-bg) 78%, transparent);
+  border-bottom:1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+}
+.topbar-inner{
+  width:min(1100px, calc(100% - 2rem));
+  margin:0 auto;
+  padding:var(--space-4) 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--space-4);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:var(--space-3);
+  min-width:0;
+}
+.brand-mark{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:var(--color-primary-highlight);
+  border:1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+  box-shadow:var(--shadow-sm);
+  color:var(--color-primary);
+  font-size:1.15rem;
+  flex-shrink:0;
+}
+.brand-copy h1{
+  font-family:var(--font-display);
+  font-size:var(--text-xl);
+  line-height:.95;
+  letter-spacing:.02em;
+}
+.brand-copy p{
+  font-size:var(--text-sm);
+  color:var(--color-text-muted);
+  margin-top:2px;
+}
+
+.theme-toggle{
+  min-width:48px;
+  min-height:48px;
+  border-radius:var(--radius-full);
+  border:1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  background:var(--color-surface);
+  display:grid;
+  place-items:center;
+  box-shadow:var(--shadow-sm);
+}
+
+.shell{
+  width:min(1100px, calc(100% - 2rem));
+  margin:0 auto;
+  padding:var(--space-6) 0 var(--space-10);
+}
+
+.hero-card{
+  background:linear-gradient(
+    135deg,
+    var(--color-surface),
+    color-mix(in srgb, var(--color-surface-2) 88%, var(--color-primary-highlight))
+  );
+  border:1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-radius:28px;
+  padding:clamp(var(--space-5), 4vw, var(--space-8));
+  box-shadow:var(--shadow-md);
+  margin-bottom:var(--space-6);
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--space-2);
+  border-radius:var(--radius-full);
+  padding:var(--space-2) var(--space-3);
+  background:var(--color-primary-highlight);
+  color:var(--color-primary);
+  font-weight:800;
+  font-size:var(--text-xs);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:var(--space-4);
+}
+.hero-card h2{
+  font-family:var(--font-display);
+  font-size:var(--text-2xl);
+  line-height:.98;
+  margin-bottom:var(--space-3);
+  max-width:12ch;
+}
+.hero-card p{
+  color:var(--color-text-muted);
+  max-width:72ch;
+}
+
+.stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:var(--space-5);
+}
+.stat{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  padding:0 14px;
+  border-radius:var(--radius-full);
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+  font-weight:700;
+  box-shadow:var(--shadow-sm);
+}
+.dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.dot-bollicine{background:var(--color-bubble)}
+.dot-bianchi{background:var(--color-gold)}
+.dot-rosati{background:var(--color-rose)}
+.dot-rossi{background:var(--color-red)}
+.dot-dolci{background:var(--color-primary)}
+.dot-giacenze{background:var(--color-ok)}
+
+.toolbar{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:var(--space-4);
+}
+.search{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-radius:20px;
+  padding:0 16px;
+  min-height:56px;
+  box-shadow:var(--shadow-sm);
+}
+.search input{
+  width:100%;
+  background:transparent;
+  border:0;
+  font-size:16px;
+}
+.search svg{color:var(--color-text-faint);flex-shrink:0}
+
+.tabs-wrap{
+  position:relative;
+}
+.tabs{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  flex-wrap:nowrap;
+  padding-bottom:2px;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  white-space:nowrap;
+  min-height:44px;
+  padding:11px 16px;
+  border-radius:var(--radius-full);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background:var(--color-surface);
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+  font-weight:700;
+  box-shadow:var(--shadow-sm);
+  scroll-snap-align:start;
+  transition:
+    background var(--transition-interactive),
+    color var(--transition-interactive),
+    border-color var(--transition-interactive),
+    transform var(--transition-interactive),
+    box-shadow var(--transition-interactive);
+}
+.tab:hover,
+.tab:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-md);
+  border-color:color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+  outline:none;
+}
+.tab.active{
+  background:var(--color-primary);
+  color:#f7f8f2;
+  border-color:var(--color-primary);
+}
+
+.content{
+  margin-top:var(--space-6);
+  display:grid;
+  gap:var(--space-6);
+}
+
+.section-head{
+  cursor:pointer;
+  user-select:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px;
+  min-height:48px;
+}
+.section-head h3{
+  font-family:var(--font-display);
+  font-size:var(--text-xl);
+  line-height:1;
+}
+.section-head p{
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+}
+.section-chevron{
+  font-size:1.1rem;
+  color:var(--color-text-faint);
+  flex-shrink:0;
+  margin-left:auto;
+}
+.section-head:hover h3{color:var(--color-primary)}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.grid.collapsed{display:none}
+
+.card{
+  background:color-mix(in srgb, var(--color-surface) 95%, transparent);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+  transition:
+    transform var(--transition-interactive),
+    box-shadow var(--transition-interactive),
+    border-color var(--transition-interactive);
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+  border-color:color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+}
+.card.open{
+  border-color:color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+  box-shadow:var(--shadow-md);
+}
+
+.card-banner{
+  padding:10px 18px;
+  font-size:.78rem;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.card-banner.warn{
+  background:var(--color-warn-soft);
+  color:var(--color-warn);
+  border-bottom:1px solid color-mix(in srgb, var(--color-warn) 15%, var(--color-border));
+}
+.card-banner.smalt{
+  background:var(--color-red-soft);
+  color:var(--color-red);
+  border-bottom:1px solid color-mix(in srgb, var(--color-red) 15%, var(--color-border));
+}
+
+.card-top{
+  padding:18px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  cursor:pointer;
+  min-height:72px;
+}
+.card-title h4{
+  font-size:1.04rem;
+  line-height:1.28;
+  letter-spacing:-.02em;
+}
+.card-title p{
+  margin-top:6px;
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+  max-width:56ch;
+}
+.pricebox{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+  flex-shrink:0;
+}
+.price{
+  font-size:.95rem;
+  font-weight:800;
+  color:var(--color-primary);
+  white-space:nowrap;
+  padding:9px 11px;
+  border-radius:14px;
+  background:var(--color-primary-highlight);
+  border:1px solid color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+}
+.glass{
+  font-size:.74rem;
+  color:var(--color-text-muted);
+  font-weight:700;
+}
+.chevron{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid var(--color-border);
+  display:grid;
+  place-items:center;
+  background:var(--color-surface-2);
+  color:var(--color-text-muted);
+  flex-shrink:0;
+}
+.card.open .chevron{
+  color:var(--color-primary);
+  border-color:color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+}
+
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 18px 18px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:30px;
+  padding:0 10px;
+  border-radius:var(--radius-full);
+  border:1px solid transparent;
+  font-size:.74rem;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.badge.type-bianchi{background:var(--color-gold-soft);color:var(--color-gold);border-color:color-mix(in srgb,var(--color-gold) 18%, transparent)}
+.badge.type-rossi{background:var(--color-red-soft);color:var(--color-red);border-color:color-mix(in srgb,var(--color-red) 18%, transparent)}
+.badge.type-bollicine{background:var(--color-bubble-soft);color:var(--color-bubble);border-color:color-mix(in srgb,var(--color-bubble) 18%, transparent)}
+.badge.type-rosati{background:var(--color-rose-soft);color:var(--color-rose);border-color:color-mix(in srgb,var(--color-rose) 18%, transparent)}
+.badge.type-dolci{background:var(--color-primary-highlight);color:var(--color-primary);border-color:color-mix(in srgb,var(--color-primary) 18%, transparent)}
+.badge.type-giacenze{background:var(--color-ok-soft);color:var(--color-ok);border-color:color-mix(in srgb,var(--color-ok) 18%, transparent)}
+.badge.stock{background:var(--color-ok-soft);color:var(--color-ok);border-color:color-mix(in srgb,var(--color-ok) 18%, transparent);text-transform:uppercase}
+.badge.glass-badge{background:var(--color-blue-soft);color:var(--color-blue);border-color:color-mix(in srgb,var(--color-blue) 18%, transparent)}
+.badge.grape{background:var(--color-surface-2);color:var(--color-text-muted);border-color:var(--color-border);text-transform:none;letter-spacing:0}
+.badge.replace{background:var(--color-replace-soft);color:var(--color-replace);border-color:color-mix(in srgb,var(--color-replace) 28%, transparent);font-size:.76rem;font-weight:700;text-transform:none;letter-spacing:0}
+
+.detail{
+  display:none;
+  border-top:1px solid var(--color-border);
+  background:color-mix(in srgb, var(--color-surface-2) 75%, var(--color-surface));
+}
+.card.open .detail{display:block}
+
+.pitch{
+  margin:18px 18px 0;
+  padding:14px 14px 14px 16px;
+  border-radius:16px;
+  background:var(--color-blue-soft);
+  color:var(--color-blue);
+  border:1px solid color-mix(in srgb,var(--color-blue) 18%, var(--color-border));
+  font-size:var(--text-sm);
+}
+.pitch strong{
+  display:block;
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:6px;
+}
+
+.subs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:14px 18px 0;
+}
+.sub-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:0 10px;
+  border-radius:var(--radius-full);
+  background:var(--color-replace-soft);
+  color:var(--color-replace);
+  border:1px solid color-mix(in srgb,var(--color-replace) 20%, transparent);
+  font-size:.75rem;
+  font-weight:700;
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  padding:18px;
+}
+.detail-block{
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  border-radius:18px;
+  padding:14px;
+  min-height:100%;
+}
+.detail-block.full{grid-column:1 / -1}
+.detail-label{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--color-text-faint);
+  font-weight:800;
+  margin-bottom:8px;
+}
+.detail-value{
+  font-size:var(--text-sm);
+  color:var(--color-text);
+}
+.detail-value.warn{
+  color:var(--color-warn);
+  font-weight:700;
+}
+
+.empty{
+  padding:40px 18px;
+  text-align:center;
+  color:var(--color-text-muted);
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius:24px;
+}
+
+.wine-category{
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius:18px;
+  margin:12px 0;
+  background:var(--color-surface);
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.wine-category summary{
+  cursor:pointer;
+  list-style:none;
+  padding:14px 16px;
+  font-weight:700;
+  background:color-mix(in srgb, var(--color-surface-2) 60%, var(--color-surface));
+}
+.wine-category summary::-webkit-details-marker{display:none}
+.wine-category summary::after{
+  content:"+";
+  float:right;
+  font-weight:700;
+  color:var(--color-text-faint);
+}
+.wine-category[open] summary::after{content:"−"}
+.wine-category .category-content{padding:12px 16px}
+
+/* ── Tag stile ── */
+.style-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  padding:0 18px 14px;
+}
+.style-tag{
+  display:inline-flex;
+  align-items:center;
+  min-height:26px;
+  padding:0 9px;
+  border-radius:var(--radius-full);
+  font-size:.7rem;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  border:1px solid transparent;
+}
+.style-tag.morbido    {background:var(--color-warn-soft);   color:var(--color-warn);   border-color:color-mix(in srgb,var(--color-warn) 20%,transparent)}
+.style-tag.fruttato   {background:var(--color-rose-soft);   color:var(--color-rose);   border-color:color-mix(in srgb,var(--color-rose) 20%,transparent)}
+.style-tag.strutturato{background:var(--color-red-soft);    color:var(--color-red);    border-color:color-mix(in srgb,var(--color-red) 20%,transparent)}
+.style-tag.secco      {background:var(--color-gold-soft);   color:var(--color-gold);   border-color:color-mix(in srgb,var(--color-gold) 20%,transparent)}
+.style-tag.fresco     {background:var(--color-blue-soft);   color:var(--color-blue);   border-color:color-mix(in srgb,var(--color-blue) 20%,transparent)}
+.style-tag.aromatico  {background:var(--color-violet-soft); color:var(--color-violet); border-color:color-mix(in srgb,var(--color-violet) 20%,transparent)}
+.style-tag.beverino   {background:var(--color-ok-soft);     color:var(--color-ok);     border-color:color-mix(in srgb,var(--color-ok) 20%,transparent)}
+.style-tag.minerale   {background:var(--color-bubble-soft); color:var(--color-bubble); border-color:color-mix(in srgb,var(--color-bubble) 20%,transparent)}
+.style-tag.elegante   {background:var(--color-primary-highlight);color:var(--color-primary);border-color:color-mix(in srgb,var(--color-primary) 20%,transparent)}
+.style-tag.dolce      {background:var(--color-amber-soft);  color:var(--color-amber);  border-color:color-mix(in srgb,var(--color-amber) 20%,transparent)}
+.style-tag.complesso  {background:var(--color-replace-soft);color:var(--color-replace);border-color:color-mix(in srgb,var(--color-replace) 20%,transparent)}
+.style-tag.sapido     {background:var(--color-bubble-soft); color:var(--color-bubble); border-color:color-mix(in srgb,var(--color-bubble) 20%,transparent)}
+.style-tag.leggero    {background:var(--color-ok-soft);     color:var(--color-ok);     border-color:color-mix(in srgb,var(--color-ok) 20%,transparent)}
+.style-tag.intenso    {background:var(--color-red-soft);    color:var(--color-red);    border-color:color-mix(in srgb,var(--color-red) 20%,transparent)}
+.style-tag.tannico    {background:var(--color-warn-soft);   color:var(--color-warn);   border-color:color-mix(in srgb,var(--color-warn) 20%,transparent)}
+.style-tag.bollicine  {background:var(--color-bubble-soft); color:var(--color-bubble); border-color:color-mix(in srgb,var(--color-bubble) 20%,transparent)}
+
+/* ── Vini simili ── */
+.similar-block{
+  margin:0 18px 16px;
+  padding:11px 13px;
+  border-radius:14px;
+  background:color-mix(in srgb,var(--color-surface-2) 70%,transparent);
+  border:1px solid color-mix(in srgb,var(--color-border) 60%,transparent);
+  font-size:.75rem;
+  color:var(--color-text-muted);
+  line-height:1.5;
+}
+.similar-block strong{
+  display:block;
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+  color:var(--color-text-faint);
+  font-weight:800;
+  margin-bottom:4px;
+}
+
+@media (max-width: 900px){
+  .grid{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr}
+}
+
+@media (max-width: 760px){
+  .topbar-inner,
+  .shell{
+    width:min(100%, calc(100% - 1rem));
+  }
+  .brand-copy p{display:none}
+  .hero-card h2{max-width:100%}
+}
+
+@media (max-width: 480px){
+  .card-top{padding:16px}
+  .hero-card{padding:var(--space-5)}
+  .tab{padding:10px 14px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+<body>
+  </section>
+
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Guida Completa ai Vini</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+  --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+  --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
+
+  --space-1:.25rem;
+  --space-2:.5rem;
+  --space-3:.75rem;
+  --space-4:1rem;
+  --space-5:1.25rem;
+  --space-6:1.5rem;
+  --space-8:2rem;
+  --space-10:2.5rem;
+  --space-12:3rem;
+
+  --radius-sm:.5rem;
+  --radius-md:.75rem;
+  --radius-lg:1rem;
+  --radius-xl:1.5rem;
+  --radius-full:9999px;
+
+  --transition-interactive:180ms cubic-bezier(.16,1,.3,1);
+
+  --font-display:"Baloo 2", cursive;
+  --font-body:"Inter", sans-serif;
+}
+
+:root,
+[data-theme="light"]{
+  --bg:#eef1e8;
+  --panel:#f7f8f2;
+  --panel-2:#e6ebde;
+  --text:#2d3a23;
+  --text-soft:#55664a;
+  --text-faint:#87957d;
+  --line:#bcc7b1;
+  --line-strong:#a8b59c;
+
+  --accent:#7a8f49;
+  --accent-soft:#dde6c9;
+
+  --ok:#5f7a56;
+  --ok-soft:#dfe8d9;
+
+  --blue:#58758b;
+  --blue-soft:#dce7ef;
+
+  --red:#9a6660;
+  --red-soft:#efdfdb;
+
+  --rose:#81505b;
+  --rose-soft:#ead8dd;
+
+  --gold:#9a7a39;
+  --gold-soft:#eee2bf;
+
+  --replace:#79649b;
+  --replace-soft:#e7e0f0;
+
+  --warn:#a06a45;
+  --warn-soft:#efdfd3;
+
+  --bubble:#7f9baa;
+  --bubble-soft:#dbe5ea;
+
+  --shadow-sm:0 1px 2px rgba(33,45,24,.08);
+  --shadow-md:0 10px 25px rgba(33,45,24,.12);
+  --shadow-lg:0 16px 40px rgba(33,45,24,.14);
+}
+
+[data-theme="dark"]{
+  --bg:#111611;
+  --panel:#1a2219;
+  --panel-2:#253026;
+  --text:#e6eadc;
+  --text-soft:#b4bea8;
+  --text-faint:#7f8b77;
+  --line:#394738;
+  --line-strong:#4a5b48;
+
+  --accent:#a6bf67;
+  --accent-soft:#2d3a24;
+
+  --ok:#a9c697;
+  --ok-soft:#1f2a20;
+
+  --blue:#9dbed0;
+  --blue-soft:#1b2730;
+
+  --red:#d7a094;
+  --red-soft:#2d211d;
+
+  --rose:#d6a7b1;
+  --rose-soft:#2e2125;
+
+  --gold:#d8c07e;
+  --gold-soft:#2c2718;
+
+  --replace:#bda9de;
+  --replace-soft:#241f31;
+
+  --warn:#d8a07a;
+  --warn-soft:#2d221c;
+
+  --bubble:#a9c1cc;
+  --bubble-soft:#1c262b;
+
+  --shadow-sm:0 1px 2px rgba(0,0,0,.24);
+  --shadow-md:0 12px 32px rgba(0,0,0,.38);
+  --shadow-lg:0 18px 48px rgba(0,0,0,.42);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  min-height:100dvh;
+  font-family:var(--font-body);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 30%),
+    radial-gradient(circle at right center, color-mix(in srgb, var(--color-surface-2) 45%, transparent), transparent 28%),
+    var(--color-bg);
+  color:var(--color-text);
+  line-height:1.58;
+}
+
+button,input{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+input{outline:none}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(14px);
+  background:color-mix(in srgb, var(--color-bg) 78%, transparent);
+  border-bottom:1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+}
+.topbar-inner{
+  width:min(1100px, calc(100% - 2rem));
+  margin:0 auto;
+  padding:var(--space-4) 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--space-4);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:var(--space-3);
+  min-width:0;
+}
+.brand-mark{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:var(--color-primary-highlight);
+  border:1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+  box-shadow:var(--shadow-sm);
+  color:var(--color-primary);
+  font-size:1.15rem;
+  flex-shrink:0;
+}
+.brand-copy h1{
+  font-family:var(--font-display);
+  font-size:var(--text-xl);
+  line-height:.95;
+  letter-spacing:.02em;
+}
+.brand-copy p{
+  font-size:var(--text-sm);
+  color:var(--color-text-muted);
+  margin-top:2px;
+}
+
+.theme-toggle{
+  min-width:48px;
+  min-height:48px;
+  border-radius:var(--radius-full);
+  border:1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  background:var(--color-surface);
+  display:grid;
+  place-items:center;
+  box-shadow:var(--shadow-sm);
+}
+
+.shell{
+  width:min(1100px, calc(100% - 2rem));
+  margin:0 auto;
+  padding:var(--space-6) 0 var(--space-10);
+}
+
+.hero-card{
+  background:linear-gradient(
+    135deg,
+    var(--color-surface),
+    color-mix(in srgb, var(--color-surface-2) 88%, var(--color-primary-highlight))
+  );
+  border:1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-radius:28px;
+  padding:clamp(var(--space-5), 4vw, var(--space-8));
+  box-shadow:var(--shadow-md);
+  margin-bottom:var(--space-6);
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--space-2);
+  border-radius:var(--radius-full);
+  padding:var(--space-2) var(--space-3);
+  background:var(--color-primary-highlight);
+  color:var(--color-primary);
+  font-weight:800;
+  font-size:var(--text-xs);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:var(--space-4);
+}
+.hero-card h2{
+  font-family:var(--font-display);
+  font-size:var(--text-2xl);
+  line-height:.98;
+  margin-bottom:var(--space-3);
+  max-width:12ch;
+}
+.hero-card p{
+  color:var(--color-text-muted);
+  max-width:72ch;
+}
+
+.stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:var(--space-5);
+}
+.stat{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  padding:0 14px;
+  border-radius:var(--radius-full);
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+  font-weight:700;
+  box-shadow:var(--shadow-sm);
+}
+.dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.dot-bollicine{background:var(--color-bubble)}
+.dot-bianchi{background:var(--color-gold)}
+.dot-rosati{background:var(--color-rose)}
+.dot-rossi{background:var(--color-red)}
+.dot-dolci{background:var(--color-primary)}
+.dot-giacenze{background:var(--color-ok)}
+
+.toolbar{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:var(--space-4);
+}
+.search{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-radius:20px;
+  padding:0 16px;
+  min-height:56px;
+  box-shadow:var(--shadow-sm);
+}
+.search input{
+  width:100%;
+  background:transparent;
+  border:0;
+  font-size:16px;
+}
+.search svg{color:var(--color-text-faint);flex-shrink:0}
+
+.tabs-wrap{
+  position:relative;
+  margin-top:var(--space-4);
+}
+.tabs{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  flex-wrap:nowrap;
+  padding-bottom:2px;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  white-space:nowrap;
+  min-height:44px;
+  padding:11px 16px;
+  border-radius:var(--radius-full);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background:var(--color-surface);
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+  font-weight:700;
+  box-shadow:var(--shadow-sm);
+  scroll-snap-align:start;
+  transition:
+    background var(--transition-interactive),
+    color var(--transition-interactive),
+    border-color var(--transition-interactive),
+    transform var(--transition-interactive),
+    box-shadow var(--transition-interactive);
+}
+.tab:hover,
+.tab:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-md);
+  border-color:color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+  outline:none;
+}
+.tab.active{
+  background:var(--color-primary);
+  color:#f7f8f2;
+  border-color:var(--color-primary);
+}
+
+.content{
+  margin-top:var(--space-6);
+  display:grid;
+  gap:var(--space-6);
+}
+
+.section-head{
+  cursor:pointer;
+  user-select:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px;
+  min-height:48px;
+}
+.section-head h3{
+  font-family:var(--font-display);
+  font-size:var(--text-xl);
+  line-height:1;
+}
+.section-head p{
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+}
+.section-chevron{
+  font-size:1.1rem;
+  color:var(--color-text-faint);
+  flex-shrink:0;
+  margin-left:auto;
+}
+.section-head:hover h3{color:var(--color-primary)}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.grid.collapsed{display:none}
+
+.card{
+  background:color-mix(in srgb, var(--color-surface) 95%, transparent);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+  transition:
+    transform var(--transition-interactive),
+    box-shadow var(--transition-interactive),
+    border-color var(--transition-interactive);
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+  border-color:color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+}
+.card.open{
+  border-color:color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+  box-shadow:var(--shadow-md);
+}
+
+.card-banner{
+  padding:10px 18px;
+  font-size:.78rem;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.card-banner.warn{
+  background:var(--color-warn-soft);
+  color:var(--color-warn);
+  border-bottom:1px solid color-mix(in srgb, var(--color-warn) 15%, var(--color-border));
+}
+.card-banner.smalt{
+  background:var(--color-red-soft);
+  color:var(--color-red);
+  border-bottom:1px solid color-mix(in srgb, var(--color-red) 15%, var(--color-border));
+}
+
+.card-top{
+  padding:18px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  cursor:pointer;
+  min-height:72px;
+}
+.card-title h4{
+  font-size:1.04rem;
+  line-height:1.28;
+  letter-spacing:-.02em;
+}
+.card-title p{
+  margin-top:6px;
+  color:var(--color-text-muted);
+  font-size:var(--text-sm);
+  max-width:56ch;
+}
+.pricebox{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+  flex-shrink:0;
+}
+.price{
+  font-size:.95rem;
+  font-weight:800;
+  color:var(--color-primary);
+  white-space:nowrap;
+  padding:9px 11px;
+  border-radius:14px;
+  background:var(--color-primary-highlight);
+  border:1px solid color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+}
+.glass{
+  font-size:.74rem;
+  color:var(--color-text-muted);
+  font-weight:700;
+}
+.chevron{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid var(--color-border);
+  display:grid;
+  place-items:center;
+  background:var(--color-surface-2);
+  color:var(--color-text-muted);
+  flex-shrink:0;
+}
+.card.open .chevron{
+  color:var(--color-primary);
+  border-color:color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+}
+
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 18px 18px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:30px;
+  padding:0 10px;
+  border-radius:var(--radius-full);
+  border:1px solid transparent;
+  font-size:.74rem;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.badge.type-bianchi{background:var(--color-gold-soft);color:var(--color-gold);border-color:color-mix(in srgb,var(--color-gold) 18%, transparent)}
+.badge.type-rossi{background:var(--color-red-soft);color:var(--color-red);border-color:color-mix(in srgb,var(--color-red) 18%, transparent)}
+.badge.type-bollicine{background:var(--color-bubble-soft);color:var(--color-bubble);border-color:color-mix(in srgb,var(--color-bubble) 18%, transparent)}
+.badge.type-rosati{background:var(--color-rose-soft);color:var(--color-rose);border-color:color-mix(in srgb,var(--color-rose) 18%, transparent)}
+.badge.type-dolci{background:var(--color-primary-highlight);color:var(--color-primary);border-color:color-mix(in srgb,var(--color-primary) 18%, transparent)}
+.badge.type-giacenze{background:var(--color-ok-soft);color:var(--color-ok);border-color:color-mix(in srgb,var(--color-ok) 18%, transparent)}
+.badge.stock{background:var(--color-ok-soft);color:var(--color-ok);border-color:color-mix(in srgb,var(--color-ok) 18%, transparent);text-transform:uppercase}
+.badge.glass-badge{background:var(--color-blue-soft);color:var(--color-blue);border-color:color-mix(in srgb,var(--color-blue) 18%, transparent)}
+.badge.grape{background:var(--color-surface-2);color:var(--color-text-muted);border-color:var(--color-border);text-transform:none;letter-spacing:0}
+.badge.replace{background:var(--color-replace-soft);color:var(--color-replace);border-color:color-mix(in srgb,var(--color-replace) 28%, transparent);font-size:.76rem;font-weight:700;text-transform:none;letter-spacing:0}
+
+.detail{
+  display:none;
+  border-top:1px solid var(--color-border);
+  background:color-mix(in srgb, var(--color-surface-2) 75%, var(--color-surface));
+}
+.card.open .detail{display:block}
+
+.pitch{
+  margin:18px 18px 0;
+  padding:14px 14px 14px 16px;
+  border-radius:16px;
+  background:var(--color-blue-soft);
+  color:var(--color-blue);
+  border:1px solid color-mix(in srgb,var(--color-blue) 18%, var(--color-border));
+  font-size:var(--text-sm);
+}
+.pitch strong{
+  display:block;
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:6px;
+}
+
+.subs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:14px 18px 0;
+}
+.sub-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:0 10px;
+  border-radius:var(--radius-full);
+  background:var(--color-replace-soft);
+  color:var(--color-replace);
+  border:1px solid color-mix(in srgb,var(--color-replace) 20%, transparent);
+  font-size:.75rem;
+  font-weight:700;
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  padding:18px;
+}
+.detail-block{
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  border-radius:18px;
+  padding:14px;
+  min-height:100%;
+}
+.detail-block.full{grid-column:1 / -1}
+.detail-label{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--color-text-faint);
+  font-weight:800;
+  margin-bottom:8px;
+}
+.detail-value{
+  font-size:var(--text-sm);
+  color:var(--color-text);
+}
+.detail-value.warn{
+  color:var(--color-warn);
+  font-weight:700;
+}
+
+.empty{
+  padding:40px 18px;
+  text-align:center;
+  color:var(--color-text-muted);
+  background:var(--color-surface);
+  border:1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius:24px;
+}
+
+@media (max-width: 900px){
+  .grid{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr}
+}
+
+@media (max-width: 760px){
+  .topbar-inner,
+  .shell{
+    width:min(100%, calc(100% - 1rem));
+  }
+  .brand-copy p{display:none}
+  .hero-card h2{max-width:100%}
+}
+
+@media (max-width: 480px){
+  .card-top{padding:16px}
+  .hero-card{padding:var(--space-5)}
+  .tab{padding:10px 14px}
+  .badges{padding:0 16px 16px}
+  .detail-grid{padding:16px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a href="index.html" class="brand-back" aria-label="Torna alla home">←</a>
+      <div class="brand-mark" aria-hidden="true">🍷</div>
+      <div class="brand-copy">
+        <div class="brand-title">ABC dei Vini</div>
+        <div class="brand-subtitle">Guida completa per il personale di sala</div>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambia tema">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema">
+      <span id="themeIcon">☀️</span>
+    </button>
+  </div>
+</div>
+
+<div class="shell">
+
+  </section>
+
+  <div class="stats" id="statsBar"></div>
+
+  <section class="toolbar">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-3.5-3.5"></path>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Cerca vino, vitigno, cantina, zona, abbinamento..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    </div>
+  </section>
+
+  <div class="tabs-wrap">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-f="all">Tutti</button>
+      <button class="tab" data-f="bollicine">Bollicine</button>
+      <button class="tab" data-f="bianchi">Bianchi</button>
+      <button class="tab" data-f="rosati">Rosati</button>
+      <button class="tab" data-f="rossi">Rossi</button>
+      <button class="tab" data-f="dolci">Dolci</button>
+      <button class="tab" data-f="giacenze">Giacenze</button>
+    </div>
+  </div>
+
+  <main class="content" id="main"></main>
+</div>
+
+<script>
+var W = [
+  {id:1,cat:"bollicine",nome:'Spumante Brut "Lumis"',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"24€",bic:"6€",vig:"80% Vernaccia, 20% Chardonnay",vin:"Metodo Charmat, bassa pressione. Produttore locale di San Gimignano, cantina di riferimento della denominazione.",prof:"Fresco, agrumato, bollicine delicate. Asciutto, beverino, senza complessità eccessiva. Leggero e immediato.",abb:"Aperitivo, fritture leggere, salumi toscani, bruschette, antipasti freddi, pesce in tempura. Perfetto come benvenuto.",nil:0,sm:0,
+    tags:["bollicine","fresco","leggero","beverino","secco"],
+    sim:"Lumis Rosé (più fruttato) · Altalanga Extra Brut (più strutturato e complesso)"},
+  {id:2,cat:"bollicine",nome:'Spumante Brut "Lumis" Magnum',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"54€",bic:null,vig:"80% Vernaccia, 20% Chardonnay",vin:"Identico al Lumis standard, formato Magnum. Il grande formato rallenta l'evoluzione e mantiene freschezza più a lungo.",prof:"Identico al Lumis. Il Magnum è da proporre per tavoli grandi o celebrazioni.",abb:"Stessi del Lumis. Da proporre per festeggiamenti, tavoli da 4+ persone.",nil:0,sm:0,
+    tags:["bollicine","fresco","leggero","beverino","secco"],
+    sim:"Lumis (stesso vino, formato 75cl) · Lumis Rosé (versione rosata)"},
+  {id:3,cat:"bollicine",nome:'Spumante Brut "Lumis" Rosé',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"26€",bic:null,vig:"100% Sangiovese",vin:"Metodo Charmat, vinificazione in rosato con breve macerazione sulle bucce.",prof:"Rosa cerasuolo, fragola, melograno, rosa, spezie leggere. Secco, fresco, leggermente più fruttato del Lumis bianco.",abb:"Aperitivo, pizza, bruschette, salumi, piatti estivi, pasta al pomodoro fresco.",nil:0,sm:0,
+    tags:["bollicine","fruttato","fresco","secco","beverino"],
+    sim:"Lumis Brut (versione bianca) · Cremisi / Zingarelli (rosato fermo, stesso frutto)"},
+  {id:4,cat:"bollicine",nome:"Altalanga Extra Brut DOCG",prod:"Ettore Germano",zona:"Serralunga d'Alba, Langhe",pr:"40€",bic:null,vig:"80% Pinot Nero, 20% Chardonnay",vin:"Metodo Classico, affinamento sui lieviti 40-50 mesi. Produttore di Serralunga d'Alba, Langhe.",prof:"Perlage fine e persistente, note di crosta di pane, frutta secca, mela verde, accenni floreali. Palato cremoso, acidità vivace, finale lungo e armonioso.",abb:"Aperitivo gourmet, pesce crudo e crostacei, ostriche, uova al tartufo, salumi nobili, formaggi stagionati, pasta con sughi ricchi.",nil:0,sm:0,sub:"Ferrari Maximum (~40€) · Champagne Rémi Couvreur (55€)",pitch:"Nel frattempo il nostro Ferrari Maximum è un Metodo Classico cremoso e strutturato, all'altezza di qualsiasi abbinamento gastronomico.",
+    tags:["bollicine","strutturato","elegante","minerale","complesso"],
+    sim:"Trento DOC Perlè (stile Metodo Classico elegante) · Ferrari Maximum (più cremoso, giacenza)"},
+  {id:5,cat:"bollicine",nome:'Trento DOC "Perlè"',prod:"Ferrari",zona:"Trentino",pr:"60€",bic:null,vig:"100% Chardonnay",vin:"Metodo Classico, affinamento minimo 60 mesi (5 anni) sui lieviti. Cantina di riferimento assoluta per il Metodo Classico italiano.",prof:"Elegante, perlage finissimo, note di fiori bianchi, mela, agrumi, lieve tostato. Strutturato, sapido, verticale.",abb:"Pesce nobile, risotto ai funghi porcini, antipasti sofisticati, tartare di tonno. Ottimo a tutto pasto con cucina di alto livello.",nil:0,sm:0,
+    tags:["bollicine","elegante","strutturato","minerale","sapido"],
+    sim:"Altalanga Extra Brut (Metodo Classico italiano di livello) · Champagne Zero Tarlant (livello superiore)"},
+  {id:6,cat:"bollicine",nome:"Crémant d'Alsace Millesimé Brut",prod:"Dirler-Cadé",zona:"Alsazia",pr:"40€",bic:null,vig:"45% Pinot Gris, 30% Pinot Nero, 25% Auxerrois",vin:"Metodo Classico alsaziano, millesimato.",prof:"Bollicine fini, profilo aromatico speziato e caldo. Note di pesca gialla, spezie dolci, pasta frolla. Corpo medio-pieno, finale morbido.",abb:"Piatti con funghi, foie gras, terrine di carne, formaggi a pasta molle o erborinati, cucina alsaziana, risotti cremosi.",nil:0,sm:0,sub:"Ferrari Maximum (~40€) · Champagne Rémi Couvreur (55€)",pitch:"Il Crémant è in arrivo. Nel frattempo il nostro Ferrari Maximum è un Metodo Classico cremoso e strutturato, all'altezza di qualsiasi abbinamento gastronomico.",
+    tags:["bollicine","morbido","aromatico","strutturato","fruttato"],
+    sim:"Altalanga Extra Brut (Metodo Classico, più secco e verticale) · Ferrari Maximum (cremoso, in giacenza)"},
+  {id:7,cat:"bollicine",nome:'Champagne "Zero"',prod:"Tarlant",zona:"Champagne",pr:"95€",bic:null,vig:"32% Pinot Nero, 32% Chardonnay, 32% Meunier, 4% Petit Meslier",vin:"Pas Dosé (0 g/l di zucchero residuo). Fermentazione in barrique (senza malolattica) per preservare l'acidità naturale. Affinamento sui lieviti circa 7 anni, sboccatura manuale senza dosaggio.",prof:"Tensione minerale straordinaria, note di agrumi, mela cotogna, nocciola, spezie fini, gessosità. Palato teso, salino, preciso, bollicina finissima, finale lunghissimo.",abb:"Ostriche, crudités di mare, sushi di alto livello, piatti à la minute minimali. Vino da clientela esperta e appassionata.",nil:0,sm:0,
+    tags:["bollicine","minerale","secco","elegante","complesso","intenso"],
+    sim:"Champagne Rémi Couvreur (Blanc de Blancs, minerale, in giacenza) · Trento DOC Perlè (Metodo Classico elegante, fascia inferiore)"},
+
+  {id:10,cat:"bianchi",nome:'Vernaccia di San Gimignano DOCG "Selvabianca"',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"24€",bic:"6€",vig:"100% Vernaccia di San Gimignano",vin:"Vinificazione in acciaio, annata giovane, immediata. Produttore di San Gimignano, cantina storica della denominazione.",prof:"Colore paglierino con riflessi dorati, note di fiori bianchi, mela, pesca, agrumi. Secco, minerale, con finale leggermente amaricante. Corpo leggero-medio, fresco.",abb:"Antipasti toscani, affettati, bruschette, zuppe di legumi, pesce al forno, fritture, formaggi freschi. Il vino del territorio da valorizzare con i turisti.",nil:0,sm:0,
+    tags:["secco","fresco","leggero","minerale","beverino"],
+    sim:"Vernaccia Albereta (versione strutturata e complessa) · Soave Classico Pieropan (fresco, floreale, stessa fascia)"},
+  {id:11,cat:"bianchi",nome:'Vernaccia di San Gimignano DOCG "Albereta"',prod:"Il Colombaio di Santa Chiara",zona:"San Gimignano",pr:"46€",bic:null,vig:"100% Vernaccia di San Gimignano",vin:"Selezione di vigna, affinamento interamente in botti di rovere francese per 12-14 mesi, poi bottiglia. Cru aziendale di riferimento.",prof:"Rispetto alla Selvabianca, più strutturata e complessa. Note di frutta matura, mandorla, mineralità intensa. Sapida, lunga, con profondità inattesa.",abb:"Piatti di pesce strutturati, zuppa di pesce, cacciucco leggero, pasta con sughi bianchi di mare, risotto allo zafferano, formaggi semi-stagionati toscani.",nil:0,sm:0,
+    tags:["strutturato","minerale","complesso","sapido","elegante"],
+    sim:"Fiano di Avellino (strutturato e complesso, bianco meridionale) · Chardonnay Schwarzhaus (struttura e mineralità)"},
+  {id:12,cat:"bianchi",nome:'Alto Adige Chardonnay "Schwarzhaus"',prod:"Stroblhof",zona:"Appiano, Alto Adige",pr:"30€",bic:null,vig:"100% Chardonnay",vin:"Vigneto a 430 m slm nella zona di Appiano. Stile moderno, elegante, con cura per preservare mineralità e frutto.",prof:"Mineralità intensa, note di mela verde, pesca bianca e vaniglia. Morbido e persistente. Fruttato, corposo, strutturato ma non eccessivamente burroso.",abb:"Pasta con burro e tartufo, secondi di pesce in salsa, pollo arrosto, risotti cremosi, formaggi a pasta semi-dura.",nil:0,sm:0,
+    tags:["strutturato","morbido","fruttato","minerale","elegante"],
+    sim:"Vernaccia Albereta (strutturato e complesso) · Fiano di Avellino (corpo pieno, persistente)"},
+  {id:13,cat:"bianchi",nome:'Alto Adige Sauvignon "Nico"',prod:"Stroblhof",zona:"Caldaro, Alto Adige",pr:"32€",bic:null,vig:"100% Sauvignon Blanc",vin:"Prodotto a Caldaro, stile altoatesino moderno, alta freschezza e profumi varietali intensi.",prof:"Frutta tropicale, agrumi, mela verde, accenti floreali, nota minerale delicata. Vivace, acidità equilibrata, finale lungo e rinfrescante.",abb:"Insalate di mare, crudités di verdure, caprese, piatti di pesce leggeri, sushi, formaggi di capra freschi, verdure alla griglia.",nil:0,sm:0,
+    tags:["fresco","aromatico","fruttato","secco","minerale"],
+    sim:"Vermentino Lambruschi (fresco, sapido, marino) · Reguta Sauvignon (versione più semplice, in giacenza)"},
+  {id:14,cat:"bianchi",nome:'Alto Adige Valle Isarco "Kerner"',prod:"Taschlerhof",zona:"Valle Isarco",pr:"28€",bic:null,vig:"100% Kerner (incrocio Riesling × Trollinger)",vin:"Vigneti su pendii scistosi a 530+ m di altitudine, fermentazione a temperatura controllata, affinamento in acciaio. Produttore di eccellenza della Valle Isarco.",prof:"Piacevolmente aromatico, note di frutta a polpa bianca, agrumi, fiori bianchi alpini, mineralità schistacea. Fresco, verticale, beverino.",abb:"Antipasti di pesce, speck e formaggi altoatesini, trota in padella, piatti di verdure, cucina leggera di montagna.",nil:0,sm:0,sub:"Reguta Traminer Aromatico (24€)",pitch:"Il Kerner sta arrivando. Nel frattempo abbiamo un Traminer Aromatico della stessa famiglia: floreale, fresco, con quella leggerezza aromatica che si abbina benissimo a questo piatto.",
+    tags:["aromatico","fresco","leggero","minerale","beverino"],
+    sim:"Gewurztraminer Taschlerhof (stesso produttore, più aromatico e pieno) · Riesling Kerpen (verticale, minerale, più strutturato)"},
+  {id:15,cat:"bianchi",nome:"Alto Adige Valle Isarco Gewurztraminer",prod:"Taschlerhof",zona:"Valle Isarco",pr:"32€",bic:null,vig:"100% Gewurztraminer",vin:"70% acciaio, 30% legno. Affinamento sulle fecce fini per aumentare complessità.",prof:"Frutta esotica matura, floreale intenso di rosa, spezie dolci, elegante nota agrumata. Corpo pieno, retrogusto fresco e leggermente amaricante.",abb:"Cucina asiatica, formaggi erborinati, foie gras, pesce e crostacei alla griglia, carni bianche in salsa aromatica. Perfetto con clienti curiosi.",nil:0,sm:0,
+    tags:["aromatico","fruttato","strutturato","morbido","intenso"],
+    sim:"Kerner Taschlerhof (stesso produttore, più leggero e fresco) · Reguta Traminer Aromatico (simile ma più semplice, in giacenza)"},
+  {id:16,cat:"bianchi",nome:"Riesling Wehlener Sonnenuhr Spätlese Trocken",prod:"Kerpen",zona:"Mosella, Germania",pr:"30€",bic:null,vig:"100% Riesling",vin:'Dalla Mosella tedesca, vigneto storico Wehlener Sonnenuhr. "Spätlese Trocken" = vendemmia tardiva vinificata secca, massima concentrazione senza zucchero residuo.',prof:"Pesca bianca, albicocca, agrumi, pietra focaia, idrocarburi leggeri. Acidità tagliente, grande verticalità, lunghissima persistenza. Strutturato ma non pesante.",abb:"Piatti di pesce strutturati, astice alla griglia, capesante, triglie in umido, cucina orientale speziata, salmone affumicato.",nil:0,sm:0,sub:"Greco di Tufo Terre Diverse (32€)",pitch:"Il Riesling non è ancora arrivato, ma abbiamo un Greco di Tufo straordinario: stesso carattere minerale e quella freschezza tagliente che cercate, con un'anima più mediterranea.",
+    tags:["minerale","secco","strutturato","fresco","elegante","complesso"],
+    sim:"Greco di Tufo Terre Diverse (minerale e strutturato, in giacenza) · Etna Bianco Benanti (mineralità vulcanica, grande sapidità)"},
+  {id:17,cat:"bianchi",nome:"Soave Classico DOC",prod:"Pieropan",zona:"Monteforte d'Alpone",pr:"24€",bic:null,vig:"90% Garganega, 10% Trebbiano di Soave",vin:"Uno dei produttori di riferimento assoluto del Soave. Vigneti nella zona classica storica. Affinamento in acciaio.",prof:"Floreale, pesca, mandorla fresca, minerale vulcanico. Secco, fresco, sapido. Classico vino da pasto, leggero e piacevole.",abb:"Pasta con vongole, pesce al vapore o al forno, risotto alle erbe, insalate di mare, pizza bianca, formaggi freschi.",nil:0,sm:0,
+    tags:["fresco","secco","leggero","minerale","beverino"],
+    sim:"Vernaccia Selvabianca (fresco, leggero, locale) · Lugana Capotesta (corpo leggermente più pieno, stesso stile)"},
+  {id:18,cat:"bianchi",nome:'Lugana DOC "Capotesta"',prod:"Cascina Maddalena",zona:"Lago di Garda",pr:"26€",bic:null,vig:"100% Turbiana (Trebbiano di Lugana)",vin:"Lago di Garda, terreni argillosi profondi che conferiscono struttura insolita per un bianco del Nord. Affinamento in acciaio.",prof:"Note di pesca bianca, fiori di campo, erbe aromatiche, lieve nota mandorlata, mineralità gessosa. Corpo medio, fresco, con buona struttura e lunghezza.",abb:"Pesce di lago e di mare, risotto al limone, pasta con gamberetti, fritture di pesce, secondi bianchi leggeri.",nil:0,sm:0,sub:"Bisci Verdicchio di Matelica (26€ / 6€ bic)",pitch:"Il Lugana è in arrivo. Nel frattempo abbiamo un Verdicchio di Matelica straordinario: stesso profilo strutturato e minerale, ottimo con il pesce.",
+    tags:["fresco","minerale","strutturato","elegante","sapido"],
+    sim:"Verdicchio Bisci (strutturato e minerale, in giacenza) · Soave Classico Pieropan (fresco, leggero, stessa fascia)"},
+  {id:19,cat:"bianchi",nome:"Vermentino Colli di Luni DOC",prod:"Ottaviano Lambruschi",zona:"Liguria / Lunigiana",pr:"26€",bic:null,vig:"100% Vermentino",vin:"Produttore di riferimento della Liguria/Lunigiana. Terroir di confine tra Liguria e Toscana, vigneti su pendii con forte influenza marina.",prof:"Agrumi, erbe mediterranee, fiori di ginestra, note saline e iodate. Secco, fresco, sapido, con leggera nota amaricante finale.",abb:"Pasta al pesto, pesce alla ligure, trofie, focaccia con pesce, antipasti di mare, insalate di polpo.",nil:0,sm:0,
+    tags:["fresco","sapido","secco","minerale","leggero"],
+    sim:"Vermentino Campomaccione (più semplice, in giacenza) · Sauvignon Nico (fresco, agrumato, stessa impronta)"},
+  {id:20,cat:"bianchi",nome:"Fiano di Avellino DOCG",prod:"Colli di Lapio",zona:"Lapio, Irpinia",pr:"28€",bic:null,vig:"100% Fiano di Avellino",vin:"Produttore iconico di Lapio, riferimento per la denominazione. Acciaio, affinamento in bottiglia.",prof:"Note di miele, nocciola, mela cotogna, fiori di campo, zafferano, lieve affumicato. Corpo medio-pieno, acidità equilibrata, lunga persistenza.",abb:"Secondi di mare strutturati, branzino in crosta, orata al forno, pasta con pesto di pistacchi, piatti di funghi, risotti complessi, formaggi semi-stagionati.",nil:0,sm:0,
+    tags:["strutturato","aromatico","morbido","complesso","elegante"],
+    sim:"Chardonnay Schwarzhaus (strutturato e morbido) · Vernaccia Albereta (complessità e sapidità, stile diverso)"},
+  {id:21,cat:"bianchi",nome:"Etna Bianco DOC",prod:"Benanti",zona:"Etna, Sicilia",pr:"33€",bic:null,vig:"100% Carricante",vin:"Vigneti sui versanti Est e Sud dell'Etna, terreni vulcanici sabbiosi. Affinamento in acciaio.",prof:"Mela, zagara, pompelmo, cedro, sentori iodati e salmastri, mineralità vulcanica intensa. Secco, fresco, elegante. Grande sapidità, finale pulito e persistente.",abb:"Crudi di mare, carpacci di pesce, pasta alle sarde, pesce alla siciliana, verdure grigliate, formaggi freschi siciliani.",nil:0,sm:0,
+    tags:["minerale","secco","fresco","sapido","elegante"],
+    sim:"Riesling Kerpen (mineralità tagliente e verticalità) · Vermentino Lambruschi (sapido, marino, fresco)"},
+  {id:22,cat:"bianchi",nome:'IGT Toscana "Fonteuva" Bianco',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"18€",bic:"5€",vig:"Vernaccia, Vermentino, Malvasia",vin:"Blend di vitigni toscani, vino da tavola informale e accessibile. Ingresso di gamma del Colombaio.",prof:"Fresco, fruttato, facile beva. Note floreali e di frutta bianca, leggero corpo, poco impegnativo. Non ha pretese di complessità.",abb:"Aperitivo, salumi, bruschette, pizza, piadine. Vino da tavola quotidiano.",nil:0,sm:0,
+    tags:["fresco","fruttato","leggero","beverino","secco"],
+    sim:"Reguta Pinot Grigio (stesso profilo semplice e fresco, in giacenza) · Vernaccia Selvabianca (un gradino sopra, stesso produttore)"},
+
+  {id:30,cat:"rosati",nome:'Rosé IGT "Cremisi"',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"24€",bic:"6€",vig:"100% Sangiovese",vin:"Vinificazione in rosato con breve macerazione sulle bucce. Affinamento in acciaio.",prof:"Rosa cerasuolo, fragola, melograno, rosa, spezie leggere. Secco, fresco, bevibile. Versatile e piacevole.",abb:"Aperitivo, pizza, bruschette, salumi, piatti estivi, pasta al pomodoro fresco.",nil:0,sm:0,
+    tags:["fresco","fruttato","secco","beverino","leggero"],
+    sim:"Zingarelli Campomaccione (rosato con più struttura, Syrah, in giacenza) · Lumis Rosé (bollicina fruttata dello stesso stile)"},
+
+  {id:40,cat:"rossi",nome:'Chianti CS DOCG "Campale"',prod:"Il Colombaio di Santa Chiara",zona:"Chianti",pr:"24€",bic:"6€",vig:"90% Sangiovese, 10% Merlot",vin:"Vino di pronta beva, affinamento in acciaio. Il 10% di Merlot ammorbidisce i tannini del Sangiovese. Produttore locale di riferimento.",prof:"Ciliegia, prugna fresca, spezie leggere. Tannini morbidi, fresco, leggero corpo. Vino immediato e piacevole.",abb:"Bistecca, affettati, pizza, pasta al ragù, pici al sugo, ribollita.",nil:0,sm:0,
+    tags:["morbido","fruttato","fresco","beverino","leggero"],
+    sim:"Ciliegiolo IGT Camillo (ancora più morbido e fruttato) · Fonteuva Rosso (più semplice, stessa fascia) · Chianti Classico Riecine (più elegante e complesso)"},
+  {id:41,cat:"rossi",nome:"Chianti Classico",prod:"Riecine",zona:"Gaiole in Chianti",pr:"35€",bic:null,vig:"Sangiovese (80%), Canaiolo (15%), Syrah (5%)",vin:"Produttore biodinamico di Gaiole in Chianti. Fermentazione in cemento, approccio naturale.",prof:"Ciliegia fresca, viola, tabacco, terra, leggero balsamico. Acidità vivace, tannini fini e presenti. Stile elegante più che potente.",abb:"Bistecca alla fiorentina, selvaggina leggera, pasta al ragù di cinghiale, pecorino stagionato.",nil:0,sm:0,
+    tags:["elegante","fresco","tannico","fruttato","complesso"],
+    sim:"Chianti Classico Riserva Il Priore (più strutturato) · Chianti Classico Carleone (alternativa, in giacenza) · Etna Rosso (elegante, tannini fini)"},
+  {id:42,cat:"rossi",nome:'Chianti CS Riserva DOCG "Il Priore"',prod:"Il Colombaio di Santa Chiara",zona:"Chianti Classico",pr:"36€",bic:null,vig:"90% Sangiovese, 10% Canaiolo",vin:"Riserva = almeno 24 mesi di affinamento. Il Canaiolo tradizionale invece del Merlot internazionale: scelta più storica e toscana.",prof:"Ciliegia matura, prugna, spezie, tabacco, cuoio lieve. Struttura più complessa rispetto al Campale, tannini presenti ma maturi.",abb:"Carni rosse arrosto, selvaggina, pecorino stagionato di Pienza, pasta al ragù di lepre.",nil:0,sm:0,
+    tags:["strutturato","tannico","fruttato","complesso","elegante"],
+    sim:"Vigna Barbischio Alongi (cru superiore, più concentrato) · Chianti Classico Riecine (più fresco ed elegante) · Rosso di Montalcino (struttura simile, Sangiovese puro)"},
+  {id:43,cat:"rossi",nome:'Chianti CL Riserva DOCG "Vigna Barbischio"',prod:"Maurizio Alongi",zona:"Chianti Classico",pr:"48€",bic:null,vig:"100% Sangiovese",vin:"Cru di vigna nel Chianti Classico DOCG. Produttore artigianale di qualità, vinificazione in cemento o grandi botti.",prof:"Più concentrato e complesso rispetto al Priore: ciliegia nera, spezie orientali, cuoio, terra rossa, balsamico. Tannini setosi ma persistenti, lunga chiusura.",abb:"Bistecca alla fiorentina di qualità, cinghiale in umido, agnello al forno, formaggi stagionati importanti.",nil:0,sm:0,
+    tags:["strutturato","tannico","complesso","intenso","elegante"],
+    sim:"Brunello di Montalcino Tricerchi (vertice assoluto del Sangiovese) · Chianti CS Riserva Il Priore (un gradino sotto, stesso stile)"},
+  {id:44,cat:"rossi",nome:"Rosso di Montalcino DOC",prod:"Castello Tricerchi",zona:"Montalcino",pr:"32€",bic:null,vig:"100% Sangiovese (clone Brunello)",vin:'Il "fratello minore" del Brunello, stessa vigna, affinamento più breve (1 anno in legno). Ingresso alla denominazione di Montalcino.',prof:"Ciliegia, rosa canina, spezie dolci, mineralità. Tannico ma meno austero del Brunello, già pienamente bevibile e piacevole.",abb:"Pasta al ragù di carne, pici all'aglione, bistecca, selvaggina, formaggi semi-stagionati.",nil:0,sm:0,
+    tags:["strutturato","tannico","fruttato","minerale","elegante"],
+    sim:"Brunello di Montalcino Tricerchi (stessa vigna, più complesso e austero) · Chianti CS Riserva Il Priore (struttura simile)"},
+  {id:45,cat:"rossi",nome:"Brunello di Montalcino DOCG",prod:"Castello Tricerchi",zona:"Montalcino",pr:"66€",bic:null,vig:"100% Sangiovese Grosso (Brunello)",vin:"Minimo 5 anni di affinamento (3 in legno + 2 in bottiglia). Castello Tricerchi è una piccola tenuta di qualità nel cuore di Montalcino.",prof:"Grande vino, complesso: ciliegia sotto spirito, rosa appassita, tabacco, cuoio, grafite, terra, spezie orientali. Tannini importanti, acidità vivace, lunghissima persistenza.",abb:"Bistecca fiorentina di alta qualità, piccione arrosto, cinghiale brasato, selvaggina nobile, formaggi stagionati a lungo.",nil:0,sm:0,
+    tags:["strutturato","tannico","complesso","intenso","elegante"],
+    sim:"Rosso di Montalcino Tricerchi (stesso produttore, più accessibile) · Vigna Barbischio Alongi (stesso livello qualitativo, Sangiovese del Chianti)"},
+  {id:46,cat:"rossi",nome:"Bolgheri Rosso DOC",prod:"Le Macchiole",zona:"Bolgheri",pr:"38€",bic:null,vig:"Merlot, Cabernet Franc, Cabernet Sauvignon, Syrah",vin:"Produttore di riferimento assoluto di Bolgheri. Affinamento in barrique.",prof:"Frutta nera matura, cedro, spezie, cacao, lieve balsamico. Corpo pieno, tannini vellutati, potente ma elegante. Stile internazionale con anima toscana.",abb:"Carni rosse importanti, costata alla brace, agnello, selvaggina, formaggi stagionati, piatti di struttura.",nil:0,sm:0,
+    tags:["strutturato","morbido","fruttato","intenso","elegante"],
+    sim:"Cabernet Franc Bacicolo (più nervoso e verticale) · Vigna Barbischio Alongi (stessa struttura, Sangiovese)"},
+  {id:47,cat:"rossi",nome:'Cabernet Franc IGT "Bacicolo"',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"80€",bic:null,vig:"100% Cabernet Franc",vin:"Produzione artigianale del Colombaio. Affinamento in barrique.",prof:"Peperone maturo, ribes nero, violetta, spezie, tabacco verde, mineralità. Tannico e verticale. Più nervoso del Merlot, grande tensione acida.",abb:"Agnello arrosto, piccione, coniglio alla cacciatora strutturato, selvaggina, formaggi stagionati complessi. Abbinamento coraggioso con tartufo.",nil:0,sm:0,
+    tags:["strutturato","tannico","intenso","minerale","complesso"],
+    sim:"Bolgheri Rosso Le Macchiole (stesso livello, Cab Franc in blend) · Brunello di Montalcino (vertice toscano di struttura)"},
+  {id:48,cat:"rossi",nome:"Nebbiolo Langhe DOC",prod:"Ettore Germano",zona:"Serralunga d'Alba",pr:"26€",bic:null,vig:"100% Nebbiolo",vin:"Produttore di Serralunga d'Alba. Il Langhe Nebbiolo proviene da vigne giovani o parcelle non destinate al Barolo classico.",prof:"Ciliegia, lampone, rosa, viola, spezie, catrame leggero. Tannini importanti ma già accessibili, acidità vivace. Stile giovane-Barolo.",abb:"Brasato al vino rosso, tajarin al ragù, risotto con salsiccia, formaggi erborinati, selvaggina leggera.",nil:0,sm:0,
+    tags:["tannico","fresco","fruttato","elegante","strutturato"],
+    sim:"Etna Rosso (elegante, tannini fini, acidità vivace) · Chianti Classico Riecine (stesso carattere fresco ed elegante, vitigno diverso)"},
+  {id:49,cat:"rossi",nome:"Ciliegiolo IGT",prod:"Antonio Camillo",zona:"Manciano, Maremma Toscana",pr:"24€",bic:null,vig:"100% Ciliegiolo",vin:"Produttore di Manciano, Maremma toscana. Affinamento breve in acciaio per preservare il frutto.",prof:"Ciliegia fresca, lampone, viola, note balsamiche, leggera speziatura. Corpo medio, tannini morbidissimi, freschezza sorprendente. Estremamente piacevole e beverino.",abb:"Taglieri di salumi toscani, ribollita, pasta al pomodoro, secondi di carne bianca, pizza.",nil:0,sm:0,
+    tags:["morbido","fruttato","fresco","beverino","leggero"],
+    sim:"Chianti Campale (morbido e fruttato, stessa fascia) · Pinot Nero Panizzi (leggero, soffice, fruttato)"},
+  {id:50,cat:"rossi",nome:"Etna Rosso DOC",prod:"Tenuta delle Terre Nere",zona:"Etna",pr:"45€",bic:null,vig:"Nerello Mascalese (95%), Nerello Cappuccio (5%)",vin:"Uno dei produttori più rispettati dell'Etna. Vigneti su lava vulcanica a quote elevate, viti vecchie pre-fillossera. Affinamento in grandi botti di rovere.",prof:"Ciliegia croccante, lampone, rosa, spezie, cenere vulcanica, tabacco, mineralità intensa. Tannini eleganti e setosi, acidità vivace. Spesso paragonato al Pinot Nero per stile.",abb:"Pesce strutturato, carni bianche, agnello, funghi, pasta alla norma con carne.",nil:0,sm:0,
+    tags:["elegante","minerale","fresco","fruttato","tannico"],
+    sim:"Pinot Nero Panizzi (leggero, elegante, stesso stile) · Nebbiolo Langhe Germano (tannini fini, acidità vivace)"},
+  {id:51,cat:"rossi",nome:"Pinot Nero",prod:"Panizzi",zona:"San Gimignano",pr:"28€",bic:null,vig:"100% Pinot Nero",vin:"Panizzi è produttore storicamente di Vernaccia di San Gimignano. Questo Pinot Nero viene da vigne sui suoli di San Gimignano.",prof:"Fragola, lampone, ciliegia, lieve floreale, spezie dolci. Corpo leggero-medio, tannini soffici, fresco. Stile borgognone light.",abb:"Pasta con funghi trifolati, salmone al forno, pollo arrosto, tagliere di salumi delicati, carni bianche in umido.",nil:0,sm:0,
+    tags:["leggero","fruttato","fresco","morbido","elegante"],
+    sim:"Etna Rosso (stesso spirito elegante, più minerale) · Ciliegiolo IGT (leggero, fruttato, beverino)"},
+  {id:52,cat:"rossi",nome:'IGT Toscana Rosso "Fonteuva"',prod:"Il Colombaio di Santa Chiara",zona:"Toscana",pr:"18€",bic:"5€",vig:"100% Sangiovese",vin:"Acciaio, pronta beva. Ingresso di gamma per il rosso del Colombaio.",prof:"Fresco, fruttato, semplice. Ciliegia, frutta rossa, leggero. Vino da tavola immediato.",abb:"Pizza, pasta al pomodoro, pici, affettati, piatti semplici quotidiani.",nil:0,sm:0,
+    tags:["leggero","fruttato","fresco","beverino","secco"],
+    sim:"Chianti Campale (un gradino sopra, più morbido e strutturato) · Ciliegiolo IGT (più carattere e freschezza)"},
+
+  {id:60,cat:"dolci",nome:'Moscato d\'Asti DOCG "Camp Blanc"',prod:"Emidio Vada",zona:"Asti, Piemonte",pr:"26€",bic:null,vig:"100% Moscato Bianco di Canelli",vin:"Metodo Asti (Charmat corto), bassa gradazione alcolica (5-6% vol.), perlage delicato e soffice.",prof:"Pesca, albicocca, acacia, miele, rosa, salvia. Dolce, leggero, aromatico, bollicina sofficissima. Non stucchevole grazie alla freschezza acida.",abb:"Crostate di frutta, pesche, frutta fresca, dessert non cioccolatosi, torte di pasticceria secca, panettone. Anche da solo come digestivo leggero.",nil:0,sm:0,
+    tags:["dolce","aromatico","leggero","fruttato","bollicine"],
+    sim:"Ben Ryé Passito (dolce strutturato, da meditazione, senza bollicina)"},
+  {id:61,cat:"dolci",nome:'Passito di Pantelleria DOC "Ben Ryé"',prod:"Donnafugata",zona:"Pantelleria, Sicilia",pr:"65€",bic:null,vig:"100% Zibibbo, alberello Pantesco",vin:"Appassimento al sole delle uve, macerazione sulle bucce, affinamento 7 mesi in vasca + 12 mesi in bottiglia.",prof:"Colore ambra brillante. Albicocca fresca e candita, scorza d'arancia, macchia mediterranea, miele, erbe aromatiche, note salmastre e balsamiche. Dolce ma con straordinario equilibrio.",abb:"Dessert alle mandorle, cannoli, formaggi erborinati e stagionati, torta di ricotta. Ottimo da solo come vino da meditazione.",nil:0,sm:0,
+    tags:["dolce","aromatico","intenso","complesso","strutturato"],
+    sim:"Moscato d'Asti Camp Blanc (dolce leggero, con bollicina, più delicato)"},
+
+  {id:70,cat:"giacenze",nome:"Greco di Tufo Terre Diverse",prod:"Terre Diverse",zona:"Campania, Irpinia",pr:"32€",bic:null,stock:"5 bottiglie",vig:"100% Greco di Tufo",vin:"",prof:"Pera, pesca, mandorla, note minerali sulfuree tipiche del vitigno, sapido, fresco, buona struttura. Bianco del Sud con carattere nordico nell'eleganza.",abb:"Pasta alla genovese napoletana, pesce al forno, frittura di pesce, formaggi semi-stagionati.",nota:"Sostituto del Riesling Kerpen.",nil:0,sm:0,
+    tags:["minerale","strutturato","sapido","fresco","elegante"],
+    sim:"Riesling Kerpen (stesso carattere minerale e verticale) · Fiano di Avellino (strutturato, meridionale)"},
+  {id:71,cat:"giacenze",nome:"Chianti Classico Ten. Carleone",prod:"Tenuta Carleone",zona:"Chianti Classico",pr:"35€",bic:null,stock:"2 bottiglie",vig:"100% Sangiovese",vin:"",prof:"Chianti Classico di qualità artigianale, stile elegante e preciso. Ciliegia, viola, tabacco, tannini fini.",abb:"Come per il Chianti Classico Riecine: bistecca, selvaggina, ragù di carne.",nota:"Sostituto del Chianti Classico Riecine se esaurito.",nil:0,sm:0,
+    tags:["elegante","fruttato","tannico","fresco","strutturato"],
+    sim:"Chianti Classico Riecine (stesso stile, produttore diverso) · Chianti CS Riserva Il Priore (più strutturato)"},
+  {id:72,cat:"giacenze",nome:"Chianti Classico Isole e Olena",prod:"Isole e Olena",zona:"Barberino Tavernelle",pr:"35€",bic:null,stock:"1 bottiglia",vig:"100% Sangiovese",vin:"",prof:"Eleganza, finezza, stile tradizionale.",abb:"Come per il Chianti Classico Riecine: bistecca, selvaggina, ragù di carne.",nota:"Solo 1 bottiglia rimasta. Usare con cura.",nil:0,sm:0,
+    tags:["elegante","tannico","fresco","strutturato"],
+    sim:"Chianti Classico Riecine (stesso stile elegante) · Chianti Classico Carleone (alternativa analoga, in giacenza)"},
+  {id:73,cat:"giacenze",nome:"Ferrari Maximum",prod:"Ferrari",zona:"Trentino",pr:"~40€",bic:null,stock:"2 bottiglie",vig:"Chardonnay con saldo di Pinot Nero — Metodo Classico Trento DOC",vin:"Metodo Classico.",prof:"Più ricco e morbido del Perlè, note biscottate, crema, agrumi maturi. Strutturato, complesso.",abb:"Risotti cremosi, pesce in salsa, tartine gourmet, aperitivo di livello.",nota:"Sostituto di Altalanga e Crémant. Solo 2 bottiglie: gestire con parsimonia.",nil:0,sm:0,
+    tags:["bollicine","morbido","strutturato","complesso","elegante"],
+    sim:"Trento DOC Perlè (versione più verticale) · Altalanga Extra Brut (stesso livello, più teso)"},
+  {id:74,cat:"giacenze",nome:"Champagne Rémi Couvreur",prod:"Rémi Couvreur",zona:"Champagne",pr:"55€",bic:null,stock:"5 bottiglie",vig:"100% Chardonnay (Blanc de Blancs)",vin:"Blanc de Blancs, Metodo Classico.",prof:"Fiori bianchi, agrumi, gesso, grande freschezza e verticalità. Stile Blanc de Blancs puro, minerale e preciso.",abb:"Ostriche, crudi di mare, pesce nobile, aperitivo di livello, sushi.",nota:"Upgrade rispetto a Ferrari Maximum o sostituto del Trento DOC Perlè.",nil:0,sm:0,
+    tags:["bollicine","minerale","elegante","fresco","strutturato"],
+    sim:"Champagne Zero Tarlant (stesso livello, più complesso e pas dosé) · Trento DOC Perlè (Metodo Classico italiano, fascia inferiore)"},
+  {id:80,cat:"giacenze",nome:"Bisci Verdicchio di Matelica",prod:"Bisci",zona:"Marche, DOC Matelica",pr:"26€",bic:"6€",stock:"3 bottiglie",vig:"100% Verdicchio",vin:"",prof:"Mandorla fresca, erbe, agrumi, note amare eleganti nel finale. Più strutturato e minerale del Verdicchio dei Castelli di Jesi.",abb:"Pesce di lago e di mare, pasta con asparagi, coniglio in porchetta.",nota:"Sostituto del Lugana Capotesta.",nil:0,sm:0,
+    tags:["minerale","strutturato","fresco","sapido","elegante"],
+    sim:"Lugana Capotesta (stesso profilo strutturato, diversa zona) · Vernaccia Albereta (struttura e mineralità)"},
+  {id:81,cat:"giacenze",nome:"Vermentino Tenuta Campomaccione",prod:"Tenuta Campomaccione",zona:"Maremma Toscana",pr:"26€",bic:"6€",stock:"4 bottiglie",vig:"100% Vermentino",vin:"",prof:"Agrumi, erbe mediterranee, note saline. Fresco, leggero, immediato.",abb:"Aperitivo, bruschette, insalate di mare, pesce semplice.",nota:"Alternativa al Vermentino Lambruschi.",nil:0,sm:0,
+    tags:["fresco","leggero","sapido","beverino","secco"],
+    sim:"Vermentino Lambruschi (più carattere e complessità) · Soave Classico Pieropan (stesso stile fresco e leggero)"},
+  {id:82,cat:"giacenze",nome:"Reguta Traminer Aromatico",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"5 bottiglie",vig:"100% Traminer Aromatico",vin:"",prof:"Il più aromatico dei quattro Reguta. Rosa, litchi, fiori bianchi, frutta esotica, spezie dolci. Corpo leggero, molto profumato e accessibile. Secco al palato.",abb:"Aperitivo, cucina etnica, formaggi freschi aromatici, insalate di frutta e formaggio, antipasti freddi, dessert secchi.",nota:"Sostituto del Kerner Taschlerhof.",nil:0,sm:0,
+    tags:["aromatico","fruttato","leggero","secco","beverino"],
+    sim:"Gewurztraminer Taschlerhof (più strutturato e intenso) · Kerner Taschlerhof (fresco, aromatico, più minerale)"},
+  {id:83,cat:"giacenze",nome:"Reguta Chardonnay",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"4 bottiglie",vig:"100% Chardonnay",vin:"Senza passaggio in legno.",prof:"Stile fruttato-floreale. Mela golden, pesca, fiori bianchi, leggera vaniglia. Corpo leggero-medio, fresco, morbido, rotondo e facile.",abb:"Aperitivo, antipasti, pasta con sughi bianchi leggeri, pollo alla piastra, pesce al forno semplice, formaggi a pasta molle.",nota:"Alternativa al Fonteuva Bianco.",nil:0,sm:0,
+    tags:["fruttato","morbido","fresco","leggero","beverino"],
+    sim:"Fonteuva Bianco (stesso profilo semplice) · Soave Classico Pieropan (fresco, più carattere territoriale)"},
+  {id:84,cat:"giacenze",nome:"Reguta Sauvignon",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"8 bottiglie",vig:"100% Sauvignon Blanc",vin:"",prof:"Fruttato e aromatico. Note di bosso, pesca bianca, pompelmo, erba tagliata. Fresco, leggero, con una leggera nota erbacea tipica del vitigno in pianura friulana.",abb:"Aperitivo, insalate, pesce leggero al vapore, carpaccio di verdure, formaggi freschi di capra, frittatine alle erbe.",nota:"Alternativa più semplice al Sauvignon Nico.",nil:0,sm:0,
+    tags:["aromatico","fresco","fruttato","leggero","beverino"],
+    sim:"Sauvignon Nico Stroblhof (più complesso e strutturato) · Vermentino Campomaccione (fresco, sapido, stessa fascia)"},
+  {id:85,cat:"giacenze",nome:"Reguta Pinot Grigio",prod:"Reguta",zona:"Friuli Aquileia DOC",pr:"24€",bic:"6€",stock:"7 bottiglie",vig:"100% Pinot Grigio",vin:"",prof:"Il più neutro e versatile dei quattro Reguta. Pera, mela, fiori bianchi, accenno di mandorla. Corpo leggero, fresco, minerale appena accennato. Pulito, senza eccessi.",abb:"Aperitivo universale, pizza bianca, pasta delicata, pesce al forno o alla griglia, insalate miste, fritture leggere, formaggi freschi.",nota:"Sostituto principale del Fonteuva Bianco.",nil:0,sm:0,
+    tags:["leggero","fresco","secco","beverino","minerale"],
+    sim:"Fonteuva Bianco (stesso profilo di facile beva) · Reguta Chardonnay (stesso produttore, più fruttato)"},
+  {id:86,cat:"giacenze",nome:'Rosato Tenuta Campomaccione "Zingarelli"',prod:"Tenuta Campomaccione",zona:"Maremma Toscana",pr:"24€",bic:"6€",stock:"16 bottiglie",vig:"80% Sangiovese, 20% Syrah",vin:"",prof:"Rosa cerasuolo, fragola, melograno, pepe rosa. Fresco, fruttato, corpo medio. Il Syrah aggiunge struttura e spezia rispetto a un rosato solo Sangiovese.",abb:"Aperitivo, pizza, taglieri misti, pasta al pomodoro fresco, secondi di pesce leggeri, piatti estivi.",nota:"PRIORITÀ SMALTIMENTO: 16 bottiglie, da proporre attivamente ogni sera. Cremisi esaurito → Zingarelli.",nil:0,sm:1,
+    tags:["fruttato","fresco","strutturato","beverino","secco"],
+    sim:"Cremisi Colombaio (stesso stile rosato, più leggero) · Lumis Rosé (bollicina rosata, più leggero)"}
+];
+
+var CATS = [
+  {k:"bollicine", label:"Bollicine", copy:"Spumanti, Metodo Classico e Champagne."},
+  {k:"bianchi",   label:"Bianchi", copy:"Bianchi territoriali, aromatici e strutturati."},
+  {k:"rosati",    label:"Rosati", copy:"Rosati versatili, freschi e gastronomici."},
+  {k:"rossi",     label:"Rossi", copy:"Rossi toscani, italiani e grandi classici."},
+  {k:"dolci",     label:"Dolci e Dessert", copy:"Vini da fine pasto, dessert e meditazione."},
+  {k:"giacenze",  label:"Giacenze da Smaltire", copy:"Bottiglie residue, alternative e priorità operative."}
+];
+
+var curF = "all", curS = "";
+
+function e(s){
+  return String(s || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function catClass(cat){
+  return "type-" + cat;
+}
+
+function buildStats(){
+  var counts = {bollicine:0,bianchi:0,rosati:0,rossi:0,dolci:0,giacenze:0};
+  for(var i=0;i<W.length;i++) counts[W[i].cat]++;
+
+  document.getElementById("statsBar").innerHTML = `
+    <div class="stat"><span class="dot dot-bollicine"></span>Bollicine: ${counts.bollicine}</div>
+    <div class="stat"><span class="dot dot-bianchi"></span>Bianchi: ${counts.bianchi}</div>
+    <div class="stat"><span class="dot dot-rosati"></span>Rosati: ${counts.rosati}</div>
+    <div class="stat"><span class="dot dot-rossi"></span>Rossi: ${counts.rossi}</div>
+    <div class="stat"><span class="dot dot-dolci"></span>Dolci: ${counts.dolci}</div>
+    <div class="stat"><span class="dot dot-giacenze"></span>Giacenze: ${counts.giacenze}</div>
+  `;
+}
+
+function subPills(str){
+  if(!str) return "";
+  var pp = str.split("·");
+  var out = "";
+  for(var i=0;i<pp.length;i++){
+    out += '<span class="sub-pill">'+e(pp[i].trim())+'</span>';
+  }
+  return out ? '<div class="subs">'+out+'</div>' : '';
+}
+
+function styleTags(tags){
+  if(!tags || !tags.length) return '';
+  var out = '';
+  for(var i=0;i<tags.length;i++){
+    out += '<span class="style-tag '+tags[i]+'">'+e(tags[i])+'</span>';
+  }
+  return out ? '<div class="style-tags">'+out+'</div>' : '';
+}
+
+function card(w){
+  var banner = '';
+  if(w.sm) banner += '<div class="card-banner smalt">🔴 PRIORITÀ SMALTIMENTO — proporre attivamente ogni sera</div>';
+  
+
+  var catObj = CATS.find(function(c){ return c.k === w.cat; });
+  var badges = '';
+  badges += '<span class="badge '+catClass(w.cat)+'">'+e(catObj ? catObj.label : w.cat)+'</span>';
+  if(w.vig) badges += '<span class="badge grape">'+e(w.vig)+'</span>';
+  if(w.bic) badges += '<span class="badge glass-badge">Al bicchiere '+e(w.bic)+'</span>';
+  if(w.stock) badges += '<span class="badge stock">Stock: '+e(w.stock)+'</span>';
+  
+
+  var pitch = w.pitch
+    ? '<div class="pitch"><strong>Pitch di vendita</strong>'+e(w.pitch)+'</div>'
+    : '';
+
+  var vin = w.vin
+    ? '<div class="detail-block full"><div class="detail-label">Vinificazione</div><div class="detail-value">'+e(w.vin)+'</div></div>'
+    : '';
+
+  var nota = w.nota
+    ? '<div class="detail-block full"><div class="detail-label">Note operative</div><div class="detail-value warn">'+e(w.nota)+'</div></div>'
+    : '';
+
+  var simHtml = w.sim
+    ? '<div class="similar-block"><strong>🔁 Simili in carta</strong>'+e(w.sim)+'</div>'
+    : '';
+
+  return `
+    <article class="card" id="c${w.id}">
+      ${banner}
+      <div class="card-top" onclick="tc(${w.id})">
+        <div class="card-title">
+          <h4>${e(w.nome)}</h4>
+          <p>${e(w.prod)}${w.zona ? ' · '+e(w.zona) : ''}</p>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div class="pricebox">
+            <div class="price">${e(w.pr)}</div>
+            ${w.bic ? `<div class="glass">bic. ${e(w.bic)}</div>` : ``}
+          </div>
+          <div class="chevron" id="ch${w.id}">▾</div>
+        </div>
+      </div>
+
+      <div class="badges">${badges}</div>
+      ${styleTags(w.tags)}
+
+      <div class="detail" id="d${w.id}">
+        ${pitch}
+        ${subPills(w.sub)}
+        <div class="detail-grid">
+          <div class="detail-block">
+            <div class="detail-label">Profilo sensoriale</div>
+            <div class="detail-value">${e(w.prof || "")}</div>
+          </div>
+
+          <div class="detail-block">
+            <div class="detail-label">Abbinamenti</div>
+            <div class="detail-value">${e(w.abb || "")}</div>
+          </div>
+
+          ${vin}
+          ${nota}
+        </div>
+        ${simHtml}
+      </div>
+    </article>
+  `;
+}
+
+function tc(id){
+  var c = document.getElementById('c'+id);
+  var ch = document.getElementById('ch'+id);
+  if(!c) return;
+  var open = c.classList.contains('open');
+  if(open){
+    c.classList.remove('open');
+    if(ch) ch.textContent = '▾';
+  }else{
+    c.classList.add('open');
+    if(ch) ch.textContent = '▴';
+  }
+}
+
+var collapsedSections = {bollicine:true, bianchi:true, rosati:true, rossi:true, dolci:true, giacenze:true};
+
+function toggleSection(catKey){
+  var grid = document.getElementById('sec-' + catKey);
+  var head = document.getElementById('sh-' + catKey);
+  var chev = document.getElementById('sca-' + catKey);
+  if(!grid || !head) return;
+  collapsedSections[catKey] = !collapsedSections[catKey];
+  if(collapsedSections[catKey]){
+    grid.classList.add('collapsed');
+    head.classList.add('collapsed');
+    if(chev) chev.textContent = '▸';
+  } else {
+    grid.classList.remove('collapsed');
+    head.classList.remove('collapsed');
+    if(chev) chev.textContent = '▾';
+  }
+}
+
+function render(){
+  var s = curS.toLowerCase().trim();
+  var out = "", tot = 0;
+
+  for(var ci=0; ci<CATS.length; ci++){
+    var cat = CATS[ci];
+    if(curF !== "all" && curF !== cat.k) continue;
+
+    var list = W.filter(function(w){
+      if(w.cat !== cat.k) return false;
+      if(!s) return true;
+      var h = (
+        (w.nome||"") + " " +
+        (w.prod||"") + " " +
+        (w.vig||"") + " " +
+        (w.zona||"") + " " +
+        (w.prof||"") + " " +
+        (w.abb||"") + " " +
+        (w.vin||"") + " " +
+        (w.nota||"") + " " +
+        (w.sub||"") + " " +
+        (w.pitch||"") + " " +
+        ((w.tags||[]).join(" ")) + " " +
+        (w.sim||"")
+      ).toLowerCase();
+      return h.indexOf(s) !== -1;
+    });
+
+    if(!list.length) continue;
+
+    list.sort(function(a, b){
+      return (a.nome||"").localeCompare((b.nome||""), "it");
+    });
+
+    tot += list.length;
+
+    var isOpen = !!s; // auto-expand when searching
+    if(isOpen) collapsedSections[cat.k] = false;
+    out += `
+      <section>
+        <div class="section-head${isOpen ? '' : ' collapsed'}" onclick="toggleSection('${cat.k}')" id="sh-${cat.k}">
+          <div>
+            <h3>${e(cat.label)}</h3>
+            <p>${e(cat.copy)}</p>
+          </div>
+          <span class="section-chevron" id="sca-${cat.k}">${isOpen ? '▾' : '▸'}</span>
+        </div>
+        <div class="grid${isOpen ? '' : ' collapsed'}" id="sec-${cat.k}">
+          ${list.map(card).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  if(!tot){
+    out = `<div class="empty">Nessun vino trovato per “${e(curS)}”</div>`;
+  }
+
+  document.getElementById("main").innerHTML = out;
+}
+
+document.querySelectorAll(".tab").forEach(function(t){
+  t.addEventListener("click", function(){
+    document.querySelectorAll(".tab").forEach(function(x){ x.classList.remove("active"); });
+    t.classList.add("active");
+    curF = t.dataset.f;
+    render();
+  });
+});
+
+document.getElementById("searchInput").addEventListener("input", function(ev){
+  curS = ev.target.value;
+  render();
+});
+
+const root = document.documentElement;
+const toggle = document.getElementById("themeToggle");
+const icon = document.getElementById("themeIcon");
+
+function syncThemeIcon(){
+  icon.textContent = root.getAttribute("data-theme") === "dark" ? "☀️" : "🌙";
+}
+
+toggle.addEventListener("click", function(){
+  const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  root.setAttribute("data-theme", next);
+});
+buildStats();
+render();
+</script>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var saved=localStorage.getItem('poggio-theme');
+  if(saved) root.setAttribute('data-theme',saved);
+  document.addEventListener('DOMContentLoaded',function(){
+    var toggle=document.getElementById('themeToggle');
+    var icon=document.getElementById('themeIcon');
+    function sync(){icon.textContent=root.getAttribute('data-theme')==='dark'?'☀️':'🌙'}
+    sync();
+    toggle.addEventListener('click',function(){
+      var next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+      root.setAttribute('data-theme',next);
+      localStorage.setItem('poggio-theme',next);
+      sync();
+    });
+  });
+})();
+</script>
+</body>
+</html>
