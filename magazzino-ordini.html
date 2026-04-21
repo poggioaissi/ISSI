@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" data-theme="dark">
+<html lang="it" data-theme="light">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
@@ -7,12 +7,16 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="format-detection" content="telephone=no"/>
 <meta name="theme-color" content="#123807"/>
+<meta name="theme-color" content="#eef1e8" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#0f160e" media="(prefers-color-scheme: dark)"/>
 <title>Magazzino & Ordini — Poggio a Issi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- Ripristina tema salvato prima del render per evitare flash -->
+<script>(function(){var t=localStorage.getItem('magazzino-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
-/* ── DESIGN TOKENS (identici al menu) ── */
+/* ── DESIGN TOKENS ── */
 :root {
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -36,8 +40,41 @@
   --shadow-sm: 0 2px 8px rgba(0,0,0,.18);
   --shadow-md: 0 12px 28px rgba(0,0,0,.22);
   --transition: 180ms cubic-bezier(.16,1,.3,1);
+}
 
-  /* dark palette */
+/* ── LIGHT THEME (predefinito) ── */
+:root, [data-theme="light"] {
+  --color-bg: #eef1e8;
+  --color-surface: #f7f8f2;
+  --color-surface-2: #e6ebde;
+  --color-surface-3: #dde5d3;
+  --color-border: #bcc7b1;
+  --color-text: #2d3a23;
+  --color-text-muted: #55664a;
+  --color-text-faint: #87957d;
+  --color-primary: #7a8f49;
+  --color-primary-hover: #65793a;
+  --color-primary-highlight: #dde6c9;
+  --color-accent-gold: #9a7a39;
+  --color-accent-red: #9a6660;
+  --color-accent-red-soft: #efdfdb;
+  --color-accent-blue: #58758b;
+  --color-accent-blue-soft: #dce7ef;
+  --color-accent-green: #5f7a56;
+  --color-accent-green-soft: #dfe8d9;
+  --color-accent-orange: #a06a45;
+  --color-accent-orange-soft: #efdfd3;
+  --shadow-sm: 0 1px 3px rgba(33,45,24,.09);
+  --shadow-md: 0 8px 22px rgba(33,45,24,.12);
+
+  --prince: #9a6660; --prince-soft: #efdfdb; --prince-mid: rgba(154,102,96,.25);
+  --gloo:   #55664a; --gloo-soft:   #e6ebde; --gloo-mid:   rgba(85,102,74,.20);
+  --online: #58758b; --online-soft: #dce7ef; --online-mid: rgba(88,117,139,.22);
+  --altro:  #5f7a56; --altro-soft:  #dfe8d9; --altro-mid:  rgba(95,122,86,.22);
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
   --color-bg: #0f160e;
   --color-surface: #182117;
   --color-surface-2: #223022;
@@ -58,8 +95,9 @@
   --color-accent-green-soft: #1f2a20;
   --color-accent-orange: #d8a07a;
   --color-accent-orange-soft: #2d221c;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.18);
+  --shadow-md: 0 12px 28px rgba(0,0,0,.22);
 
-  /* supplier accent colours */
   --prince: #d7a094; --prince-soft: #2d211d; --prince-mid: rgba(215,160,148,.30);
   --gloo:   #b5beab; --gloo-soft:   #223022; --gloo-mid:   rgba(181,190,171,.25);
   --online: #9dbed0; --online-soft: #1b2730; --online-mid: rgba(157,190,208,.28);
@@ -76,12 +114,16 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text);
-  background:
+  background-color: var(--color-bg);
+  background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 7%, transparent) 0%, transparent 45%);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+[data-theme="dark"] body {
+  background-image:
     radial-gradient(circle at 50% 0%, rgba(92,145,45,.18), transparent 30%),
     radial-gradient(circle at 0% 12%, rgba(166,191,103,.08), transparent 24%),
     linear-gradient(180deg, #113806 0%, #102905 24%, var(--color-bg) 100%);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 button {
@@ -134,6 +176,78 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   transition: all var(--transition);
 }
 .btn-reset:hover { border-color: var(--color-accent-red); color: var(--color-accent-red); }
+
+.theme-btn {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.theme-btn:hover { background: var(--color-surface-2); }
+
+/* ── RESET DIALOG ── */
+.reset-dialog-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.reset-dialog-overlay.open { opacity: 1; pointer-events: all; }
+.reset-dialog {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: var(--radius-lg);
+  padding: 24px 22px 20px;
+  width: min(340px, 100%);
+  box-shadow: var(--shadow-md);
+  transform: scale(.94);
+  transition: transform .22s cubic-bezier(.16,1,.3,1);
+}
+.reset-dialog-overlay.open .reset-dialog { transform: scale(1); }
+.reset-dialog-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + .4vw, 1.35rem);
+  margin-bottom: 8px;
+}
+.reset-dialog-body {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.reset-dialog-actions { display: flex; flex-direction: column; gap: 8px; }
+.reset-btn-option {
+  width: 100%; min-height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600;
+  display: flex; align-items: center; gap: 10px; padding: 0 16px;
+  transition: all var(--transition);
+}
+.reset-btn-option:hover { background: var(--color-surface-3); border-color: var(--color-text-faint); }
+.reset-btn-option.danger { border-color: color-mix(in srgb, var(--color-accent-red) 30%, var(--color-border)); }
+.reset-btn-option.danger:hover { background: var(--color-accent-red-soft); border-color: var(--color-accent-red); color: var(--color-accent-red); }
+.reset-btn-cancel {
+  width: 100%; min-height: 38px;
+  border-radius: var(--radius-md);
+  border: 0; background: none;
+  color: var(--color-text-faint);
+  font-family: var(--font-body); font-size: var(--text-xs); font-weight: 500;
+  margin-top: 2px;
+  transition: color var(--transition);
+}
+.reset-btn-cancel:hover { color: var(--color-text-muted); }
 
 /* ── SHELL ── */
 .shell {
@@ -481,62 +595,70 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   .modal-body { padding: 12px 14px; }
   .modal-header, .modal-footer { padding: 12px 14px; }
 
-  /* stack label visibile su mobile — come pill sopra i controlli */
+  /* ── ROW: tutto inline su un'unica riga ── */
   .product-row {
-    flex-wrap: wrap;
-    padding: 10px 14px;
-    gap: 4px;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 8px 1fr auto;
+    grid-template-rows: auto;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 0 8px;
   }
-  .supplier-dot { margin-top: 6px; }
-  .product-name { font-size: var(--text-sm); flex: 1 1 0; min-width: 0; }
-
+  .supplier-dot { grid-column: 1; grid-row: 1; }
+  .product-name {
+    grid-column: 2; grid-row: 1;
+    font-size: .8rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
   .row-controls {
-    width: 100%;
-    margin-left: 19px;
-    gap: 6px;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+    grid-column: 3; grid-row: 1;
+    display: flex; align-items: center; gap: 4px;
+    flex-shrink: 0;
   }
 
-  /* etichette visibili come pill colorati su mobile */
-  .ctrl-label {
-    display: block;
-    font-size: .58rem; font-weight: 800;
-    text-transform: uppercase; letter-spacing: .06em;
-    padding: 1px 7px;
-    border-radius: var(--radius-full);
-    margin-bottom: 2px;
+  /* ctrl-label nascosta — il colore distingue i blocchi */
+  .ctrl-label { display: none; }
+
+  /* Giacenze: bordo/accento rosso */
+  .ctrl-block:first-child .unit-toggle {
+    border-color: color-mix(in srgb, var(--color-accent-red) 40%, var(--color-border));
   }
-  .ctrl-block:first-child .ctrl-label {
-    background: color-mix(in srgb, var(--color-accent-blue-soft,#1b2730) 80%, transparent);
-    color: var(--color-accent-blue);
-    border: 1px solid color-mix(in srgb, var(--color-accent-blue) 25%, transparent);
+  .ctrl-block:first-child .unit-btn.active {
+    background: color-mix(in srgb, var(--color-accent-red) 18%, var(--color-surface-3));
+    color: var(--color-accent-red);
   }
-  .ctrl-block:last-child .ctrl-label {
-    background: color-mix(in srgb, var(--color-primary-highlight) 80%, transparent);
+  .ctrl-block:first-child .qty-ctrl {
+    border-color: color-mix(in srgb, var(--color-accent-red) 35%, var(--color-border));
+  }
+
+  /* Ordine: bordo/accento verde (primary) */
+  .ctrl-block:last-child .unit-toggle {
+    border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  }
+  .ctrl-block:last-child .unit-btn.active {
+    background: color-mix(in srgb, var(--color-primary) 18%, var(--color-surface-3));
     color: var(--color-primary);
-    border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+  .ctrl-block:last-child .qty-ctrl {
+    border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
   }
 
-  .ctrl-divider { height: 52px; margin: 0 2px; }
-  .unit-btn { font-size: .6rem; padding: 4px 6px; }
-  .qty-btn { width: 34px; height: 34px; font-size: 1.05rem; }
-  .qty-val { width: 26px; font-size: .8rem; }
-  .cat-header { padding: 12px 14px; }
+  .ctrl-divider { width: 1px; height: 30px; margin: 0 2px; }
+  .unit-btn { font-size: .58rem; padding: 3px 5px; }
+  .qty-btn { width: 28px; height: 28px; font-size: .95rem; }
+  .qty-val { width: 22px; font-size: .75rem; }
+  .cat-header { padding: 11px 12px; }
   .cat-count { display: none; }
-
-  /* footer bar: stack vertically if very narrow */
   .footer-inner { gap: var(--space-3); }
   .btn-genera { min-height: 42px; padding: 0 18px; font-size: var(--text-xs); }
 }
 
 @media (max-width: 380px) {
-  .row-controls { gap: 4px; }
-  .unit-btn { padding: 4px 4px; font-size: .56rem; }
-  .qty-btn { width: 30px; height: 30px; }
-  .qty-val { width: 22px; }
+  .row-controls { gap: 2px; }
   .ctrl-divider { margin: 0 1px; }
+  .unit-btn { padding: 3px 4px; font-size: .54rem; }
+  .qty-btn { width: 26px; height: 26px; }
+  .qty-val { width: 20px; }
 }
 
 /* ── SCROLL TOP ── */
@@ -560,7 +682,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 <header class="topbar">
   <div class="topbar-inner">
     <div class="topbar-title">Magazzino <span>/ Ordini</span></div>
-    <button class="btn-reset" onclick="resetAll()">↺ Azzera tutto</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="theme-btn" id="themeToggle" aria-label="Cambia tema"><span id="themeIcon">☀️</span></button>
+      <button class="btn-reset" onclick="resetAll()">↺ Azzera</button>
+    </div>
   </div>
 </header>
 
@@ -612,6 +737,23 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-footer">
       <button class="btn-copy" id="btnCopyAll" onclick="copyAll()">📋 Copia tutto</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET DIALOG -->
+<div class="reset-dialog-overlay" id="resetDialogOverlay" onclick="closeResetDialogOutside(event)">
+  <div class="reset-dialog" onclick="event.stopPropagation()">
+    <div class="reset-dialog-title">Azzera dati</div>
+    <div class="reset-dialog-body">Cosa vuoi azzerare?</div>
+    <div class="reset-dialog-actions">
+      <button class="reset-btn-option" onclick="doReset('ordine')">
+        <span>🛒</span><span>Solo ordini (quantità da ordinare)</span>
+      </button>
+      <button class="reset-btn-option danger" onclick="doReset('tutto')">
+        <span>🗑️</span><span>Tutto (ordini + giacenze)</span>
+      </button>
+      <button class="reset-btn-cancel" onclick="doReset('cancel')">Annulla</button>
     </div>
   </div>
 </div>
@@ -950,9 +1092,20 @@ function updateCounters(){
 
 /* ── RESET ── */
 function resetAll(){
-  CATALOG.forEach(p=>{ setQty(p.name,0); setGiac(p.name,0); });
+  document.getElementById('resetDialogOverlay').classList.add('open');
+}
+function closeResetDialogOutside(e){
+  if(e.target===document.getElementById('resetDialogOverlay')) doReset('cancel');
+}
+function doReset(type){
+  document.getElementById('resetDialogOverlay').classList.remove('open');
+  if(type==='cancel') return;
+  CATALOG.forEach(p=>{
+    setQty(p.name,0);
+    if(type==='tutto') setGiac(p.name,0);
+  });
   const btn=document.querySelector('.btn-reset');
-  if(btn){ const orig=btn.textContent; btn.textContent='✓ Azzerato'; setTimeout(()=>btn.textContent=orig,1500); }
+  if(btn){ const orig=btn.textContent; btn.textContent='✓ Ok'; setTimeout(()=>btn.textContent=orig,1400); }
 }
 
 /* ── FORMAT LINE ── */
@@ -1100,10 +1253,30 @@ scrollTopBtn.addEventListener('click', ()=>{ window.scrollTo({top:0,behavior:'sm
 window.toggleCat=toggleCat; window.setUnit=setUnit; window.setGiacUnit=setGiacUnit;
 window.changeQty=changeQty; window.setQtyInput=setQtyInput;
 window.changeGiac=changeGiac; window.setGiacInput=setGiacInput;
-window.resetAll=resetAll; window.generaOrdine=generaOrdine;
+window.resetAll=resetAll; window.doReset=doReset; window.closeResetDialogOutside=closeResetDialogOutside;
+window.generaOrdine=generaOrdine;
 window.copyAll=copyAll; window.copySingle=copySingle;
 window.closeModal=closeModal; window.closeModalOutside=closeModalOutside;
 window.showLastOrder=showLastOrder;
+
+/* ── THEME TOGGLE ── */
+(function(){
+  var root=document.documentElement;
+  var btn=document.getElementById('themeToggle');
+  var icon=document.getElementById('themeIcon');
+  var THEME_KEY='magazzino-theme';
+  function sync(){
+    var isDark=root.getAttribute('data-theme')==='dark';
+    icon.textContent=isDark?'☀️':'🌙';
+  }
+  sync();
+  btn.addEventListener('click',function(){
+    var next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    localStorage.setItem(THEME_KEY,next);
+    sync();
+  });
+})();
 
 /* ── INIT ── */
 buildUI();
