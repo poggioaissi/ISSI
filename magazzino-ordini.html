@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="theme-color" content="#123807"/>
+<meta name="theme-color" content="#eef1e8" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#0f160e" media="(prefers-color-scheme: dark)"/>
+<title>Magazzino & Ordini — Poggio a Issi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- Ripristina tema salvato prima del render per evitare flash -->
+<script>(function(){var t=localStorage.getItem('magazzino-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --font-display: "DM Serif Display", serif;
+  --font-ui: "Baloo 2", cursive;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --text-xs: clamp(0.74rem, 0.70rem + 0.20vw, 0.84rem);
+  --text-sm: clamp(0.87rem, 0.82rem + 0.24vw, 0.98rem);
+  --text-base: clamp(1rem, 0.95rem + 0.22vw, 1.08rem);
+  --text-lg: clamp(1.12rem, 1rem + 0.6vw, 1.36rem);
+
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius-sm: 12px; --radius-md: 16px; --radius-lg: 22px;
+  --radius-xl: 30px; --radius-full: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.18);
+  --shadow-md: 0 12px 28px rgba(0,0,0,.22);
+  --transition: 180ms cubic-bezier(.16,1,.3,1);
+}
+
+/* ── LIGHT THEME (predefinito) ── */
+:root, [data-theme="light"] {
+  --color-bg: #eef1e8;
+  --color-surface: #f7f8f2;
+  --color-surface-2: #e6ebde;
+  --color-surface-3: #dde5d3;
+  --color-border: #bcc7b1;
+  --color-text: #2d3a23;
+  --color-text-muted: #55664a;
+  --color-text-faint: #87957d;
+  --color-primary: #7a8f49;
+  --color-primary-hover: #65793a;
+  --color-primary-highlight: #dde6c9;
+  --color-accent-gold: #9a7a39;
+  --color-accent-red: #9a6660;
+  --color-accent-red-soft: #efdfdb;
+  --color-accent-blue: #58758b;
+  --color-accent-blue-soft: #dce7ef;
+  --color-accent-green: #5f7a56;
+  --color-accent-green-soft: #dfe8d9;
+  --color-accent-orange: #a06a45;
+  --color-accent-orange-soft: #efdfd3;
+  --shadow-sm: 0 1px 3px rgba(33,45,24,.09);
+  --shadow-md: 0 8px 22px rgba(33,45,24,.12);
+
+  --prince: #9a6660; --prince-soft: #efdfdb; --prince-mid: rgba(154,102,96,.25);
+  --gloo:   #55664a; --gloo-soft:   #e6ebde; --gloo-mid:   rgba(85,102,74,.20);
+  --online: #58758b; --online-soft: #dce7ef; --online-mid: rgba(88,117,139,.22);
+  --altro:  #5f7a56; --altro-soft:  #dfe8d9; --altro-mid:  rgba(95,122,86,.22);
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
+  --color-bg: #0f160e;
+  --color-surface: #182117;
+  --color-surface-2: #223022;
+  --color-surface-3: #2a3927;
+  --color-border: #394837;
+  --color-text: #edf1e5;
+  --color-text-muted: #b5beab;
+  --color-text-faint: #808c77;
+  --color-primary: #a7c466;
+  --color-primary-hover: #bddb7a;
+  --color-primary-highlight: #263422;
+  --color-accent-gold: #d8c07e;
+  --color-accent-red: #d7a094;
+  --color-accent-red-soft: #2d211d;
+  --color-accent-blue: #9dbed0;
+  --color-accent-blue-soft: #1b2730;
+  --color-accent-green: #a9c697;
+  --color-accent-green-soft: #1f2a20;
+  --color-accent-orange: #d8a07a;
+  --color-accent-orange-soft: #2d221c;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.18);
+  --shadow-md: 0 12px 28px rgba(0,0,0,.22);
+
+  --prince: #d7a094; --prince-soft: #2d211d; --prince-mid: rgba(215,160,148,.30);
+  --gloo:   #b5beab; --gloo-soft:   #223022; --gloo-mid:   rgba(181,190,171,.25);
+  --online: #9dbed0; --online-soft: #1b2730; --online-mid: rgba(157,190,208,.28);
+  --altro:  #a9c697; --altro-soft:  #1f2a20; --altro-mid:  rgba(169,198,151,.28);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 7%, transparent) 0%, transparent 45%);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(92,145,45,.18), transparent 30%),
+    radial-gradient(circle at 0% 12%, rgba(166,191,103,.08), transparent 24%),
+    linear-gradient(180deg, #113806 0%, #102905 24%, var(--color-bg) 100%);
+}
+
+button {
+  border: 0; background: none; font: inherit;
+  color: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+input { -webkit-tap-highlight-color: transparent; }
+/* iOS: prevent auto-zoom on focus */
+input[type="number"], input[type="search"] { font-size: 16px !important; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  padding: 0 var(--space-4);
+}
+.topbar-inner {
+  width: min(1100px, calc(100% - 1rem));
+  margin-inline: auto;
+  min-height: 58px;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+}
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.4rem);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.topbar-title span {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: .85em;
+}
+.btn-reset {
+  min-height: 38px; padding: 0 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.btn-reset:hover { border-color: var(--color-accent-red); color: var(--color-accent-red); }
+
+.theme-btn {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.theme-btn:hover { background: var(--color-surface-2); }
+
+/* ── RESET DIALOG ── */
+.reset-dialog-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.reset-dialog-overlay.open { opacity: 1; pointer-events: all; }
+.reset-dialog {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: var(--radius-lg);
+  padding: 24px 22px 20px;
+  width: min(340px, 100%);
+  box-shadow: var(--shadow-md);
+  transform: scale(.94);
+  transition: transform .22s cubic-bezier(.16,1,.3,1);
+}
+.reset-dialog-overlay.open .reset-dialog { transform: scale(1); }
+.reset-dialog-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + .4vw, 1.35rem);
+  margin-bottom: 8px;
+}
+.reset-dialog-body {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.reset-dialog-actions { display: flex; flex-direction: column; gap: 8px; }
+.reset-btn-option {
+  width: 100%; min-height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600;
+  display: flex; align-items: center; gap: 10px; padding: 0 16px;
+  transition: all var(--transition);
+}
+.reset-btn-option:hover { background: var(--color-surface-3); border-color: var(--color-text-faint); }
+.reset-btn-option.danger { border-color: color-mix(in srgb, var(--color-accent-red) 30%, var(--color-border)); }
+.reset-btn-option.danger:hover { background: var(--color-accent-red-soft); border-color: var(--color-accent-red); color: var(--color-accent-red); }
+.reset-btn-cancel {
+  width: 100%; min-height: 38px;
+  border-radius: var(--radius-md);
+  border: 0; background: none;
+  color: var(--color-text-faint);
+  font-family: var(--font-body); font-size: var(--text-xs); font-weight: 500;
+  margin-top: 2px;
+  transition: color var(--transition);
+}
+.reset-btn-cancel:hover { color: var(--color-text-muted); }
+
+/* ── SHELL ── */
+.shell {
+  width: min(1100px, calc(100% - 1rem));
+  margin-inline: auto;
+  padding: var(--space-5) 0 calc(110px + var(--safe-bottom));
+  display: grid; gap: 12px;
+}
+
+/* ── SEARCH ── */
+.search-wrap { position: relative; }
+.search-wrap svg {
+  position: absolute; left: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-faint); pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  padding: 12px 14px 12px 42px;
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition);
+}
+.search-input::placeholder { color: var(--color-text-faint); }
+.search-input:focus { border-color: var(--color-primary); }
+
+/* ── LEGENDA ── */
+.legenda {
+  display: flex; flex-wrap: wrap; gap: 8px 14px;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.leg-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: var(--text-xs); color: var(--color-text-muted);
+}
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.leg-dot.prince { background: var(--prince); }
+.leg-dot.gloo   { background: var(--gloo); }
+.leg-dot.online { background: var(--online); }
+.leg-dot.altro  { background: var(--altro); }
+.leg-note { font-size: .72em; color: var(--color-text-faint); }
+
+/* ── LAST ORDER BAR ── */
+.last-order-bar {
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: background var(--transition);
+}
+.last-order-bar:hover { background: var(--color-surface-2); }
+.last-order-icon { font-size: 1rem; }
+.last-order-text { flex: 1; }
+.last-order-title { font-size: var(--text-sm); font-weight: 700; }
+.last-order-date { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 1px; }
+.last-order-arrow { color: var(--color-text-faint); }
+
+/* ── CATEGORY SECTION ── */
+.cat-section {
+  background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.cat-header {
+  width: 100%; background: none; border: 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  padding: 15px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; text-align: left;
+  border-bottom: 1px solid transparent;
+  min-height: 58px;
+  transition: background var(--transition);
+}
+.cat-header:hover { background: color-mix(in srgb, var(--color-surface-2) 60%, transparent); }
+.cat-section.open .cat-header { border-bottom-color: color-mix(in srgb, var(--color-border) 80%, transparent); }
+.cat-header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cat-icon {
+  width: 36px; height: 36px;
+  border-radius: 12px;
+  background: var(--color-primary-highlight);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+  display: grid; place-items: center;
+  font-size: .9rem; flex-shrink: 0;
+}
+.cat-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, .95rem + .5vw, 1.35rem);
+  letter-spacing: -.01em; line-height: 1;
+}
+.cat-count {
+  font-size: var(--text-xs); font-weight: 500;
+  color: var(--color-text-faint);
+  background: var(--color-surface-3);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-radius: var(--radius-full);
+  padding: 1px 9px;
+}
+.cat-selected-badge {
+  font-size: var(--text-xs); font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-highlight);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  border-radius: var(--radius-full);
+  padding: 1px 9px; display: none;
+}
+.cat-selected-badge.visible { display: inline-block; }
+.cat-chevron {
+  color: var(--color-text-faint);
+  transition: transform .24s ease; font-size: 1rem; flex-shrink: 0;
+}
+.cat-section.open .cat-chevron { transform: rotate(180deg); color: var(--color-primary); }
+.cat-body { display: none; }
+.cat-section.open .cat-body { display: block; }
+
+/* ── PRODUCT ROW ── */
+.product-row {
+  display: flex; align-items: center;
+  padding: 10px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  gap: 12px;
+  transition: background var(--transition);
+}
+.product-row:last-child { border-bottom: 0; }
+.product-row:hover { background: color-mix(in srgb, var(--color-surface-2) 50%, transparent); }
+.product-row.hidden { display: none; }
+.product-row.has-qty {
+  background: color-mix(in srgb, var(--color-primary-highlight) 60%, transparent);
+}
+.product-row.has-qty .product-name { font-weight: 700; color: var(--color-text); }
+
+.supplier-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.supplier-dot.prince { background: var(--prince); }
+.supplier-dot.gloo   { background: var(--gloo); }
+.supplier-dot.online { background: var(--online); }
+.supplier-dot.altro  { background: var(--altro); }
+
+.product-name { flex: 1; font-size: var(--text-sm); font-weight: 500; min-width: 0; }
+
+/* ── ROW CONTROLS ── */
+.row-controls {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.ctrl-block { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ctrl-label {
+  font-size: .6rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--color-text-faint);
+}
+.ctrl-divider { width: 1px; height: 38px; background: var(--color-border); flex-shrink: 0; }
+
+/* ── UNIT TOGGLE ── */
+.unit-toggle {
+  display: flex;
+  background: var(--color-surface-3);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: 8px; overflow: hidden; flex-shrink: 0;
+}
+.unit-btn {
+  background: none; border: 0;
+  color: var(--color-text-faint);
+  font-family: var(--font-body); font-size: .65rem; font-weight: 600;
+  padding: 5px 8px; cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap; line-height: 1;
+}
+.unit-btn.active { background: color-mix(in srgb, var(--color-primary) 22%, var(--color-surface-3)); color: var(--color-primary); }
+
+/* ── QTY STEPPER ── */
+.qty-ctrl {
+  display: flex; align-items: center;
+  background: var(--color-surface-3);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: 9px; overflow: hidden; flex-shrink: 0;
+}
+.qty-btn {
+  background: none; border: 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-body); font-size: 1rem;
+  width: 30px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--transition), color var(--transition);
+  flex-shrink: 0;
+}
+.qty-btn:hover { background: var(--color-surface-2); color: var(--color-text); }
+.qty-val {
+  font-family: var(--font-body); font-size: .82rem; font-weight: 700;
+  width: 30px; text-align: center;
+  color: var(--color-text); background: transparent;
+  border: 0; outline: none;
+}
+
+/* ── FOOTER BAR ── */
+.footer-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + var(--safe-bottom));
+}
+.footer-inner {
+  width: min(1100px, calc(100% - 1rem));
+  margin-inline: auto;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+}
+.footer-info { font-size: var(--text-sm); color: var(--color-text-muted); }
+.footer-info strong { color: var(--color-text); font-weight: 700; }
+.btn-genera {
+  min-height: 44px; padding: 0 22px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: #f7f8f2;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm); font-weight: 800;
+  letter-spacing: .04em;
+  box-shadow: 0 4px 16px rgba(167,196,102,.28);
+  transition: opacity var(--transition), transform 80ms;
+  flex-shrink: 0;
+}
+.btn-genera:hover { opacity: .9; }
+.btn-genera:active { transform: scale(.97); }
+.btn-genera:disabled { opacity: .3; cursor: not-allowed; box-shadow: none; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: min(720px, 100%); max-height: 88vh;
+  display: flex; flex-direction: column;
+  transform: translateY(40px);
+  transition: transform .3s cubic-bezier(.16,1,.3,1);
+  padding-bottom: var(--safe-bottom);
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  flex-shrink: 0;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1rem + .8vw, 1.6rem);
+  letter-spacing: -.02em; line-height: 1;
+}
+.modal-date { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 4px; }
+.btn-close {
+  min-width: 36px; min-height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted); font-size: .95rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.btn-close:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+.modal-body { flex: 1; overflow-y: auto; padding: 18px 22px; display: grid; gap: 12px; }
+.modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  display: flex; gap: 10px; flex-shrink: 0;
+}
+
+/* ── ORDER BLOCKS (modal) ── */
+.order-block {
+  border-radius: var(--radius-md); overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+}
+.order-block-header {
+  padding: 10px 16px; font-size: var(--text-xs); font-weight: 800;
+  letter-spacing: .07em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+}
+.order-block-header.prince { background: var(--prince-soft); color: var(--prince); border-bottom: 1px solid var(--prince-mid); }
+.order-block-header.gloo   { background: var(--gloo-soft);   color: var(--gloo);   border-bottom: 1px solid var(--gloo-mid); }
+.order-block-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
+.order-block-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
+.order-block-note { font-size: .7rem; font-weight: 400; opacity: .75; margin-right: auto; letter-spacing: .02em; text-transform: none; }
+.order-items { padding: 12px 16px; display: grid; gap: 7px; }
+.order-item { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
+.order-item-qty {
+  font-family: var(--font-body); font-size: var(--text-xs); font-weight: 700;
+  color: var(--color-text);
+  background: var(--color-surface-3);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-radius: 8px; padding: 3px 10px; flex-shrink: 0;
+  white-space: nowrap; min-width: 80px; text-align: center;
+}
+.order-item-name { flex: 1; }
+
+/* ── MODAL BUTTONS ── */
+.btn-copy {
+  flex: 1;
+  min-height: 44px; padding: 0 18px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary); color: #f7f8f2;
+  font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 800;
+  letter-spacing: .04em;
+  transition: opacity var(--transition), background var(--transition);
+}
+.btn-copy:hover { opacity: .9; }
+.btn-copy.copied { background: var(--color-accent-green); }
+
+.btn-copy-single {
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  color: var(--color-text-faint);
+  font-family: var(--font-body); font-size: .65rem; font-weight: 600;
+  padding: 3px 9px; border-radius: 6px;
+  transition: all var(--transition); white-space: nowrap; flex-shrink: 0;
+}
+.btn-copy-single:hover { border-color: var(--color-text-muted); color: var(--color-text-muted); }
+.btn-copy-single.copied { border-color: var(--color-accent-green); color: var(--color-accent-green); }
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 640px) {
+  .topbar-inner { min-height: 52px; }
+  .shell { padding-bottom: calc(100px + var(--safe-bottom)); }
+  .modal-body { padding: 12px 14px; }
+  .modal-header, .modal-footer { padding: 12px 14px; }
+
+  /* ── ROW: tutto inline su un'unica riga ── */
+  .product-row {
+    display: grid;
+    grid-template-columns: 8px 1fr auto;
+    grid-template-rows: auto;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 0 8px;
+  }
+  .supplier-dot { grid-column: 1; grid-row: 1; }
+  .product-name {
+    grid-column: 2; grid-row: 1;
+    font-size: .8rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .row-controls {
+    grid-column: 3; grid-row: 1;
+    display: flex; align-items: center; gap: 4px;
+    flex-shrink: 0;
+  }
+
+  /* ctrl-label nascosta — il colore distingue i blocchi */
+  .ctrl-label { display: none; }
+
+  /* Giacenze: bordo/accento rosso */
+  .ctrl-block:first-child .unit-toggle {
+    border-color: color-mix(in srgb, var(--color-accent-red) 40%, var(--color-border));
+  }
+  .ctrl-block:first-child .unit-btn.active {
+    background: color-mix(in srgb, var(--color-accent-red) 18%, var(--color-surface-3));
+    color: var(--color-accent-red);
+  }
+  .ctrl-block:first-child .qty-ctrl {
+    border-color: color-mix(in srgb, var(--color-accent-red) 35%, var(--color-border));
+  }
+
+  /* Ordine: bordo/accento verde (primary) */
+  .ctrl-block:last-child .unit-toggle {
+    border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  }
+  .ctrl-block:last-child .unit-btn.active {
+    background: color-mix(in srgb, var(--color-primary) 18%, var(--color-surface-3));
+    color: var(--color-primary);
+  }
+  .ctrl-block:last-child .qty-ctrl {
+    border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+  }
+
+  .ctrl-divider { width: 1px; height: 30px; margin: 0 2px; }
+  .unit-btn { font-size: .58rem; padding: 3px 5px; }
+  .qty-btn { width: 28px; height: 28px; font-size: .95rem; }
+  .qty-val { width: 22px; font-size: .75rem; }
+  .cat-header { padding: 11px 12px; }
+  .cat-count { display: none; }
+  .footer-inner { gap: var(--space-3); }
+  .btn-genera { min-height: 42px; padding: 0 18px; font-size: var(--text-xs); }
+}
+
+@media (max-width: 380px) {
+  .row-controls { gap: 2px; }
+  .ctrl-divider { margin: 0 1px; }
+  .unit-btn { padding: 3px 4px; font-size: .54rem; }
+  .qty-btn { width: 26px; height: 26px; }
+  .qty-val { width: 20px; }
+}
+
+/* ── SCROLL TOP ── */
+.scroll-top {
+  position: fixed; bottom: calc(80px + var(--safe-bottom)); right: var(--space-4); z-index: 150;
+  width: 40px; height: 40px; border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  color: var(--color-text-muted); font-size: .85rem;
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-md);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--transition);
+}
+.scroll-top.visible { opacity: 1; pointer-events: all; }
+.scroll-top:hover { color: var(--color-text); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-title">Magazzino <span>/ Ordini</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="theme-btn" id="themeToggle" aria-label="Cambia tema"><span id="themeIcon">☀️</span></button>
+      <button class="btn-reset" onclick="resetAll()">↺ Azzera</button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <div class="search-wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    <input class="search-input" id="searchInput" type="search" placeholder="Cerca prodotto…" autocomplete="off" spellcheck="false"/>
+  </div>
+
+  <div class="legenda">
+    <div class="leg-item"><div class="leg-dot prince"></div> Prince <span class="leg-note">entro le 17 · ogni giorno</span></div>
+    <div class="leg-item"><div class="leg-dot gloo"></div> GlooGloo <span class="leg-note">entro le 15 · mart–sab</span></div>
+    <div class="leg-item"><div class="leg-dot online"></div> Online / Diretto</div>
+    <div class="leg-item"><div class="leg-dot altro"></div> Altro</div>
+  </div>
+
+  <div class="last-order-bar" id="lastOrderBar" style="display:none" onclick="showLastOrder()">
+    <div class="last-order-icon">🕐</div>
+    <div class="last-order-text">
+      <div class="last-order-title">Ultimo ordine salvato</div>
+      <div class="last-order-date" id="lastOrderDate">—</div>
+    </div>
+    <div class="last-order-arrow">→</div>
+  </div>
+
+  <div id="categoriesWrap"></div>
+</div>
+
+<!-- FOOTER BAR: z-index alto, safe area corretta -->
+<div class="footer-bar">
+  <div class="footer-inner">
+    <div class="footer-info">Selezionati: <strong id="totalSelected">0</strong> prodotti</div>
+    <button class="btn-genera" id="btnGenera" onclick="generaOrdine()" disabled>Genera ordine →</button>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" aria-label="Torna su">↑</button>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Ordine settimanale</div>
+        <div class="modal-date" id="modalDate"></div>
+      </div>
+      <button class="btn-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-copy" id="btnCopyAll" onclick="copyAll()">📋 Copia tutto</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET DIALOG -->
+<div class="reset-dialog-overlay" id="resetDialogOverlay" onclick="closeResetDialogOutside(event)">
+  <div class="reset-dialog" onclick="event.stopPropagation()">
+    <div class="reset-dialog-title">Azzera dati</div>
+    <div class="reset-dialog-body">Cosa vuoi azzerare?</div>
+    <div class="reset-dialog-actions">
+      <button class="reset-btn-option" onclick="doReset('ordine')">
+        <span>🛒</span><span>Solo ordini (quantità da ordinare)</span>
+      </button>
+      <button class="reset-btn-option danger" onclick="doReset('tutto')">
+        <span>🗑️</span><span>Tutto (ordini + giacenze)</span>
+      </button>
+      <button class="reset-btn-cancel" onclick="doReset('cancel')">Annulla</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const SUPPLIERS = {
+  prince: { label:'Prince',          note:'entro le 17 · ogni giorno' },
+  gloo:   { label:'GlooGloo',        note:'entro le 15 · mart–sab' },
+  online: { label:'Online / Diretto',note:'' },
+  altro:  { label:'Altro',           note:'' }
+};
+
+// Emoji per categoria
+const CAT_ICONS = {
+  'WHISKY':'🥃','RUM':'🍹','AGAVE / VODKA':'🌵','GIN':'🍸',
+  'SPUMANTI / VINI':'🍾','MIXER DANDY':'🫧','SUCCHI':'🧃',
+  'VERMOUTH / BITTER / AMARO':'🍊','LIQUORI':'🍬','AMARI & DIGESTIVI':'🌿',
+  'BIBITE':'🥤','BIRRE':'🍺','SCIROPPI & PUREE':'🫙','DISPENSA / SERVIZIO':'🧂'
+};
+
+const CATALOG = [
+  // WHISKY
+  {cat:'WHISKY',name:'Aberfeldy 12',          sup:'gloo',  unit:'bott'},
+  {cat:'WHISKY',name:'Bulleit Bourbon',        sup:'prince',unit:'bott'},
+  {cat:'WHISKY',name:'Bulleit Rye',            sup:'prince',unit:'bott'},
+  {cat:'WHISKY',name:'Jameson 1lt',            sup:'gloo',  unit:'bott'},
+  {cat:'WHISKY',name:'Laphroaig 10',           sup:'gloo',  unit:'bott'},
+  {cat:'WHISKY',name:'Macallan 12',            sup:'prince',unit:'bott'},
+  {cat:'WHISKY',name:'Nikka from the Barrel',  sup:'gloo',  unit:'bott'},
+  {cat:'WHISKY',name:'Wild Turkey 101',         sup:'prince',unit:'bott'},
+  // RUM
+  {cat:'RUM',name:'Bacardi Carta Blanca',      sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:'Bacardi Carta Oro 1lt',     sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:'Diplomatico Reserva',       sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:'Don Papa',                  sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:"Gosling's Black Seal",      sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:'Plantation O.F.T.D',        sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:'Zacapa 23',                 sup:'gloo',  unit:'bott'},
+  // AGAVE / VODKA
+  {cat:'AGAVE / VODKA',name:'Eristoff',               sup:'gloo',  unit:'bott'},
+  {cat:'AGAVE / VODKA',name:'Grey Goose',              sup:'gloo',  unit:'bott'},
+  {cat:'AGAVE / VODKA',name:'Mezcal Ilegal',           sup:'gloo',  unit:'bott'},
+  {cat:'AGAVE / VODKA',name:'Tequila Cazadores',       sup:'gloo',  unit:'bott'},
+  {cat:'AGAVE / VODKA',name:'Tequila Patron Reposado', sup:'gloo',  unit:'bott'},
+  {cat:'AGAVE / VODKA',name:'Tequila Patron Silver',   sup:'gloo',  unit:'bott'},
+  {cat:'AGAVE / VODKA',name:'Vodka Pesca',             sup:'gloo',  unit:'bott'},
+  // GIN
+  {cat:'GIN',name:'Arigatuono',               sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Barbarasa London Dry',     sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Barbarasa Navy',           sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Bombay Dry',               sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'Bombay Sapphire 0,7/1/1,75lt',sup:'gloo',unit:'bott'},
+  {cat:'GIN',name:"Brockman's",              sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Ciauru Gin Pompelmo Rosa', sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Frantuono',               sup:'online',unit:'bott'},
+  {cat:'GIN',name:"Hendrick's",              sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'J Rose',                  sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Maite Fiamma',            sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Maite Spiaggialunga',     sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Monkey 47',               sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'Nordes',                  sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Piero Dry Gin',           sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'Poseidon',                sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Rame Italian Dry',        sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Rame London Dry',         sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Tanqueray Ten',           sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'Upperhand',               sup:'online',unit:'bott'},
+  // SPUMANTI / VINI
+  {cat:'SPUMANTI / VINI',name:'Prosecco da miscelazione',sup:'gloo',unit:'ct'},
+  // MIXER DANDY
+  {cat:'MIXER DANDY',name:'Ginger Beer Dandy',         sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Lemon Artigianale Dandy',   sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Pompelmo Rosa Dandy',       sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Tonica Dandy Classic',      sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Tonica Dandy Zero Zuccheri',sup:'prince',unit:'ct'},
+  // SUCCHI
+  {cat:'SUCCHI',name:'Succo ACE',          sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:"Succo d'arancia",    sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:'Succo di ananas',    sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:'Succo di mela',      sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:'Succo di mela verde',sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:'Succo di pera',      sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:'Succo di pesca',     sup:'gloo',unit:'ct'},
+  {cat:'SUCCHI',name:'Succo di pompelmo',  sup:'gloo',unit:'ct'},
+  // VERMOUTH / BITTER / AMARO
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Aperol',                             sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Bitter Martini Floreale (analcolico)',sup:'gloo', unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Bitter Martini Riserva',             sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Bitter Martini Vibrante (analcolico)',sup:'gloo', unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Bitter Martini classico',            sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Bitter fusetti alla banana',         sup:'online',unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Campari',                            sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Lillet Blanc',                       sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Martini Dry',                        sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Vermouth Ambrato Martini Riserva',   sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Vermouth Martini Rubino Riserva',    sup:'gloo',  unit:'bott'},
+  {cat:'VERMOUTH / BITTER / AMARO',name:'Vermouth Rosso Martini',             sup:'gloo',  unit:'bott'},
+  // LIQUORI
+  {cat:'LIQUORI',name:'Ancho Reyes Verde',         sup:'online',unit:'bott'},
+  {cat:'LIQUORI',name:'Assenzio',                  sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Baileys',                   sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Blue Curaçao',              sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Borghetti/Kahlua',          sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Campari Soda',              sup:'gloo',  unit:'ct'},
+  {cat:'LIQUORI',name:'Crodino',                   sup:'gloo',  unit:'ct'},
+  {cat:'LIQUORI',name:'Liquore al caffè Patron XO',sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Love Kamikaze',             sup:'online',unit:'bott'},
+  {cat:'LIQUORI',name:'Midori',                    sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Passoã',                    sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'St. Germain',               sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Triple Sec',                sup:'gloo',  unit:'bott'},
+  // AMARI & DIGESTIVI
+  {cat:'AMARI & DIGESTIVI',name:'Amaro Jefferson',    sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro',   sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Courvoisier',        sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Disaronno',          sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Fernet Branca',      sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Grappa Riserva',     sup:'online',unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Grappa di Vernaccia',sup:'online',unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Jägermeister',       sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Sambuca',            sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Vecchia Romagna',    sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Vinsanto',           sup:'online',unit:'bott'},
+  // BIBITE
+  {cat:'BIBITE',name:'1/2 NAT',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'1/2 GAS',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'1lt NAT',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'1lt GAS',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Fusto Coca Cola',     sup:'prince',unit:'bott'},
+  {cat:'BIBITE',name:'Fusto Lemon',         sup:'prince',unit:'bott'},
+  {cat:'BIBITE',name:'Fusto Tonica',        sup:'prince',unit:'bott'},
+  {cat:'BIBITE',name:'Coca Cola (+bottiglia)',  sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Coca Zero',              sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Fanta',                  sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Lemon bottiglia',        sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Pompelmo bottiglia',     sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Red Bull',              sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Sprite',                 sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Tonica bottiglia',       sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Tè Limone',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Tè Pesca',             sup:'gloo',  unit:'ct'},
+  // BIRRE
+  {cat:'BIRRE',name:"Beck's 33cl",          sup:'gloo',  unit:'ct'},
+  {cat:'BIRRE',name:'Ceres 33cl',           sup:'gloo',  unit:'ct'},
+  {cat:'BIRRE',name:'Corona 33cl',          sup:'gloo',  unit:'ct'},
+  {cat:'BIRRE',name:'Corona Analcolica 33cl',sup:'gloo', unit:'ct'},
+  {cat:'BIRRE',name:'Divago (Amber)',        sup:'online',unit:'bott'},
+  {cat:'BIRRE',name:'Fusto Raffo Grezza',   sup:'prince',unit:'bott'},
+  {cat:'BIRRE',name:'Menabrea 33cl',        sup:'gloo',  unit:'ct'},
+  {cat:'BIRRE',name:'Nikulas (Tripel)',     sup:'online',unit:'bott'},
+  {cat:'BIRRE',name:'Roma (IPA)',           sup:'online',unit:'bott'},
+  {cat:'BIRRE',name:'Sigeric (Blonde)',     sup:'online',unit:'bott'},
+  {cat:'BIRRE',name:'Strade (Blanche)',     sup:'online',unit:'bott'},
+  {cat:'BIRRE',name:"Tennent's 33cl",      sup:'gloo',  unit:'ct'},
+  // SCIROPPI & PUREE
+  {cat:'SCIROPPI & PUREE',name:'Foamer',                sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Purea di Lampone',      sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Purea di Mango',        sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Purea di Passion Fruit',sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Sale fino',             sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Agave',     sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Granatina', sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Lime',      sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Limone',    sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Zucchero Liquido',      sup:'prince',unit:'bott'},
+  // DISPENSA / SERVIZIO
+  {cat:'DISPENSA / SERVIZIO',name:'Bombole Gas',sup:'prince',unit:'bott'},
+  {cat:'DISPENSA / SERVIZIO',name:'Ghiaccio',   sup:'altro', unit:'bott'},
+  {cat:'DISPENSA / SERVIZIO',name:'Caffè',       sup:'altro', unit:'ct'},
+  {cat:'DISPENSA / SERVIZIO',name:'Ketchup',     sup:'altro', unit:'bott'},
+  {cat:'DISPENSA / SERVIZIO',name:'Maionese',    sup:'altro', unit:'bott'},
+  {cat:'DISPENSA / SERVIZIO',name:'Olio EVO',    sup:'altro', unit:'bott'},
+  {cat:'DISPENSA / SERVIZIO',name:'Snacks',      sup:'gloo',  unit:'ct'},
+];
+
+const state = {};
+CATALOG.forEach(p => { state[p.name] = { qty:0, unit:p.unit, giac:0, giacUnit:p.unit }; });
+
+const STORE = 'poggio-ordine-v2';
+function saveStore(data){ try{ localStorage.setItem(STORE,JSON.stringify({date:new Date().toISOString(),order:data})); }catch(e){} }
+function loadStore(){ try{ const r=localStorage.getItem(STORE); return r?JSON.parse(r):null; }catch(e){ return null; } }
+function sid(name){ return name.replace(/[^a-z0-9]/gi,'_'); }
+function escQ(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+/* ── BUILD UI ── */
+function buildUI(){
+  const wrap = document.getElementById('categoriesWrap');
+  wrap.innerHTML = '';
+  const seen = new Set(), cats = {}, catOrder = [];
+  CATALOG.forEach(p=>{
+    if(!seen.has(p.cat)){ seen.add(p.cat); catOrder.push(p.cat); cats[p.cat]=[]; }
+    cats[p.cat].push(p);
+  });
+
+  catOrder.forEach(catName=>{
+    const products = cats[catName];
+    const catId = sid(catName).toLowerCase();
+    const icon = CAT_ICONS[catName] || '📦';
+
+    const section = document.createElement('div');
+    section.className = 'cat-section';
+    section.id = 'cat_'+catId;
+
+    section.innerHTML = `
+      <button class="cat-header" aria-expanded="false" onclick="toggleCat('${catId}')">
+        <div class="cat-header-left">
+          <span class="cat-icon">${icon}</span>
+          <span class="cat-name">${catName}</span>
+          <span class="cat-count">${products.length}</span>
+          <span class="cat-selected-badge" id="badge_${catId}">0 sel.</span>
+        </div>
+        <span class="cat-chevron">▾</span>
+      </button>
+      <div class="cat-body" id="body_${catId}"></div>
+    `;
+
+    const body = section.querySelector('.cat-body');
+    products.forEach(p=>{
+      const s = sid(p.name);
+      const row = document.createElement('div');
+      row.className = 'product-row';
+      row.id = 'row_'+s;
+      row.dataset.name = p.name.toLowerCase();
+
+      row.innerHTML = `
+        <div class="supplier-dot ${p.sup}"></div>
+        <div class="product-name">${p.name}</div>
+        <div class="row-controls">
+          <div class="ctrl-block">
+            <div class="ctrl-label">Giacenze</div>
+            <div class="qty-wrap">
+              <div class="unit-toggle">
+                <button class="unit-btn ${p.unit==='ct'?'active':''}" id="gct_${s}" onclick="setGiacUnit('${escQ(p.name)}','ct')">ct.</button>
+                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','bott')">bott.</button>
+              </div>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',-1)">−</button>
+                <input class="qty-val" type="number" min="0" value="0" id="giac_${s}"
+                  onchange="setGiacInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
+                <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="ctrl-divider"></div>
+          <div class="ctrl-block">
+            <div class="ctrl-label">Ordine</div>
+            <div class="qty-wrap">
+              <div class="unit-toggle">
+                <button class="unit-btn ${p.unit==='ct'?'active':''}" id="ubct_${s}" onclick="setUnit('${escQ(p.name)}','ct')">ct.</button>
+                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','bott')">bott.</button>
+              </div>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',-1)">−</button>
+                <input class="qty-val" type="number" min="0" value="0" id="qty_${s}"
+                  onchange="setQtyInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
+                <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      body.appendChild(row);
+    });
+    wrap.appendChild(section);
+  });
+
+  loadLastOrderBar();
+}
+
+/* ── ACCORDION ── */
+function toggleCat(catId){
+  const el = document.getElementById('cat_'+catId);
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.cat-section.open').forEach(s=>{
+    s.classList.remove('open');
+    s.querySelector('.cat-header').setAttribute('aria-expanded','false');
+  });
+  if(!wasOpen){
+    el.classList.add('open');
+    el.querySelector('.cat-header').setAttribute('aria-expanded','true');
+    setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60);
+  }
+}
+
+/* ── UNIT ── */
+function setUnit(name,unit){
+  state[name].unit = unit;
+  const s=sid(name);
+  document.getElementById('ubct_'+s).classList.toggle('active',unit==='ct');
+  document.getElementById('ubbott_'+s).classList.toggle('active',unit==='bott');
+}
+function setGiacUnit(name,unit){
+  state[name].giacUnit = unit;
+  const s=sid(name);
+  document.getElementById('gct_'+s).classList.toggle('active',unit==='ct');
+  document.getElementById('gbott_'+s).classList.toggle('active',unit==='bott');
+}
+
+/* ── GIACENZE ── */
+function changeGiac(name,delta){ setGiac(name,Math.max(0,(state[name].giac||0)+delta)); }
+function setGiacInput(name,val){ setGiac(name,Math.max(0,parseInt(val)||0)); }
+function setGiac(name,val){
+  state[name].giac = val;
+  const inp=document.getElementById('giac_'+sid(name));
+  if(inp) inp.value=val;
+}
+
+/* ── QTY ── */
+function changeQty(name,delta){ setQty(name,Math.max(0,(state[name].qty||0)+delta)); }
+function setQtyInput(name,val){ setQty(name,Math.max(0,parseInt(val)||0)); }
+function setQty(name,val){
+  state[name].qty = val;
+  const s = sid(name);
+  const inp = document.getElementById('qty_'+s);
+  if(inp) inp.value = val;
+  const row = document.getElementById('row_'+s);
+  if(row) row.classList.toggle('has-qty',val>0);
+  updateCounters();
+}
+
+/* ── COUNTERS ── */
+function updateCounters(){
+  const selected = CATALOG.filter(p=>state[p.name].qty>0);
+  document.getElementById('totalSelected').textContent = selected.length;
+  document.getElementById('btnGenera').disabled = selected.length===0;
+  const catCounts={};
+  selected.forEach(p=>{ const c=sid(p.cat).toLowerCase(); catCounts[c]=(catCounts[c]||0)+1; });
+  document.querySelectorAll('[id^="badge_"]').forEach(b=>{
+    const c=b.id.replace('badge_','');
+    const n=catCounts[c]||0;
+    b.textContent=n+' sel.';
+    b.classList.toggle('visible',n>0);
+  });
+}
+
+/* ── RESET ── */
+function resetAll(){
+  document.getElementById('resetDialogOverlay').classList.add('open');
+}
+function closeResetDialogOutside(e){
+  if(e.target===document.getElementById('resetDialogOverlay')) doReset('cancel');
+}
+function doReset(type){
+  document.getElementById('resetDialogOverlay').classList.remove('open');
+  if(type==='cancel') return;
+  CATALOG.forEach(p=>{
+    setQty(p.name,0);
+    if(type==='tutto') setGiac(p.name,0);
+  });
+  const btn=document.querySelector('.btn-reset');
+  if(btn){ const orig=btn.textContent; btn.textContent='✓ Ok'; setTimeout(()=>btn.textContent=orig,1400); }
+}
+
+/* ── FORMAT LINE ── */
+function fmtLine(name,qty,unit){ return String(qty).padStart(2,'0')+'x '+unit+'. '+name; }
+
+/* ── MACRO GRUPPI per output ordine ── */
+const MACRO_GROUPS=[
+  {label:'Bevande Spiritose', cats:new Set(['WHISKY','RUM','AGAVE / VODKA','GIN',
+    'SPUMANTI / VINI','VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI',
+    'MIXER DANDY','SUCCHI'])},
+  {label:'Birre',             cats:new Set(['BIRRE'])},
+  {label:'Bibite',            cats:new Set(['BIBITE'])},
+  {label:'Sciroppi & Puree',  cats:new Set(['SCIROPPI & PUREE'])},
+  {label:'Dispensa / Servizio',cats:new Set(['DISPENSA / SERVIZIO'])}
+];
+function macroOf(cat){ for(const g of MACRO_GROUPS) if(g.cats.has(cat)) return g.label; return 'Altro'; }
+
+/* Raggruppa per macro, separa bott/ct con riga vuota, separa gruppi con riga vuota */
+function groupItems(items){
+  const macroOrder=MACRO_GROUPS.map(g=>g.label);
+  const byMacro={};
+  items.forEach(it=>{
+    const ml=macroOf(it.cat);
+    if(!byMacro[ml]) byMacro[ml]=[];
+    byMacro[ml].push(it);
+  });
+  const lines=[];
+  let first=true;
+  macroOrder.forEach(ml=>{
+    const gi=byMacro[ml];
+    if(!gi||!gi.length) return;
+    if(!first) lines.push(null); // riga vuota tra macro-gruppi
+    first=false;
+    const botts=gi.filter(it=>it.unit==='bott');
+    const cts  =gi.filter(it=>it.unit==='ct');
+    botts.forEach(it=>lines.push(it));
+    if(botts.length&&cts.length) lines.push(null); // riga vuota tra bott e ct
+    cts.forEach(it=>lines.push(it));
+  });
+  return lines;
+}
+
+/* ── GENERA ORDINE ── */
+function generaOrdine(){
+  const byS={prince:[],gloo:[],online:[],altro:[]};
+  CATALOG.forEach(p=>{
+    const st=state[p.name];
+    if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat});
+  });
+  if(!Object.values(byS).some(a=>a.length)) return;
+  const now=new Date();
+  document.getElementById('modalDate').textContent=
+    now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderModal(byS,now);
+  const orderData={};
+  Object.entries(byS).forEach(([sup,items])=>{ if(items.length) orderData[sup]=items; });
+  saveStore(orderData);
+  loadLastOrderBar();
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+/* ── RENDER MODAL ── */
+function renderModal(byS,date){
+  const body=document.getElementById('modalBody');
+  body.innerHTML='';
+  ['prince','gloo','online','altro'].forEach(sup=>{
+    const items=byS[sup];
+    if(!items||!items.length) return;
+    const block=document.createElement('div');
+    block.className='order-block';
+    const s=SUPPLIERS[sup];
+    const hdr=document.createElement('div');
+    hdr.className='order-block-header '+sup;
+    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button>`;
+    const itemsDiv=document.createElement('div');
+    itemsDiv.className='order-items';
+    const grouped=groupItems(items);
+    grouped.forEach(it=>{
+      if(it===null){
+        const sep=document.createElement('div');
+        sep.style.cssText='height:6px;';
+        itemsDiv.appendChild(sep);
+      } else {
+        const row=document.createElement('div');
+        row.className='order-item';
+        row.dataset.line=fmtLine(it.name,it.qty,it.unit);
+        row.innerHTML=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')}x ${it.unit}.</span><span class="order-item-name">${it.name}</span>`;
+        itemsDiv.appendChild(row);
+      }
+    });
+    block.appendChild(hdr);
+    block.appendChild(itemsDiv);
+    body.appendChild(block);
+  });
+}
+
+/* ── COPY ── */
+function buildTxtGrouped(sup,items,date){
+  const s=SUPPLIERS[sup];
+  const ds=(date||new Date()).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  let t=`📦 ORDINE ${s.label.toUpperCase()} — ${ds}`;
+  if(s.note) t+=`\n(${s.note})`;
+  t+='\n\n';
+  const grouped=groupItems(items);
+  grouped.forEach(it=>{
+    if(it===null) t+='\n';
+    else t+=fmtLine(it.name,it.qty,it.unit)+'\n';
+  });
+  return t.trim();
+}
+function copyAll(){
+  const byS={prince:[],gloo:[],online:[],altro:[]};
+  CATALOG.forEach(p=>{ const st=state[p.name]; if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat}); });
+  const now=new Date();
+  const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  let full=`🗂 ORDINE SETTIMANALE — ${ds}\n${'─'.repeat(34)}\n\n`;
+  ['prince','gloo','online','altro'].forEach(sup=>{ if(byS[sup].length) full+=buildTxtGrouped(sup,byS[sup],now)+'\n\n'; });
+  navigator.clipboard.writeText(full.trim()).then(()=>{
+    const btn=document.getElementById('btnCopyAll');
+    btn.textContent='✓ Copiato!'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='📋 Copia tutto'; btn.classList.remove('copied'); },2200);
+  }).catch(()=>alert('Copia non supportata su questo browser.'));
+}
+function copySingle(btnEl,sup){
+  const block=btnEl.closest('.order-block');
+  const lines=[];
+  block.querySelectorAll('.order-item').forEach(r=>lines.push(r.dataset.line));
+  const s=SUPPLIERS[sup];
+  const ds=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  let txt=`📦 ORDINE ${s.label.toUpperCase()} — ${ds}`;
+  if(s.note) txt+=`\n(${s.note})`;
+  txt+='\n\n'+lines.join('\n');
+  navigator.clipboard.writeText(txt.trim()).then(()=>{
+    const orig=btnEl.textContent; btnEl.textContent='✓'; btnEl.classList.add('copied');
+    setTimeout(()=>{ btnEl.textContent=orig; btnEl.classList.remove('copied'); },2000);
+  }).catch(()=>alert('Copia non supportata.'));
+}
+
+/* ── MODAL CLOSE ── */
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalOutside(e){ if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+
+/* ── LAST ORDER ── */
+function loadLastOrderBar(){
+  const saved=loadStore();
+  const bar=document.getElementById('lastOrderBar');
+  if(!saved){ bar.style.display='none'; return; }
+  bar.style.display='flex';
+  const d=new Date(saved.date);
+  document.getElementById('lastOrderDate').textContent=
+    'Salvato '+d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+}
+function showLastOrder(){
+  const saved=loadStore();
+  if(!saved) return;
+  const d=new Date(saved.date);
+  document.getElementById('modalDate').textContent=
+    'Ordine del '+d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderModal(saved.order,d);
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+/* ── SEARCH ── */
+document.getElementById('searchInput').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  const vis=new Set();
+  document.querySelectorAll('.product-row').forEach(function(row){
+    const m=!q||row.dataset.name.includes(q);
+    row.classList.toggle('hidden',!m);
+    if(m) vis.add(row.closest('.cat-section').id);
+  });
+  document.querySelectorAll('.cat-section').forEach(function(sec){
+    if(!q){
+      sec.style.display='';
+      sec.classList.remove('open');
+      sec.querySelector('.cat-header').setAttribute('aria-expanded','false');
+    } else {
+      const hasMatch=vis.has(sec.id);
+      sec.style.display=hasMatch?'':'none';
+      if(hasMatch){ sec.classList.add('open'); sec.querySelector('.cat-header').setAttribute('aria-expanded','true'); }
+      else sec.classList.remove('open');
+    }
+  });
+});
+
+/* ── SCROLL TOP ── */
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', ()=>{
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+scrollTopBtn.addEventListener('click', ()=>{ window.scrollTo({top:0,behavior:'smooth'}); });
+
+/* ── ESPONI GLOBALE ── */
+window.toggleCat=toggleCat; window.setUnit=setUnit; window.setGiacUnit=setGiacUnit;
+window.changeQty=changeQty; window.setQtyInput=setQtyInput;
+window.changeGiac=changeGiac; window.setGiacInput=setGiacInput;
+window.resetAll=resetAll; window.doReset=doReset; window.closeResetDialogOutside=closeResetDialogOutside;
+window.generaOrdine=generaOrdine;
+window.copyAll=copyAll; window.copySingle=copySingle;
+window.closeModal=closeModal; window.closeModalOutside=closeModalOutside;
+window.showLastOrder=showLastOrder;
+
+/* ── THEME TOGGLE ── */
+(function(){
+  var root=document.documentElement;
+  var btn=document.getElementById('themeToggle');
+  var icon=document.getElementById('themeIcon');
+  var THEME_KEY='magazzino-theme';
+  function sync(){
+    var isDark=root.getAttribute('data-theme')==='dark';
+    icon.textContent=isDark?'☀️':'🌙';
+  }
+  sync();
+  btn.addEventListener('click',function(){
+    var next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    localStorage.setItem(THEME_KEY,next);
+    sync();
+  });
+})();
+
+/* ── INIT ── */
+buildUI();
+})();
+</script>
+</body>
+</html>
