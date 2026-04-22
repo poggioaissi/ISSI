@@ -501,7 +501,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   background: var(--color-surface);
   border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  width: min(720px, 100%); max-height: 88vh;
+  width: min(720px, 100%); max-height: 94vh;
   display: flex; flex-direction: column;
   transform: translateY(40px);
   transition: transform .3s cubic-bezier(.16,1,.3,1);
@@ -546,13 +546,14 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   padding: 10px 16px; font-size: var(--text-xs); font-weight: 800;
   letter-spacing: .07em; text-transform: uppercase;
   display: flex; align-items: center; gap: 10px;
+  justify-content: flex-start;
 }
 .order-block-header.prince { background: var(--prince-soft); color: var(--prince); border-bottom: 1px solid var(--prince-mid); }
 .order-block-header.gloo   { background: var(--gloo-soft);   color: var(--gloo);   border-bottom: 1px solid var(--gloo-mid); }
 .order-block-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
 .order-block-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
 .order-block-note { font-size: .7rem; font-weight: 400; opacity: .75; margin-right: auto; letter-spacing: .02em; text-transform: none; }
-.order-items { padding: 12px 16px; display: grid; gap: 7px; }
+.order-items { padding: 12px 16px; display: grid; gap: 7px; overflow: visible; }
 .order-item { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
 .order-item-qty {
   font-family: var(--font-body); font-size: var(--text-xs); font-weight: 700;
@@ -587,6 +588,17 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 }
 .btn-copy-single:hover { border-color: var(--color-text-muted); color: var(--color-text-muted); }
 .btn-copy-single.copied { border-color: var(--color-accent-green); color: var(--color-accent-green); }
+
+.btn-collapse-block {
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  color: var(--color-text-faint);
+  font-size: .75rem; font-weight: 700;
+  padding: 3px 7px; border-radius: 6px;
+  transition: all var(--transition); white-space: nowrap; flex-shrink: 0;
+  margin-left: auto;
+}
+.btn-collapse-block:hover { border-color: var(--color-text-muted); color: var(--color-text-muted); }
 
 /* ── MOBILE RESPONSIVE ── */
 @media (max-width: 640px) {
@@ -827,11 +839,11 @@ const CATALOG = [
   // SPUMANTI / VINI
   {cat:'SPUMANTI / VINI',name:'Prosecco da miscelazione',sup:'gloo',unit:'ct'},
   // MIXER DANDY
-  {cat:'MIXER DANDY',name:'Ginger Beer Dandy',         sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Lemon Artigianale Dandy',   sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Pompelmo Rosa Dandy',       sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Tonica Dandy Classic',      sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Tonica Dandy Zero Zuccheri',sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Dandy Ginger Beer',              sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Dandy Lemon Artigianale',        sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Dandy Pink Soda',                sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Dandy Tonica Classic',           sup:'prince',unit:'ct'},
+  {cat:'MIXER DANDY',name:'Dandy Tonica Zero Zuccheri',     sup:'prince',unit:'ct'},
   // SUCCHI
   {cat:'SUCCHI',name:'Succo ACE',          sup:'gloo',unit:'ct'},
   {cat:'SUCCHI',name:"Succo d'arancia",    sup:'gloo',unit:'ct'},
@@ -870,14 +882,14 @@ const CATALOG = [
   {cat:'LIQUORI',name:'Triple Sec',                sup:'gloo',  unit:'bott'},
   // AMARI & DIGESTIVI
   {cat:'AMARI & DIGESTIVI',name:'Amaro Jefferson',    sup:'gloo',  unit:'bott'},
-  {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro',   sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro 150cl',   sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Courvoisier',        sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Disaronno',          sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Fernet Branca',      sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Grappa Riserva',     sup:'online',unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Grappa di Vernaccia',sup:'online',unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Jägermeister',       sup:'gloo',  unit:'bott'},
-  {cat:'AMARI & DIGESTIVI',name:'Sambuca',            sup:'gloo',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Sambuca 150cl',            sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Vecchia Romagna',    sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Vinsanto',           sup:'online',unit:'bott'},
   // BIBITE
@@ -885,26 +897,27 @@ const CATALOG = [
   {cat:'BIBITE',name:'1/2 GAS',             sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'1lt NAT',             sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'1lt GAS',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Fusto Coca Cola',     sup:'prince',unit:'bott'},
-  {cat:'BIBITE',name:'Fusto Lemon',         sup:'prince',unit:'bott'},
-  {cat:'BIBITE',name:'Fusto Tonica',        sup:'prince',unit:'bott'},
-  {cat:'BIBITE',name:'Coca Cola (+bottiglia)',  sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Fusto Coca Cola',     sup:'prince',unit:'bott',noUnit:true},
+  {cat:'BIBITE',name:'Fusto Kinley Lemon',  sup:'prince',unit:'bott',noUnit:true},
+  {cat:'BIBITE',name:'Fusto Kinley Tonic',  sup:'prince',unit:'bott',noUnit:true},
+  {cat:'BIBITE',name:'Coca Cola',           sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Cola Bottiglia',      sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'Coca Zero',              sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'Fanta',                  sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Lemon bottiglia',        sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Kinley Lemon Bottiglia',  sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'Pompelmo bottiglia',     sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'Red Bull',              sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'Sprite',                 sup:'gloo',  unit:'ct'},
   {cat:'BIBITE',name:'Tonica bottiglia',       sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Tè Limone',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Tè Pesca',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Fuze Limone',             sup:'gloo',  unit:'ct'},
+  {cat:'BIBITE',name:'Fuze Pesca',              sup:'gloo',  unit:'ct'},
   // BIRRE
   {cat:'BIRRE',name:"Beck's 33cl",          sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Ceres 33cl',           sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Corona 33cl',          sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Corona Analcolica 33cl',sup:'gloo', unit:'ct'},
   {cat:'BIRRE',name:'Divago (Amber)',        sup:'online',unit:'bott'},
-  {cat:'BIRRE',name:'Fusto Raffo Grezza',   sup:'prince',unit:'bott'},
+  {cat:'BIRRE',name:'Fusto Raffo Grezza',   sup:'prince',unit:'bott',noUnit:true},
   {cat:'BIRRE',name:'Menabrea 33cl',        sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Nikulas (Tripel)',     sup:'online',unit:'bott'},
   {cat:'BIRRE',name:'Roma (IPA)',           sup:'online',unit:'bott'},
@@ -933,7 +946,7 @@ const CATALOG = [
 ];
 
 const state = {};
-CATALOG.forEach(p => { state[p.name] = { qty:0, unit:p.unit, giac:0, giacUnit:p.unit }; });
+CATALOG.forEach(p => { state[p.name] = { qty:0, unit:p.unit, giac:0, giacUnit:p.unit, noUnit:!!p.noUnit }; });
 
 const STORE = 'poggio-ordine-v2';
 function saveStore(data){ try{ localStorage.setItem(STORE,JSON.stringify({date:new Date().toISOString(),order:data})); }catch(e){} }
@@ -981,6 +994,17 @@ function buildUI(){
       row.id = 'row_'+s;
       row.dataset.name = p.name.toLowerCase();
 
+      const unitToggleHtml = p.noUnit ? '' : `
+                <div class="unit-toggle">
+                  <button class="unit-btn ${p.unit==='ct'?'active':''}" id="gct_${s}" onclick="setGiacUnit('${escQ(p.name)}','ct')">ct.</button>
+                  <button class="unit-btn ${p.unit==='bott'?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','bott')">bott.</button>
+                </div>`;
+      const unitToggleOrdHtml = p.noUnit ? '' : `
+                <div class="unit-toggle">
+                  <button class="unit-btn ${p.unit==='ct'?'active':''}" id="ubct_${s}" onclick="setUnit('${escQ(p.name)}','ct')">ct.</button>
+                  <button class="unit-btn ${p.unit==='bott'?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','bott')">bott.</button>
+                </div>`;
+
       row.innerHTML = `
         <div class="supplier-dot ${p.sup}"></div>
         <div class="product-name">${p.name}</div>
@@ -988,10 +1012,7 @@ function buildUI(){
           <div class="ctrl-block">
             <div class="ctrl-label">Giacenze</div>
             <div class="qty-wrap">
-              <div class="unit-toggle">
-                <button class="unit-btn ${p.unit==='ct'?'active':''}" id="gct_${s}" onclick="setGiacUnit('${escQ(p.name)}','ct')">ct.</button>
-                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','bott')">bott.</button>
-              </div>
+              ${unitToggleHtml}
               <div class="qty-ctrl">
                 <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',-1)">−</button>
                 <input class="qty-val" type="number" min="0" value="0" id="giac_${s}"
@@ -1004,10 +1025,7 @@ function buildUI(){
           <div class="ctrl-block">
             <div class="ctrl-label">Ordine</div>
             <div class="qty-wrap">
-              <div class="unit-toggle">
-                <button class="unit-btn ${p.unit==='ct'?'active':''}" id="ubct_${s}" onclick="setUnit('${escQ(p.name)}','ct')">ct.</button>
-                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','bott')">bott.</button>
-              </div>
+              ${unitToggleOrdHtml}
               <div class="qty-ctrl">
                 <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',-1)">−</button>
                 <input class="qty-val" type="number" min="0" value="0" id="qty_${s}"
@@ -1110,7 +1128,7 @@ function doReset(type){
 }
 
 /* ── FORMAT LINE ── */
-function fmtLine(name,qty,unit){ return String(qty).padStart(2,'0')+'x '+unit+'. '+name; }
+function fmtLine(name,qty,unit,noUnit){ return String(qty).padStart(2,'0')+'x'+(noUnit?'':(' '+unit+'.')) +' '+name; }
 
 /* ── MACRO GRUPPI per output ordine ── */
 const MACRO_GROUPS=[
@@ -1154,7 +1172,7 @@ function generaOrdine(){
   const byS={prince:[],gloo:[],online:[],altro:[]};
   CATALOG.forEach(p=>{
     const st=state[p.name];
-    if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat});
+    if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat,noUnit:!!p.noUnit});
   });
   if(!Object.values(byS).some(a=>a.length)) return;
   const now=new Date();
@@ -1181,20 +1199,23 @@ function renderModal(byS,date){
     const s=SUPPLIERS[sup];
     const hdr=document.createElement('div');
     hdr.className='order-block-header '+sup;
-    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button>`;
+    const blockId='ob_'+sup;
+    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button><button class="btn-collapse-block" onclick="toggleOrderBlock('${blockId}')" title="Comprimi/Espandi">▾</button>`;
     const itemsDiv=document.createElement('div');
     itemsDiv.className='order-items';
+    itemsDiv.id=blockId;
     const grouped=groupItems(items);
     grouped.forEach(it=>{
       if(it===null){
         const sep=document.createElement('div');
+        sep.className='order-sep';
         sep.style.cssText='height:6px;';
         itemsDiv.appendChild(sep);
       } else {
         const row=document.createElement('div');
         row.className='order-item';
-        row.dataset.line=fmtLine(it.name,it.qty,it.unit);
-        row.innerHTML=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')}x ${it.unit}.</span><span class="order-item-name">${it.name}</span>`;
+        row.dataset.line=fmtLine(it.name,it.qty,it.unit,it.noUnit);
+        row.innerHTML=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')}x${it.noUnit?'':(' '+it.unit+'.')}</span><span class="order-item-name">${it.name}</span>`;
         itemsDiv.appendChild(row);
       }
     });
@@ -1203,6 +1224,15 @@ function renderModal(byS,date){
     body.appendChild(block);
   });
 }
+function toggleOrderBlock(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  const collapsed=el.style.display==='none';
+  el.style.display=collapsed?'':'none';
+  const hdr=el.closest('.order-block').querySelector('.order-block-header');
+  if(hdr){ const b=hdr.querySelector('.btn-collapse-block'); if(b) b.textContent=collapsed?'▾':'▸'; }
+}
+window.toggleOrderBlock=toggleOrderBlock;
 
 /* ── COPY ── */
 function buildTxtGrouped(sup,items,date){
@@ -1214,13 +1244,13 @@ function buildTxtGrouped(sup,items,date){
   const grouped=groupItems(items);
   grouped.forEach(it=>{
     if(it===null) t+='\n';
-    else t+=fmtLine(it.name,it.qty,it.unit)+'\n';
+    else t+=fmtLine(it.name,it.qty,it.unit,it.noUnit)+'\n';
   });
   return t.trim();
 }
 function copyAll(){
   const byS={prince:[],gloo:[],online:[],altro:[]};
-  CATALOG.forEach(p=>{ const st=state[p.name]; if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat}); });
+  CATALOG.forEach(p=>{ const st=state[p.name]; if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat,noUnit:!!p.noUnit}); });
   const now=new Date();
   const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
   let full=`🗂 ORDINE SETTIMANALE — ${ds}\n${'─'.repeat(34)}\n\n`;
@@ -1233,13 +1263,16 @@ function copyAll(){
 }
 function copySingle(btnEl,sup){
   const block=btnEl.closest('.order-block');
-  const lines=[];
-  block.querySelectorAll('.order-item').forEach(r=>lines.push(r.dataset.line));
   const s=SUPPLIERS[sup];
   const ds=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
   let txt=`📦 ORDINE ${s.label.toUpperCase()} — ${ds}`;
   if(s.note) txt+=`\n(${s.note})`;
-  txt+='\n\n'+lines.join('\n');
+  txt+='\n\n';
+  // Rebuild from data-line and data-sep attributes to preserve blank lines
+  block.querySelectorAll('.order-item, .order-sep').forEach(el=>{
+    if(el.classList.contains('order-sep')) txt+='\n';
+    else txt+=el.dataset.line+'\n';
+  });
   navigator.clipboard.writeText(txt.trim()).then(()=>{
     const orig=btnEl.textContent; btnEl.textContent='✓'; btnEl.classList.add('copied');
     setTimeout(()=>{ btnEl.textContent=orig; btnEl.classList.remove('copied'); },2000);
