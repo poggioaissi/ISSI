@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- Ripristina tema salvato prima del render per evitare flash -->
 <script>(function(){var t=localStorage.getItem('magazzino-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
@@ -553,7 +554,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .order-block-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
 .order-block-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
 .order-block-note { font-size: .7rem; font-weight: 400; opacity: .75; margin-right: auto; letter-spacing: .02em; text-transform: none; }
-.order-items { padding: 12px 16px; display: grid; gap: 7px; overflow: visible; }
+.order-items { padding: 12px 16px; display: grid; gap: 7px; overflow-y: auto; max-height: 280px; }
 .order-item { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
 .order-item-qty {
   font-family: var(--font-body); font-size: var(--text-xs); font-weight: 700;
@@ -599,6 +600,16 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   margin-left: auto;
 }
 .btn-collapse-block:hover { border-color: var(--color-text-muted); color: var(--color-text-muted); }
+
+.btn-download-img {
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  color: var(--color-text-faint);
+  font-family: var(--font-body); font-size: .65rem; font-weight: 600;
+  padding: 3px 9px; border-radius: 6px;
+  transition: all var(--transition); white-space: nowrap; flex-shrink: 0;
+}
+.btn-download-img:hover { border-color: var(--color-accent-blue); color: var(--color-accent-blue); }
 
 /* ── MOBILE RESPONSIVE ── */
 @media (max-width: 640px) {
@@ -747,8 +758,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
       <button class="btn-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
-    <div class="modal-footer">
-      <button class="btn-copy" id="btnCopyAll" onclick="copyAll()">📋 Copia tutto</button>
+    <div class="modal-footer" id="modalFooter">
     </div>
   </div>
 </div>
@@ -1200,7 +1210,7 @@ function renderModal(byS,date){
     const hdr=document.createElement('div');
     hdr.className='order-block-header '+sup;
     const blockId='ob_'+sup;
-    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button><button class="btn-collapse-block" onclick="toggleOrderBlock('${blockId}')" title="Comprimi/Espandi">▾</button>`;
+    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button><button class="btn-download-img" onclick="downloadImg('${sup}')" title="Scarica immagine">⬇ Img</button><button class="btn-collapse-block" onclick="toggleOrderBlock('${blockId}')" title="Comprimi/Espandi">▾</button>`;
     const itemsDiv=document.createElement('div');
     itemsDiv.className='order-items';
     itemsDiv.id=blockId;
@@ -1279,7 +1289,139 @@ function copySingle(btnEl,sup){
   }).catch(()=>alert('Copia non supportata.'));
 }
 
-/* ── MODAL CLOSE ── */
+/* ── DOWNLOAD IMG ── */
+function downloadImg(sup){
+  const block=document.querySelector(`#ob_${sup}`);
+  if(!block) return;
+  const s=SUPPLIERS[sup];
+  const ds=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  // Collect lines
+  const lines=[];
+  block.querySelectorAll('.order-item,.order-sep').forEach(el=>{
+    if(el.classList.contains('order-sep')) lines.push(null);
+    else lines.push({qty:el.querySelector('.order-item-qty').textContent.trim(), name:el.querySelector('.order-item-name').textContent.trim()});
+  });
+
+  // Theme colours
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const palette={
+    prince:{bg:isDark?'#2d211d':'#efdfdb',accent:isDark?'#d7a094':'#9a6660'},
+    gloo:  {bg:isDark?'#223022':'#e6ebde',accent:isDark?'#b5beab':'#55664a'},
+    online:{bg:isDark?'#1b2730':'#dce7ef',accent:isDark?'#9dbed0':'#58758b'},
+    altro: {bg:isDark?'#1f2a20':'#dfe8d9',accent:isDark?'#a9c697':'#5f7a56'},
+  };
+  const pal=palette[sup]||palette.altro;
+  const bgPage=isDark?'#182117':'#f7f8f2';
+  const textMain=isDark?'#edf1e5':'#2d3a23';
+  const textMuted=isDark?'#b5beab':'#55664a';
+  const borderCol=isDark?'#394837':'#bcc7b1';
+  const qtyBg=isDark?'#2a3927':'#dde5d3';
+
+  // Canvas sizing
+  const W=560;
+  const lineH=36;
+  const headerH=72;
+  const paddingX=24;
+  const paddingY=16;
+  const itemsCount=lines.length;
+  const H=headerH + paddingY + itemsCount*lineH + paddingY + 8;
+
+  const canvas=document.createElement('canvas');
+  const dpr=2;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  // Draw background card
+  const r=18;
+  ctx.fillStyle=bgPage;
+  roundRect(ctx,0,0,W,H,r);
+  ctx.fill();
+
+  // Header band
+  ctx.fillStyle=pal.bg;
+  roundRect(ctx,0,0,W,headerH,{tl:r,tr:r,bl:0,br:0});
+  ctx.fill();
+
+  // Header bottom border
+  ctx.strokeStyle=pal.accent+'55';
+  ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,headerH); ctx.lineTo(W,headerH); ctx.stroke();
+
+  // Supplier label
+  ctx.fillStyle=pal.accent;
+  ctx.font=`800 15px Inter, sans-serif`;
+  ctx.textBaseline='middle';
+  ctx.fillText(s.label.toUpperCase(), paddingX, headerH/2-10);
+
+  // Date
+  ctx.fillStyle=textMuted;
+  ctx.font=`500 11px Inter, sans-serif`;
+  ctx.fillText('📦 ORDINE — '+ds, paddingX, headerH/2+12);
+
+  // Items
+  let y=headerH+paddingY;
+  lines.forEach(line=>{
+    if(line===null){ y+=lineH*0.5; return; }
+    // Qty badge
+    const qtyW=88;
+    ctx.fillStyle=qtyBg;
+    roundRect(ctx, paddingX, y+4, qtyW, lineH-10, 8);
+    ctx.fill();
+    ctx.strokeStyle=borderCol;
+    ctx.lineWidth=1;
+    roundRect(ctx, paddingX, y+4, qtyW, lineH-10, 8);
+    ctx.stroke();
+
+    ctx.fillStyle=textMain;
+    ctx.font=`700 12px Inter, sans-serif`;
+    ctx.textBaseline='middle';
+    ctx.textAlign='center';
+    ctx.fillText(line.qty, paddingX+qtyW/2, y+lineH/2);
+
+    // Name
+    ctx.textAlign='left';
+    ctx.font=`500 13px Inter, sans-serif`;
+    ctx.fillStyle=textMain;
+    ctx.fillText(line.name, paddingX+qtyW+14, y+lineH/2);
+
+    // Separator line
+    ctx.strokeStyle=borderCol+'55';
+    ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(paddingX, y+lineH-1); ctx.lineTo(W-paddingX, y+lineH-1); ctx.stroke();
+
+    y+=lineH;
+  });
+
+  // Watermark
+  ctx.fillStyle=textMuted+'55';
+  ctx.font=`500 10px Inter, sans-serif`;
+  ctx.textAlign='right';
+  ctx.fillText('Poggio a Issi', W-paddingX, H-10);
+
+  // Download
+  canvas.toBlob(blob=>{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=`ordine-${sup}-${ds.replace(/\//g,'-')}.png`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  },'image/png');
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  if(typeof r==='number') r={tl:r,tr:r,bl:r,br:r};
+  ctx.beginPath();
+  ctx.moveTo(x+r.tl,y);
+  ctx.lineTo(x+w-r.tr,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r.tr);
+  ctx.lineTo(x+w,y+h-r.br); ctx.quadraticCurveTo(x+w,y+h,x+w-r.br,y+h);
+  ctx.lineTo(x+r.bl,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r.bl);
+  ctx.lineTo(x,y+r.tl); ctx.quadraticCurveTo(x,y,x+r.tl,y);
+  ctx.closePath();
+}
+window.downloadImg=downloadImg;
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOutside(e){ if(e.target===document.getElementById('modalOverlay')) closeModal(); }
 
