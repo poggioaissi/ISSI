@@ -684,6 +684,39 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   .qty-val { width: 20px; }
 }
 
+/* ── MODAL TABS ── */
+.modal-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  flex-shrink: 0;
+  padding: 0 22px;
+}
+.modal-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-faint);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 10px 16px 9px;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition);
+  margin-bottom: -1px;
+}
+.modal-tab-btn:hover { color: var(--color-text-muted); }
+.modal-tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+.modal-tab-panel { display: none; }
+.modal-tab-panel.active { display: block; }
+@media (max-width: 640px) {
+  .modal-tabs { padding: 0 14px; }
+  .modal-tab-btn { padding: 9px 12px 8px; font-size: var(--text-xs); }
+}
+
 /* ── MODAL NOTE ── */
 .modal-note-wrap {
   padding: 0 22px 14px;
@@ -782,7 +815,14 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
       </div>
       <button class="btn-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-tabs" id="modalTabs">
+      <button class="modal-tab-btn active" id="tabBtnOrdine" onclick="switchModalTab('ordine')">🛒 Ordine</button>
+      <button class="modal-tab-btn" id="tabBtnGiacenze" onclick="switchModalTab('giacenze')">📦 Giacenze</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="modal-tab-panel active" id="panelOrdine"></div>
+      <div class="modal-tab-panel" id="panelGiacenze"></div>
+    </div>
     <div class="modal-footer" id="modalFooter">
     </div>
     <div class="modal-note-wrap" id="modalNoteWrap">
@@ -1241,12 +1281,19 @@ function groupItems(items){
     if(!gi||!gi.length) return;
     if(!first) lines.push(null); // riga vuota tra macro-gruppi
     first=false;
-    const botts=gi.filter(it=>it.unit==='bott');
+    const botts=gi.filter(it=>it.unit==='bott'||it.noUnit); // noUnit (fusti) trattati come bott
     const cts  =gi.filter(it=>it.unit==='ct');
     botts.forEach(it=>lines.push(it));
     if(botts.length&&cts.length) lines.push(null); // riga vuota tra bott e ct
     cts.forEach(it=>lines.push(it));
   });
+  // fallback: qualsiasi item non mappato in MACRO_GROUPS
+  const mapped=new Set(lines.filter(Boolean).map(it=>it.name));
+  const unmapped=items.filter(it=>!mapped.has(it.name));
+  if(unmapped.length){
+    if(lines.length) lines.push(null);
+    unmapped.forEach(it=>lines.push(it));
+  }
   return lines;
 }
 
@@ -1262,6 +1309,8 @@ function generaOrdine(){
   document.getElementById('modalDate').textContent=
     now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   renderModal(byS,now);
+  renderGiacenzePanel(null); // usa state corrente
+  switchModalTab('ordine');
   const orderData={};
   Object.entries(byS).forEach(([sup,items])=>{ if(items.length) orderData[sup]=items; });
   saveStore(orderData);
@@ -1273,9 +1322,20 @@ function generaOrdine(){
 }
 
 /* ── RENDER MODAL ── */
-function renderModal(byS,date){
-  const body=document.getElementById('modalBody');
-  body.innerHTML='';
+function switchModalTab(tab){
+  document.getElementById('panelOrdine').classList.toggle('active', tab==='ordine');
+  document.getElementById('panelGiacenze').classList.toggle('active', tab==='giacenze');
+  document.getElementById('tabBtnOrdine').classList.toggle('active', tab==='ordine');
+  document.getElementById('tabBtnGiacenze').classList.toggle('active', tab==='giacenze');
+  // nota e footer solo sul tab ordine
+  document.getElementById('modalNoteWrap').style.display = tab==='ordine' ? '' : 'none';
+  document.getElementById('modalFooter').style.display   = tab==='ordine' ? '' : 'none';
+}
+window.switchModalTab = switchModalTab;
+
+function renderModal(byS, date){
+  const panel = document.getElementById('panelOrdine');
+  panel.innerHTML = '';
   ['prince','gloo','online','altro'].forEach(sup=>{
     const items=byS[sup];
     if(!items||!items.length) return;
@@ -1306,7 +1366,65 @@ function renderModal(byS,date){
     });
     block.appendChild(hdr);
     block.appendChild(itemsDiv);
-    body.appendChild(block);
+    panel.appendChild(block);
+  });
+}
+
+function renderGiacenzePanel(giacData){
+  const panel = document.getElementById('panelGiacenze');
+  panel.innerHTML = '';
+  // giacData può essere un oggetto {name: {giac, giacUnit}} (dal salvataggio)
+  // oppure null (usa lo state corrente)
+  const items = [];
+  CATALOG.forEach(p=>{
+    let giac, giacUnit;
+    if(giacData){
+      const entry = giacData[p.name];
+      if(!entry || !entry.giac) return;
+      giac = entry.giac;
+      giacUnit = entry.giacUnit || p.unit;
+    } else {
+      const st = state[p.name];
+      if(!st || !st.giac) return;
+      giac = st.giac;
+      giacUnit = st.giacUnit || p.unit;
+    }
+    items.push({name:p.name, giac, giacUnit, sup:p.sup, noUnit:!!p.noUnit, cat:p.cat});
+  });
+
+  if(!items.length){
+    const empty = document.createElement('p');
+    empty.style.cssText='padding:20px;color:var(--color-text-faint);font-size:var(--text-sm);text-align:center;';
+    empty.textContent='Nessuna giacenza registrata.';
+    panel.appendChild(empty);
+    return;
+  }
+
+  // Raggruppa per fornitore
+  const byS={prince:[],gloo:[],online:[],altro:[]};
+  items.forEach(it=>{ if(byS[it.sup]) byS[it.sup].push(it); });
+
+  ['prince','gloo','online','altro'].forEach(sup=>{
+    const list=byS[sup];
+    if(!list.length) return;
+    const block=document.createElement('div');
+    block.className='order-block';
+    const s=SUPPLIERS[sup];
+    const hdr=document.createElement('div');
+    hdr.className='order-block-header '+sup;
+    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}`;
+    const itemsDiv=document.createElement('div');
+    itemsDiv.className='order-items';
+    list.forEach(it=>{
+      const row=document.createElement('div');
+      row.className='order-item';
+      const unitLabel = it.noUnit ? '' : (' '+it.giacUnit+'.');
+      row.innerHTML=`<span class="order-item-qty">${String(it.giac).padStart(2,'0')}x${unitLabel}</span><span class="order-item-name">${it.name}</span>`;
+      itemsDiv.appendChild(row);
+    });
+    block.appendChild(hdr);
+    block.appendChild(itemsDiv);
+    panel.appendChild(block);
   });
 }
 function toggleOrderBlock(id){
@@ -1531,6 +1649,10 @@ function showLastOrder(){
   document.getElementById('modalDate').textContent=
     'Ordine del '+d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   renderModal(saved.order,d);
+  // Carica giacenze salvate (snapshot al momento dell'ordine)
+  const savedGiac=loadGiacenze();
+  renderGiacenzePanel(savedGiac ? savedGiac.data : null);
+  switchModalTab('ordine');
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
