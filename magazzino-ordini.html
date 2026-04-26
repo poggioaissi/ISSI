@@ -684,6 +684,31 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   .qty-val { width: 20px; }
 }
 
+/* ── MODAL NOTE ── */
+.modal-note-wrap {
+  padding: 0 22px 14px;
+  flex-shrink: 0;
+}
+.modal-note-input {
+  width: 100%;
+  background: var(--color-surface-2);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  padding: 10px 14px;
+  resize: none;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.modal-note-input::placeholder { color: var(--color-text-faint); }
+.modal-note-input:focus { border-color: var(--color-primary); }
+@media (max-width: 640px) {
+  .modal-note-wrap { padding: 0 14px 12px; }
+}
+
 /* ── SCROLL TOP ── */
 .scroll-top {
   position: fixed; bottom: calc(80px + var(--safe-bottom)); right: var(--space-4); z-index: 150;
@@ -729,7 +754,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   <div class="last-order-bar" id="lastOrderBar" style="display:none" onclick="showLastOrder()">
     <div class="last-order-icon">🕐</div>
     <div class="last-order-text">
-      <div class="last-order-title">Ultimo ordine salvato</div>
+      <div class="last-order-title">Ultimo salvataggio</div>
       <div class="last-order-date" id="lastOrderDate">—</div>
     </div>
     <div class="last-order-arrow">→</div>
@@ -759,6 +784,9 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     </div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-footer" id="modalFooter">
+    </div>
+    <div class="modal-note-wrap" id="modalNoteWrap">
+      <textarea class="modal-note-input" id="modalNoteInput" placeholder="✏️ Nota libera (opzionale, inclusa nella copia)…" rows="2"></textarea>
     </div>
   </div>
 </div>
@@ -794,9 +822,10 @@ const SUPPLIERS = {
 // Emoji per categoria
 const CAT_ICONS = {
   'WHISKY':'🥃','RUM':'🍹','AGAVE / VODKA':'🌵','GIN':'🍸',
-  'SPUMANTI / VINI':'🍾','MIXER DANDY':'🫧','SUCCHI':'🧃',
+  'SUCCHI':'🧃',
   'VERMOUTH / BITTER / AMARO':'🍊','LIQUORI':'🍬','AMARI & DIGESTIVI':'🌿',
-  'BIBITE':'🥤','BIRRE':'🍺','SCIROPPI & PUREE':'🫙','DISPENSA / SERVIZIO':'🧂'
+  'ACQUA & BIBITE':'🥤','BIRRE':'🍺','SCIROPPI & PUREE':'🫙',
+  'FUSTI & MISCELAZIONE':'🫧'
 };
 
 const CATALOG = [
@@ -826,34 +855,32 @@ const CATALOG = [
   {cat:'AGAVE / VODKA',name:'Tequila Patron Silver',   sup:'gloo',  unit:'bott'},
   {cat:'AGAVE / VODKA',name:'Vodka Pesca',             sup:'gloo',  unit:'bott'},
   // GIN
+  {cat:'GIN',name:"Another Hendrick's",        sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Arigatuono',               sup:'online',unit:'bott'},
   {cat:'GIN',name:'Barbarasa London Dry',     sup:'online',unit:'bott'},
   {cat:'GIN',name:'Barbarasa Navy',           sup:'online',unit:'bott'},
   {cat:'GIN',name:'Bombay Dry',               sup:'gloo',  unit:'bott'},
-  {cat:'GIN',name:'Bombay Sapphire 0,7/1/1,75lt',sup:'gloo',unit:'bott'},
+  {cat:'GIN',name:'Bombay Sapphire 0,7lt',           sup:'gloo',unit:'bott'},
+  {cat:'GIN',name:'Bombay Sapphire 1lt',             sup:'gloo',unit:'bott'},
+  {cat:'GIN',name:'Bombay Sapphire 1,75lt',          sup:'gloo',unit:'bott'},
   {cat:'GIN',name:"Brockman's",              sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Ciauru Gin Pompelmo Rosa', sup:'online',unit:'bott'},
   {cat:'GIN',name:'Frantuono',               sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Gin Amiata',                 sup:'online',unit:'bott'},
   {cat:'GIN',name:"Hendrick's",              sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'J Rose',                  sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Maite Fiamma',            sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Maite Spiaggialunga',     sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Monkey 47',               sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Nordes',                  sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Peter in Florence',           sup:'online',unit:'bott'},
   {cat:'GIN',name:'Piero Dry Gin',           sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Poseidon',                sup:'online',unit:'bott'},
   {cat:'GIN',name:'Rame Italian Dry',        sup:'online',unit:'bott'},
   {cat:'GIN',name:'Rame London Dry',         sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Silent Pool',                 sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Tanqueray Ten',           sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Upperhand',               sup:'online',unit:'bott'},
-  // SPUMANTI / VINI
-  {cat:'SPUMANTI / VINI',name:'Prosecco da miscelazione',sup:'gloo',unit:'ct'},
-  // MIXER DANDY
-  {cat:'MIXER DANDY',name:'Dandy Ginger Beer',              sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Dandy Lemon Artigianale',        sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Dandy Pink Soda',                sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Dandy Tonica Classic',           sup:'prince',unit:'ct'},
-  {cat:'MIXER DANDY',name:'Dandy Tonica Zero Zuccheri',     sup:'prince',unit:'ct'},
   // SUCCHI
   {cat:'SUCCHI',name:'Succo ACE',          sup:'gloo',unit:'ct'},
   {cat:'SUCCHI',name:"Succo d'arancia",    sup:'gloo',unit:'ct'},
@@ -903,31 +930,22 @@ const CATALOG = [
   {cat:'AMARI & DIGESTIVI',name:'Vecchia Romagna',    sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Vinsanto',           sup:'online',unit:'bott'},
   // BIBITE
-  {cat:'BIBITE',name:'1/2 NAT',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'1/2 GAS',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'1lt NAT',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'1lt GAS',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Fusto Coca Cola',     sup:'prince',unit:'bott',noUnit:true},
-  {cat:'BIBITE',name:'Fusto Kinley Lemon',  sup:'prince',unit:'bott',noUnit:true},
-  {cat:'BIBITE',name:'Fusto Kinley Tonic',  sup:'prince',unit:'bott',noUnit:true},
-  {cat:'BIBITE',name:'Coca Cola',           sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Cola Bottiglia',      sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Coca Zero',              sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Fanta',                  sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Kinley Lemon Bottiglia',  sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Pompelmo bottiglia',     sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Red Bull',              sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Sprite',                 sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Tonica bottiglia',       sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Fuze Limone',             sup:'gloo',  unit:'ct'},
-  {cat:'BIBITE',name:'Fuze Pesca',              sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'1/2 NAT',             sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'1/2 GAS',             sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'1lt NAT',             sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'1lt GAS',             sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'Coca Cola',           sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'Coca Zero',              sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'Fanta',                  sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'Fuze Limone',             sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'Fuze Pesca',              sup:'gloo',  unit:'ct'},
+  {cat:'ACQUA & BIBITE',name:'Sprite',                 sup:'gloo',  unit:'ct'},
   // BIRRE
   {cat:'BIRRE',name:"Beck's 33cl",          sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Ceres 33cl',           sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Corona 33cl',          sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Corona Analcolica 33cl',sup:'gloo', unit:'ct'},
   {cat:'BIRRE',name:'Divago (Amber)',        sup:'online',unit:'bott'},
-  {cat:'BIRRE',name:'Fusto Raffo Grezza',   sup:'prince',unit:'bott',noUnit:true},
   {cat:'BIRRE',name:'Menabrea 33cl',        sup:'gloo',  unit:'ct'},
   {cat:'BIRRE',name:'Nikulas (Tripel)',     sup:'online',unit:'bott'},
   {cat:'BIRRE',name:'Roma (IPA)',           sup:'online',unit:'bott'},
@@ -936,31 +954,79 @@ const CATALOG = [
   {cat:'BIRRE',name:"Tennent's 33cl",      sup:'gloo',  unit:'ct'},
   // SCIROPPI & PUREE
   {cat:'SCIROPPI & PUREE',name:'Foamer',                sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Mixer Lime',             sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Mixer Limone',           sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Purea di Lampone',      sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Purea di Mango',        sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Purea di Passion Fruit',sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Sale fino',             sup:'prince',unit:'bott'},
-  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Agave',     sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Sciroppo di Granatina', sup:'prince',unit:'bott'},
-  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Lime',      sup:'prince',unit:'bott'},
-  {cat:'SCIROPPI & PUREE',name:'Sciroppo di Limone',    sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI & PUREE',name:'Zucchero di Agave',     sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Zucchero Liquido',      sup:'prince',unit:'bott'},
-  // DISPENSA / SERVIZIO
-  {cat:'DISPENSA / SERVIZIO',name:'Bombole Gas',sup:'prince',unit:'bott'},
-  {cat:'DISPENSA / SERVIZIO',name:'Ghiaccio',   sup:'altro', unit:'bott'},
-  {cat:'DISPENSA / SERVIZIO',name:'Caffè',       sup:'altro', unit:'ct'},
-  {cat:'DISPENSA / SERVIZIO',name:'Ketchup',     sup:'altro', unit:'bott'},
-  {cat:'DISPENSA / SERVIZIO',name:'Maionese',    sup:'altro', unit:'bott'},
-  {cat:'DISPENSA / SERVIZIO',name:'Olio EVO',    sup:'altro', unit:'bott'},
-  {cat:'DISPENSA / SERVIZIO',name:'Snacks',      sup:'gloo',  unit:'ct'},
+  // FUSTI & MISCELAZIONE
+  {cat:'FUSTI & MISCELAZIONE',name:'Bombole Gas',                    sup:'prince',unit:'—',   noUnit:true},
+  {cat:'FUSTI & MISCELAZIONE',name:'Fusto Coca Cola',                sup:'prince',unit:'—',   noUnit:true},
+  {cat:'FUSTI & MISCELAZIONE',name:'Fusto Kinley Lemon',             sup:'prince',unit:'—',   noUnit:true},
+  {cat:'FUSTI & MISCELAZIONE',name:'Fusto Kinley Tonic',             sup:'prince',unit:'—',   noUnit:true},
+  {cat:'FUSTI & MISCELAZIONE',name:'Fusto Raffo Grezza',             sup:'prince',unit:'—',   noUnit:true},
+  {cat:'FUSTI & MISCELAZIONE',name:'Red Bull',                        sup:'gloo',  unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Coca Cola Bottiglia',            sup:'gloo',  unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Kinley Lemon Bottiglia',         sup:'gloo',  unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Kinley/Schweppes Tonica Bottiglia',sup:'gloo',unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Schweppes Pompelmo Bottiglia',     sup:'gloo',  unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Prosecco da miscelazione',       sup:'gloo',  unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Dandy Ginger Beer',              sup:'prince',unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Dandy Lemon Artigianale',        sup:'prince',unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Dandy Pink Soda',                sup:'prince',unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Dandy Tonica Classic',           sup:'prince',unit:'ct'},
+  {cat:'FUSTI & MISCELAZIONE',name:'Dandy Tonica Zero Zuccheri',     sup:'prince',unit:'ct'},
 ];
 
 const state = {};
 CATALOG.forEach(p => { state[p.name] = { qty:0, unit:p.unit, giac:0, giacUnit:p.unit, noUnit:!!p.noUnit }; });
 
-const STORE = 'poggio-ordine-v2';
+const STORE       = 'poggio-ordine-v2';
+const STORE_GIAC  = 'poggio-giacenze-v1';
+
+/* ── ORDINE: salva/carica ── */
 function saveStore(data){ try{ localStorage.setItem(STORE,JSON.stringify({date:new Date().toISOString(),order:data})); }catch(e){} }
 function loadStore(){ try{ const r=localStorage.getItem(STORE); return r?JSON.parse(r):null; }catch(e){ return null; } }
+
+/* ── GIACENZE: salva snapshot completo ── */
+function saveGiacenze(){
+  try{
+    const snap={};
+    CATALOG.forEach(p=>{
+      const st=state[p.name];
+      if(st.giac>0) snap[p.name]={giac:st.giac,giacUnit:st.giacUnit};
+    });
+    localStorage.setItem(STORE_GIAC,JSON.stringify({date:new Date().toISOString(),data:snap}));
+  }catch(e){}
+}
+function loadGiacenze(){ try{ const r=localStorage.getItem(STORE_GIAC); return r?JSON.parse(r):null; }catch(e){ return null; } }
+
+/* ── RIPRISTINA GIACENZE all'avvio ── */
+function restoreGiacenze(){
+  const saved=loadGiacenze();
+  if(!saved) return;
+  CATALOG.forEach(p=>{
+    const entry=saved.data[p.name];
+    if(entry){
+      state[p.name].giac=entry.giac||0;
+      state[p.name].giacUnit=entry.giacUnit||p.unit;
+    }
+  });
+}
+/* ── RIPRISTINA UNITÀ ORDINE all'avvio (da ultimo ordine salvato) ── */
+function restoreOrderUnits(){
+  const saved=loadStore();
+  if(!saved) return;
+  Object.values(saved.order||{}).forEach(items=>{
+    items.forEach(it=>{
+      if(state[it.name]) state[it.name].unit=it.unit;
+    });
+  });
+}
 function sid(name){ return name.replace(/[^a-z0-9]/gi,'_'); }
 function escQ(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
@@ -968,11 +1034,17 @@ function escQ(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 function buildUI(){
   const wrap = document.getElementById('categoriesWrap');
   wrap.innerHTML = '';
-  const seen = new Set(), cats = {}, catOrder = [];
+  const cats = {};
   CATALOG.forEach(p=>{
-    if(!seen.has(p.cat)){ seen.add(p.cat); catOrder.push(p.cat); cats[p.cat]=[]; }
+    if(!cats[p.cat]) cats[p.cat]=[];
     cats[p.cat].push(p);
   });
+
+  // Fixed order: priority cats first, then remaining alphabetically
+  const PRIORITY_CATS = ['FUSTI & MISCELAZIONE','ACQUA & BIBITE','SUCCHI','BIRRE'];
+  const allCats = Object.keys(cats);
+  const remaining = allCats.filter(c=>!PRIORITY_CATS.includes(c)).sort((a,b)=>a.localeCompare(b,'it'));
+  const catOrder = [...PRIORITY_CATS.filter(c=>cats[c]), ...remaining];
 
   catOrder.forEach(catName=>{
     const products = cats[catName];
@@ -1131,8 +1203,9 @@ function doReset(type){
   if(type==='cancel') return;
   CATALOG.forEach(p=>{
     setQty(p.name,0);
-    if(type==='tutto') setGiac(p.name,0);
+    if(type==='tutto'){ setGiac(p.name,0); state[p.name].giacUnit=p.unit; }
   });
+  if(type==='tutto') try{ localStorage.removeItem(STORE_GIAC); }catch(e){}
   const btn=document.querySelector('.btn-reset');
   if(btn){ const orig=btn.textContent; btn.textContent='✓ Ok'; setTimeout(()=>btn.textContent=orig,1400); }
 }
@@ -1143,12 +1216,12 @@ function fmtLine(name,qty,unit,noUnit){ return String(qty).padStart(2,'0')+'x'+(
 /* ── MACRO GRUPPI per output ordine ── */
 const MACRO_GROUPS=[
   {label:'Bevande Spiritose', cats:new Set(['WHISKY','RUM','AGAVE / VODKA','GIN',
-    'SPUMANTI / VINI','VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI',
-    'MIXER DANDY','SUCCHI'])},
+    'VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI',
+    'SUCCHI'])},
   {label:'Birre',             cats:new Set(['BIRRE'])},
-  {label:'Bibite',            cats:new Set(['BIBITE'])},
+  {label:'Bibite',            cats:new Set(['ACQUA & BIBITE'])},
   {label:'Sciroppi & Puree',  cats:new Set(['SCIROPPI & PUREE'])},
-  {label:'Dispensa / Servizio',cats:new Set(['DISPENSA / SERVIZIO'])}
+  {label:'Fusti & Miscelazione',cats:new Set(['FUSTI & MISCELAZIONE'])}
 ];
 function macroOf(cat){ for(const g of MACRO_GROUPS) if(g.cats.has(cat)) return g.label; return 'Altro'; }
 
@@ -1192,7 +1265,9 @@ function generaOrdine(){
   const orderData={};
   Object.entries(byS).forEach(([sup,items])=>{ if(items.length) orderData[sup]=items; });
   saveStore(orderData);
+  saveGiacenze();
   loadLastOrderBar();
+  document.getElementById('modalNoteInput').value='';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -1265,6 +1340,8 @@ function copyAll(){
   const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
   let full=`🗂 ORDINE SETTIMANALE — ${ds}\n${'─'.repeat(34)}\n\n`;
   ['prince','gloo','online','altro'].forEach(sup=>{ if(byS[sup].length) full+=buildTxtGrouped(sup,byS[sup],now)+'\n\n'; });
+  const nota=document.getElementById('modalNoteInput').value.trim();
+  if(nota) full+=`\n📝 NOTA:\n${nota}\n`;
   navigator.clipboard.writeText(full.trim()).then(()=>{
     const btn=document.getElementById('btnCopyAll');
     btn.textContent='✓ Copiato!'; btn.classList.add('copied');
@@ -1283,6 +1360,8 @@ function copySingle(btnEl,sup){
     if(el.classList.contains('order-sep')) txt+='\n';
     else txt+=el.dataset.line+'\n';
   });
+  const nota=document.getElementById('modalNoteInput').value.trim();
+  if(nota) txt+=`\n📝 NOTA:\n${nota}\n`;
   navigator.clipboard.writeText(txt.trim()).then(()=>{
     const orig=btnEl.textContent; btnEl.textContent='✓'; btnEl.classList.add('copied');
     setTimeout(()=>{ btnEl.textContent=orig; btnEl.classList.remove('copied'); },2000);
@@ -1425,15 +1504,25 @@ window.downloadImg=downloadImg;
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOutside(e){ if(e.target===document.getElementById('modalOverlay')) closeModal(); }
 
-/* ── LAST ORDER ── */
+/* ── LAST ORDER / LAST GIACENZE BAR ── */
 function loadLastOrderBar(){
-  const saved=loadStore();
+  const savedOrd=loadStore();
+  const savedGiac=loadGiacenze();
   const bar=document.getElementById('lastOrderBar');
-  if(!saved){ bar.style.display='none'; return; }
+  if(!savedOrd&&!savedGiac){ bar.style.display='none'; return; }
   bar.style.display='flex';
-  const d=new Date(saved.date);
-  document.getElementById('lastOrderDate').textContent=
-    'Salvato '+d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+  let label='';
+  if(savedOrd){
+    const d=new Date(savedOrd.date);
+    label='Ordine: '+d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'long'});
+  }
+  if(savedGiac){
+    const d=new Date(savedGiac.date);
+    const nProd=Object.keys(savedGiac.data).length;
+    if(label) label+='  ·  ';
+    label+='Giacenze: '+nProd+' prod. ('+d.toLocaleDateString('it-IT',{day:'numeric',month:'short'})+')';
+  }
+  document.getElementById('lastOrderDate').textContent=label;
 }
 function showLastOrder(){
   const saved=loadStore();
@@ -1506,7 +1595,19 @@ window.showLastOrder=showLastOrder;
 })();
 
 /* ── INIT ── */
+restoreGiacenze();
+restoreOrderUnits();
 buildUI();
+// Aggiorna i valori giacenze nell'UI dopo buildUI
+CATALOG.forEach(p=>{
+  const st=state[p.name];
+  if(st.giac>0){
+    const inp=document.getElementById('giac_'+sid(p.name));
+    if(inp) inp.value=st.giac;
+    setGiacUnit(p.name,st.giacUnit);
+  }
+});
+loadLastOrderBar();
 })();
 </script>
 </body>
