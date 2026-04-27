@@ -873,7 +873,7 @@ const CATALOG = [
   {cat:'WHISKY',name:'Aberfeldy 12',          sup:'gloo',  unit:'bott'},
   {cat:'WHISKY',name:'Bulleit Bourbon',        sup:'prince',unit:'bott'},
   {cat:'WHISKY',name:'Bulleit Rye',            sup:'prince',unit:'bott'},
-  {cat:'WHISKY',name:'Jameson 1lt',            sup:'gloo',  unit:'bott'},
+  {cat:'WHISKY',name:"Dewar's White Label",    sup:'gloo',  unit:'bott'},
   {cat:'WHISKY',name:'Laphroaig 10',           sup:'gloo',  unit:'bott'},
   {cat:'WHISKY',name:'Macallan 12',            sup:'prince',unit:'bott'},
   {cat:'WHISKY',name:'Nikka from the Barrel',  sup:'gloo',  unit:'bott'},
@@ -885,7 +885,7 @@ const CATALOG = [
   {cat:'RUM',name:'Don Papa',                  sup:'gloo',  unit:'bott'},
   {cat:'RUM',name:"Gosling's Black Seal",      sup:'gloo',  unit:'bott'},
   {cat:'RUM',name:'Plantation O.F.T.D',        sup:'gloo',  unit:'bott'},
-  {cat:'RUM',name:'Zacapa 23',                 sup:'gloo',  unit:'bott'},
+  {cat:'RUM',name:'Santa Teresa 1796',          sup:'gloo',  unit:'bott'},
   // AGAVE / VODKA
   {cat:'AGAVE / VODKA',name:'Eristoff',               sup:'gloo',  unit:'bott'},
   {cat:'AGAVE / VODKA',name:'Grey Goose',              sup:'gloo',  unit:'bott'},
@@ -958,6 +958,7 @@ const CATALOG = [
   {cat:'LIQUORI',name:'St. Germain',               sup:'gloo',  unit:'bott'},
   {cat:'LIQUORI',name:'Triple Sec',                sup:'gloo',  unit:'bott'},
   // AMARI & DIGESTIVI
+  {cat:'AMARI & DIGESTIVI',name:'Amaro del Capo',      sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Amaro Jefferson',    sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro 150cl',   sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Courvoisier',        sup:'gloo',  unit:'bott'},
@@ -1184,14 +1185,18 @@ function toggleCat(catId){
 function setUnit(name,unit){
   state[name].unit = unit;
   const s=sid(name);
-  document.getElementById('ubct_'+s).classList.toggle('active',unit==='ct');
-  document.getElementById('ubbott_'+s).classList.toggle('active',unit==='bott');
+  const bct=document.getElementById('ubct_'+s);
+  const bbott=document.getElementById('ubbott_'+s);
+  if(bct)   bct.classList.toggle('active',unit==='ct');
+  if(bbott) bbott.classList.toggle('active',unit==='bott');
 }
 function setGiacUnit(name,unit){
   state[name].giacUnit = unit;
   const s=sid(name);
-  document.getElementById('gct_'+s).classList.toggle('active',unit==='ct');
-  document.getElementById('gbott_'+s).classList.toggle('active',unit==='bott');
+  const gct=document.getElementById('gct_'+s);
+  const gbott=document.getElementById('gbott_'+s);
+  if(gct)   gct.classList.toggle('active',unit==='ct');
+  if(gbott) gbott.classList.toggle('active',unit==='bott');
 }
 
 /* ── GIACENZE ── */
