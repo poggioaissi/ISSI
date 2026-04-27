@@ -504,6 +504,23 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .btn-genera:active { transform: scale(.97); }
 .btn-genera:disabled { opacity: .3; cursor: not-allowed; box-shadow: none; }
 
+.btn-registra-giac {
+  min-height: 44px; padding: 0 18px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm); font-weight: 700;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  flex-shrink: 0;
+}
+.btn-registra-giac:hover { background: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+.btn-registra-giac:active { transform: scale(.97); }
+.btn-registra-giac.saved { background: var(--color-primary); color: #f7f8f2; }
+
 /* ── MODAL ── */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 300;
@@ -570,7 +587,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .order-block-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
 .order-block-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
 .order-block-note { font-size: .7rem; font-weight: 400; opacity: .75; margin-right: auto; letter-spacing: .02em; text-transform: none; }
-.order-items { padding: 12px 16px; display: grid; gap: 7px; overflow-y: auto; max-height: 280px; }
+.order-items { padding: 12px 16px; display: grid; gap: 7px; overflow-y: auto; max-height: 320px; }
 .order-item { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
 .order-item-qty {
   font-family: var(--font-body); font-size: var(--text-xs); font-weight: 700;
@@ -816,7 +833,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 <div class="footer-bar">
   <div class="footer-inner">
     <div class="footer-info">Selezionati: <strong id="totalSelected">0</strong> prodotti</div>
-    <button class="btn-genera" id="btnGenera" onclick="generaOrdine()" disabled>Genera ordine →</button>
+    <div style="display:flex;gap:8px;flex-shrink:0">
+      <button class="btn-registra-giac" id="btnRegistraGiac" onclick="registraGiacenze()">📦 Registra giacenze</button>
+      <button class="btn-genera" id="btnGenera" onclick="generaOrdine()" disabled>Genera ordine →</button>
+    </div>
   </div>
 </div>
 
@@ -854,10 +874,13 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="reset-dialog-body">Cosa vuoi azzerare?</div>
     <div class="reset-dialog-actions">
       <button class="reset-btn-option" onclick="doReset('ordine')">
-        <span>🛒</span><span>Solo ordini (quantità da ordinare)</span>
+        <span>🛒</span><span>Azzera ordine corrente</span>
+      </button>
+      <button class="reset-btn-option" onclick="doReset('giacenze')">
+        <span>📦</span><span>Azzera giacenze</span>
       </button>
       <button class="reset-btn-option danger" onclick="doReset('tutto')">
-        <span>🗑️</span><span>Tutto (ordini + giacenze)</span>
+        <span>🗑️</span><span>Azzera tutto</span>
       </button>
       <button class="reset-btn-cancel" onclick="doReset('cancel')">Annulla</button>
     </div>
@@ -1283,6 +1306,20 @@ function updateCounters(){
   });
 }
 
+/* ── REGISTRA GIACENZE (standalone) ── */
+function registraGiacenze(){
+  saveGiacenze();
+  loadLastOrderBar();
+  const btn=document.getElementById('btnRegistraGiac');
+  if(btn){
+    const orig=btn.textContent;
+    btn.textContent='✓ Salvate!';
+    btn.classList.add('saved');
+    setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('saved'); },2000);
+  }
+}
+window.registraGiacenze=registraGiacenze;
+
 /* ── RESET ── */
 function resetAll(){
   document.getElementById('resetDialogOverlay').classList.add('open');
@@ -1294,10 +1331,11 @@ function doReset(type){
   document.getElementById('resetDialogOverlay').classList.remove('open');
   if(type==='cancel') return;
   CATALOG.forEach(p=>{
-    setQty(p.name,0);
-    if(type==='tutto'){ setGiac(p.name,0); state[p.name].giacUnit=p.unit; }
+    if(type==='ordine' || type==='tutto') setQty(p.name,0);
+    if(type==='giacenze' || type==='tutto'){ setGiac(p.name,0); state[p.name].giacUnit=p.unit; }
   });
-  if(type==='tutto') try{ db.ref('giacenze').remove(); }catch(e){}
+  if(type==='giacenze' || type==='tutto') try{ db.ref('giacenze').remove(); }catch(e){}
+  if(type==='ordine')  try{ db.ref('ordine').remove(); }catch(e){}
   const btn=document.querySelector('.btn-reset');
   if(btn){ const orig=btn.textContent; btn.textContent='✓ Ok'; setTimeout(()=>btn.textContent=orig,1400); }
 }
@@ -1308,10 +1346,9 @@ function fmtLine(name,qty,unit,noUnit){ return String(qty).padStart(2,'0')+'x'+(
 /* ── MACRO GRUPPI per output ordine ── */
 const MACRO_GROUPS=[
   {label:'Bevande Spiritose', cats:new Set(['WHISKY','RUM','AGAVE / VODKA','GIN',
-    'VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI',
-    'SUCCHI'])},
+    'VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI'])},
   {label:'Birre',             cats:new Set(['BIRRE'])},
-  {label:'Bibite',            cats:new Set(['ACQUA & BIBITE'])},
+  {label:'Bibite',            cats:new Set(['ACQUA & BIBITE','SUCCHI'])},
   {label:'Sciroppi & Puree',  cats:new Set(['SCIROPPI & PUREE'])},
   {label:'Fusti & Miscelazione',cats:new Set(['FUSTI & MISCELAZIONE'])}
 ];
@@ -1452,19 +1489,38 @@ function renderGiacenzePanel(giacData){
     return;
   }
 
-  // Raggruppa per fornitore
-  const byS={prince:[],gloo:[],online:[],altro:[]};
-  items.forEach(it=>{ if(byS[it.sup]) byS[it.sup].push(it); });
+  // Raggruppa per categoria (MACRO_GROUPS)
+  const CAT_COLORS = {
+    'WHISKY':'prince','RUM':'prince','AGAVE / VODKA':'prince','GIN':'prince',
+    'VERMOUTH / BITTER / AMARO':'prince','LIQUORI':'prince','AMARI & DIGESTIVI':'prince',
+    'BIRRE':'gloo','ACQUA & BIBITE':'gloo','SUCCHI':'gloo',
+    'SCIROPPI & PUREE':'online','FUSTI & MISCELAZIONE':'altro'
+  };
+  const byCat = {};
+  const catOrder = [];
+  CATALOG.forEach(p => {
+    if(items.find(it=>it.name===p.name)){
+      if(!byCat[p.cat]){ byCat[p.cat]=[]; catOrder.push(p.cat); }
+    }
+  });
+  items.forEach(it=>{
+    if(!byCat[it.cat]) byCat[it.cat]=[];
+    byCat[it.cat].push(it);
+  });
+  // Ordine categorie: segue MACRO_GROUPS
+  const orderedCats = [];
+  MACRO_GROUPS.forEach(mg=>{ mg.cats.forEach(c=>{ if(byCat[c]) orderedCats.push(c); }); });
+  Object.keys(byCat).forEach(c=>{ if(!orderedCats.includes(c)) orderedCats.push(c); });
 
-  ['prince','gloo','online','altro'].forEach(sup=>{
-    const list=byS[sup];
-    if(!list.length) return;
+  orderedCats.forEach(cat=>{
+    const list=byCat[cat];
+    if(!list||!list.length) return;
     const block=document.createElement('div');
     block.className='order-block';
-    const s=SUPPLIERS[sup];
+    const colorClass = CAT_COLORS[cat] || 'altro';
     const hdr=document.createElement('div');
-    hdr.className='order-block-header '+sup;
-    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}`;
+    hdr.className='order-block-header '+colorClass;
+    hdr.innerHTML=cat;
     const itemsDiv=document.createElement('div');
     itemsDiv.className='order-items';
     list.forEach(it=>{
