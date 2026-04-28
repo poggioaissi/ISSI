@@ -27,8 +27,15 @@
     messagingSenderId: "292166364099",
     appId: "1:292166364099:web:3e854f0286abc7f2446b76"
   };
-  firebase.initializeApp(firebaseConfig);
-  window.db = firebase.database();
+  try {
+    firebase.initializeApp(firebaseConfig);
+    window.db = firebase.database();
+  } catch(e) {
+    // Firebase non disponibile (es. apertura locale senza rete)
+    // db rimane undefined — le funzioni che lo usano gestiscono il caso
+    window.db = null;
+    console.warn('Firebase non disponibile:', e.message);
+  }
 </script>
 <!-- Ripristina tema salvato prima del render per evitare flash -->
 <script>(function(){var t=localStorage.getItem('magazzino-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
@@ -88,6 +95,7 @@
   --gloo:   #b8960c; --gloo-soft:   #fdf6d8; --gloo-mid:   rgba(184,150,12,.20);
   --online: #58758b; --online-soft: #dce7ef; --online-mid: rgba(88,117,139,.22);
   --altro:  #5f7a56; --altro-soft:  #dfe8d9; --altro-mid:  rgba(95,122,86,.22);
+  --logi:   #8b5e9e; --logi-soft:   #f0e6f5; --logi-mid:   rgba(139,94,158,.22);
 }
 
 /* ── DARK THEME ── */
@@ -119,6 +127,7 @@
   --gloo:   #d4a820; --gloo-soft:   #2e2800; --gloo-mid:   rgba(212,168,32,.25);
   --online: #9dbed0; --online-soft: #1b2730; --online-mid: rgba(157,190,208,.28);
   --altro:  #a9c697; --altro-soft:  #1f2a20; --altro-mid:  rgba(169,198,151,.28);
+  --logi:   #c49ad4; --logi-soft:   #251930; --logi-mid:   rgba(196,154,212,.28);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -331,6 +340,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .leg-dot.gloo   { background: var(--gloo); }
 .leg-dot.online { background: var(--online); }
 .leg-dot.altro  { background: var(--altro); }
+.leg-dot.logi   { background: var(--logi); }
 .leg-note { font-size: .72em; color: var(--color-text-faint); }
 
 /* ── LAST ORDER BAR ── */
@@ -349,6 +359,56 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .last-order-title { font-size: var(--text-sm); font-weight: 700; }
 .last-order-date { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 1px; }
 .last-order-arrow { color: var(--color-text-faint); }
+
+.btn-storico {
+  background: none; border: none; cursor: pointer;
+  font-size: 1.1rem; padding: 4px 6px; border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.btn-storico:hover { background: color-mix(in srgb, var(--color-primary) 12%, transparent); }
+
+/* ── STORICO MODAL ── */
+.storico-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.65);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s;
+}
+.storico-overlay.open { opacity: 1; pointer-events: all; }
+.storico-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: min(600px, 100%);
+  max-height: 75vh;
+  display: flex; flex-direction: column;
+  transform: translateY(40px);
+  transition: transform .25s cubic-bezier(.32,.72,0,1);
+  overflow: hidden;
+}
+.storico-overlay.open .storico-modal { transform: translateY(0); }
+.storico-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  flex-shrink: 0;
+}
+.storico-title { font-size: var(--text-sm); font-weight: 800; }
+.storico-body { overflow-y: auto; padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 8px; }
+.storico-empty { color: var(--color-text-faint); font-size: var(--text-sm); text-align: center; padding: 24px; }
+.storico-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: var(--color-surface-2);
+  cursor: pointer; transition: background var(--transition), border-color var(--transition);
+}
+.storico-item:hover { background: var(--color-surface-3); border-color: var(--color-primary); }
+.storico-item-date { font-size: var(--text-sm); font-weight: 700; }
+.storico-item-meta { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 2px; }
+.storico-item-arrow { color: var(--color-text-faint); font-size: .85rem; flex-shrink: 0; }
 
 /* ── CATEGORY SECTION ── */
 .cat-section {
@@ -433,6 +493,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .supplier-dot.gloo   { background: var(--gloo); }
 .supplier-dot.online { background: var(--online); }
 .supplier-dot.altro  { background: var(--altro); }
+.supplier-dot.logi   { background: var(--logi); }
 
 .product-name { flex: 1; font-size: var(--text-sm); font-weight: 500; min-width: 0; }
 
@@ -602,6 +663,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .order-block-header.gloo   { background: var(--gloo-soft);   color: var(--gloo);   border-bottom: 1px solid var(--gloo-mid); }
 .order-block-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
 .order-block-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
+.order-block-header.logi   { background: var(--logi-soft);   color: var(--logi);   border-bottom: 1px solid var(--logi-mid); }
 .order-block-note { font-size: .7rem; font-weight: 400; opacity: .75; margin-right: auto; letter-spacing: .02em; text-transform: none; }
 .order-items { padding: 12px 16px; display: grid; gap: 7px; overflow-y: auto; max-height: 320px; }
 .order-item { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
@@ -832,6 +894,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="leg-item"><div class="leg-dot gloo"></div> GlooGloo <span class="leg-note">entro le 15 · mart–sab</span></div>
     <div class="leg-item"><div class="leg-dot online"></div> Online / Diretto</div>
     <div class="leg-item"><div class="leg-dot altro"></div> Altro</div>
+    <div class="leg-item"><div class="leg-dot logi"></div> Logi</div>
   </div>
 
   <div class="last-order-bar" id="lastOrderBar" style="display:none" onclick="showLastOrder()">
@@ -840,6 +903,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
       <div class="last-order-title">Ultimo salvataggio</div>
       <div class="last-order-date" id="lastOrderDate">—</div>
     </div>
+    <button class="btn-storico" onclick="event.stopPropagation();openStorico()" title="Storico ordini ultimo mese">📋</button>
     <div class="last-order-arrow">→</div>
   </div>
 
@@ -904,15 +968,25 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   </div>
 </div>
 
-<script>
-(function(){
-'use strict';
+<!-- STORICO ORDINI MODAL -->
+<div class="storico-overlay" id="storicoOverlay" onclick="if(event.target===this)closeStorico()">
+  <div class="storico-modal" onclick="event.stopPropagation()">
+    <div class="storico-header">
+      <div class="storico-title">📋 Storico ordini — ultimi 30 giorni</div>
+      <button class="btn-close" onclick="closeStorico()">✕</button>
+    </div>
+    <div class="storico-body" id="storicoBody">
+      <p class="storico-empty">Caricamento…</p>
+    </div>
+  </div>
+</div>
 
-const SUPPLIERS = {
+
   prince: { label:'Prince',          note:'entro le 17 · ogni giorno' },
   gloo:   { label:'GlooGloo',        note:'entro le 15 · mart–sab' },
   online: { label:'Online / Diretto',note:'' },
-  altro:  { label:'Altro',           note:'' }
+  altro:  { label:'Altro',           note:'' },
+  logi:   { label:'Logi',            note:'' }
 };
 
 // Emoji per categoria
@@ -921,7 +995,8 @@ const CAT_ICONS = {
   'SUCCHI':'🧃',
   'VERMOUTH / BITTER / AMARO':'🍊','LIQUORI':'🍬','AMARI & DIGESTIVI':'🌿',
   'ACQUA & BIBITE':'🥤','BIRRE':'🍺','SCIROPPI & PUREE':'🫙',
-  'FUSTI & MISCELAZIONE':'🫧'
+  'FUSTI & MISCELAZIONE':'🫧',
+  'VINI - BIANCHI':'🍾','VINI - BOLLICINE':'🥂','VINI - COLOMBAIO':'🍷','VINI - DESSERT':'🍯','VINI - ROSSI':'🍷'
 };
 
 const CATALOG = [
@@ -952,7 +1027,7 @@ const CATALOG = [
   {cat:'AGAVE / VODKA',name:'Tequila Patron Silver',   sup:'gloo',  unit:'bott'},
   {cat:'AGAVE / VODKA',name:'Vodka Pesca',             sup:'gloo',  unit:'bott'},
   // GIN
-  {cat:'GIN',name:"Another Hendrick's",        sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:"Another Hendrick's",        sup:'online',unit:'bott'},
   {cat:'GIN',name:'Arigatuono',               sup:'online',unit:'bott'},
   {cat:'GIN',name:'Barbarasa London Dry',     sup:'online',unit:'bott'},
   {cat:'GIN',name:'Barbarasa Navy',           sup:'online',unit:'bott'},
@@ -975,7 +1050,7 @@ const CATALOG = [
   {cat:'GIN',name:'Poseidon',                sup:'online',unit:'bott'},
   {cat:'GIN',name:'Rame Italian Dry',        sup:'online',unit:'bott'},
   {cat:'GIN',name:'Rame London Dry',         sup:'online',unit:'bott'},
-  {cat:'GIN',name:'Silent Pool',                 sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'Silent Pool',                 sup:'online',unit:'bott'},
   {cat:'GIN',name:'Tanqueray Ten',           sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Upperhand',               sup:'online',unit:'bott'},
   // SUCCHI
@@ -1021,8 +1096,8 @@ const CATALOG = [
   {cat:'AMARI & DIGESTIVI',name:'Courvoisier',        sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Disaronno',          sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Fernet Branca',      sup:'gloo',  unit:'bott'},
-  {cat:'AMARI & DIGESTIVI',name:'Grappa Riserva',     sup:'online',unit:'bott'},
-  {cat:'AMARI & DIGESTIVI',name:'Grappa di Vernaccia',sup:'online',unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Grappa Riserva',     sup:'logi',  unit:'bott'},
+  {cat:'AMARI & DIGESTIVI',name:'Grappa di Vernaccia',sup:'logi',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Jägermeister',       sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Sambuca 150cl',            sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Vecchia Romagna',    sup:'gloo',  unit:'bott'},
@@ -1050,6 +1125,48 @@ const CATALOG = [
   {cat:'BIRRE',name:'Sigeric (Blonde)',     sup:'online',unit:'bott'},
   {cat:'BIRRE',name:'Strade (Blanche)',     sup:'online',unit:'bott'},
   {cat:'BIRRE',name:"Tennent's 33cl",      sup:'gloo',  unit:'ct'},
+
+  // VINI - COLOMBAIO
+  {cat:'VINI - COLOMBAIO',name:'Selvabianca',              sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Albereta',                 sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Fonteuva Bianco',          sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Fonteuva Rosso',           sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Campale',                  sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Cremisi',                  sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Lumis',                    sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Lumis Magnum',             sup:'logi',unit:'bott'},
+  {cat:'VINI - COLOMBAIO',name:'Lumis Rosè',               sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Bacicolo',                 sup:'logi',unit:'ct'},
+  {cat:'VINI - COLOMBAIO',name:'Il Priore',                sup:'logi',unit:'ct'},
+  // VINI - BOLLICINE
+  {cat:'VINI - BOLLICINE',name:'Cremant d'Alsace',        sup:'logi',unit:'ct'},
+  {cat:'VINI - BOLLICINE',name:'Altalanga Ettore Germano', sup:'logi',unit:'ct'},
+  {cat:'VINI - BOLLICINE',name:'Ferrari Perlè',            sup:'logi',unit:'ct'},
+  {cat:'VINI - BOLLICINE',name:'Tarlant Zero',             sup:'logi',unit:'ct'},
+  // VINI - BIANCHI
+  {cat:'VINI - BIANCHI',name:'Strobhlof Chardonnay',       sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Strobhlof Sauvignon',        sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Taschlerhof Kerner',         sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Taschlerhof Gewurztraminer', sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Kerpen Riesling',            sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Piero Pan Soave Classico',   sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Lugana Capotesta',           sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Vermentino Colli di Luni',   sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Fiano Avellino',             sup:'logi',unit:'ct'},
+  {cat:'VINI - BIANCHI',name:'Etna Bianco',                sup:'logi',unit:'ct'},
+  // VINI - ROSSI
+  {cat:'VINI - ROSSI',name:'Riecine Chianti CL',           sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Vigna Barbischio Chianti CL Ris.',sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Tricerchi Rosso Montalcino',   sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Tricerchi Brunello',           sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Bolgheri Le Macchiole',        sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Nebbiolo Langhe',              sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Ciliegiolo Camillo',           sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Etna Rosso',                   sup:'logi',unit:'ct'},
+  {cat:'VINI - ROSSI',name:'Pinot Nero Panizzi',           sup:'logi',unit:'ct'},
+  // VINI - DESSERT
+  {cat:'VINI - DESSERT',name:'Moscato d'Asti',            sup:'logi',unit:'ct'},
+  {cat:'VINI - DESSERT',name:'Passito Donna Fugata',       sup:'logi',unit:'bott'},
   // SCIROPPI & PUREE
   {cat:'SCIROPPI & PUREE',name:'Foamer',                sup:'prince',unit:'bott'},
   {cat:'SCIROPPI & PUREE',name:'Mixer Lime',             sup:'prince',unit:'bott'},
@@ -1152,16 +1269,51 @@ function syncUIFromState(){
 
 /* ── ORDINE: salva/carica su Firebase ── */
 function saveStore(data){
-  try{ db.ref('ordine').set({date:new Date().toISOString(), order:data}); }catch(e){ console.warn('saveStore error',e); }
+  if(!window.db) return;
+  try{
+    const now = new Date();
+    const iso = now.toISOString();
+    // Salva ultimo ordine (sovrascrive)
+    db.ref('ordine').set({date: iso, order: data});
+    // Salva nello storico con chiave timestamp
+    const key = now.getFullYear()+'_'
+      +String(now.getMonth()+1).padStart(2,'0')+'_'
+      +String(now.getDate()).padStart(2,'0')+'_'
+      +String(now.getHours()).padStart(2,'0')
+      +String(now.getMinutes()).padStart(2,'0');
+    db.ref('storico/'+key).set({date: iso, order: data});
+    // Pulizia automatica: rimuovi voci più vecchie di 30 giorni
+    const cutoff = new Date(now.getTime() - 30*24*60*60*1000).toISOString();
+    db.ref('storico').once('value').then(snap=>{
+      if(!snap.exists()) return;
+      snap.forEach(child=>{
+        if(child.val().date < cutoff) db.ref('storico/'+child.key).remove();
+      });
+    });
+  }catch(e){ console.warn('saveStore error',e); }
 }
 function loadStore(){
+  if(!window.db) return Promise.resolve(null);
   return new Promise(resolve=>{
     db.ref('ordine').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+  });
+}
+function loadStorico(){
+  if(!window.db) return Promise.resolve([]);
+  return new Promise(resolve=>{
+    db.ref('storico').once('value').then(snap=>{
+      if(!snap.exists()){ resolve([]); return; }
+      const list=[];
+      snap.forEach(child=>{ list.push({key:child.key, ...child.val()}); });
+      list.sort((a,b)=>b.date.localeCompare(a.date)); // più recente prima
+      resolve(list);
+    }).catch(()=>resolve([]));
   });
 }
 
 /* ── GIACENZE: salva snapshot su Firebase ── */
 function saveGiacenze(){
+  if(!window.db) return;
   try{
     const snap={};
     CATALOG.forEach(p=>{ const st=state[p.name]; if(st.giac>0) snap[p.name]={giac:st.giac,giacUnit:st.giacUnit}; });
@@ -1169,6 +1321,7 @@ function saveGiacenze(){
   }catch(e){ console.warn('saveGiacenze error',e); }
 }
 function loadGiacenze(){
+  if(!window.db) return Promise.resolve(null);
   return new Promise(resolve=>{
     db.ref('giacenze').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
   });
@@ -1375,16 +1528,12 @@ function closeResetDialogOutside(e){
 function doReset(type){
   document.getElementById('resetDialogOverlay').classList.remove('open');
   if(type==='cancel') return;
+  // Azzera solo lo state/UI locale — Firebase NON viene mai toccato
   CATALOG.forEach(p=>{
     if(type==='ordine' || type==='tutto'){ state[p.name].qty=0; state[p.name].unit=p.unit; }
     if(type==='giacenze' || type==='tutto'){ state[p.name].giac=0; state[p.name].giacUnit=p.unit; }
   });
-  // Aggiorna UI
   syncUIFromState();
-  // Pulizia Firebase
-  if(type==='giacenze' || type==='tutto') try{ db.ref('giacenze').remove(); }catch(e){}
-  if(type==='ordine'   || type==='tutto') try{ db.ref('ordine').remove(); }catch(e){}
-  // Pulizia localStorage (sempre, salva stato azzerato)
   saveLocalState();
   loadLastOrderBar();
   const btn=document.querySelector('.btn-reset');
@@ -1401,7 +1550,8 @@ const MACRO_GROUPS=[
   {label:'Birre',             cats:new Set(['BIRRE'])},
   {label:'Bibite',            cats:new Set(['ACQUA & BIBITE','SUCCHI'])},
   {label:'Sciroppi & Puree',  cats:new Set(['SCIROPPI & PUREE'])},
-  {label:'Fusti & Miscelazione',cats:new Set(['FUSTI & MISCELAZIONE'])}
+  {label:'Fusti & Miscelazione',cats:new Set(['FUSTI & MISCELAZIONE'])},
+  {label:'Vini',cats:new Set(['VINI - BIANCHI','VINI - BOLLICINE','VINI - COLOMBAIO','VINI - DESSERT','VINI - ROSSI'])}
 ];
 function macroOf(cat){ for(const g of MACRO_GROUPS) if(g.cats.has(cat)) return g.label; return 'Altro'; }
 
@@ -1421,6 +1571,21 @@ function groupItems(items){
     if(!gi||!gi.length) return;
     if(!first) lines.push(null); // riga vuota tra macro-gruppi
     first=false;
+
+    // Per i VINI: separa ogni sottocategoria con riga vuota, preservando l'ordine del CATALOG
+    if(ml==='Vini'){
+      const VINI_CATS=['VINI - BIANCHI','VINI - BOLLICINE','VINI - COLOMBAIO','VINI - DESSERT','VINI - ROSSI'];
+      let firstCat=true;
+      VINI_CATS.forEach(cat=>{
+        const subItems=gi.filter(it=>it.cat===cat);
+        if(!subItems.length) return;
+        if(!firstCat) lines.push(null); // riga vuota tra sottocategorie
+        firstCat=false;
+        subItems.forEach(it=>lines.push(it));
+      });
+      return;
+    }
+
     const botts=gi.filter(it=>it.unit==='bott'||it.noUnit); // noUnit (fusti) trattati come bott
     const cts  =gi.filter(it=>it.unit==='ct');
     botts.forEach(it=>lines.push(it));
@@ -1439,7 +1604,7 @@ function groupItems(items){
 
 /* ── GENERA ORDINE ── */
 function generaOrdine(){
-  const byS={prince:[],gloo:[],online:[],altro:[]};
+  const byS={prince:[],gloo:[],online:[],altro:[],logi:[]};
   CATALOG.forEach(p=>{
     const st=state[p.name];
     if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat,noUnit:!!p.noUnit});
@@ -1476,7 +1641,7 @@ window.switchModalTab = switchModalTab;
 function renderModal(byS, date){
   const panel = document.getElementById('panelOrdine');
   panel.innerHTML = '';
-  ['prince','gloo','online','altro'].forEach(sup=>{
+  ['prince','gloo','online','altro','logi'].forEach(sup=>{
     const items=byS[sup];
     if(!items||!items.length) return;
     const block=document.createElement('div');
@@ -1545,7 +1710,8 @@ function renderGiacenzePanel(giacData){
     'WHISKY':'prince','RUM':'prince','AGAVE / VODKA':'prince','GIN':'prince',
     'VERMOUTH / BITTER / AMARO':'prince','LIQUORI':'prince','AMARI & DIGESTIVI':'prince',
     'BIRRE':'gloo','ACQUA & BIBITE':'gloo','SUCCHI':'gloo',
-    'SCIROPPI & PUREE':'online','FUSTI & MISCELAZIONE':'altro'
+    'SCIROPPI & PUREE':'online','FUSTI & MISCELAZIONE':'altro',
+    'VINI - BIANCHI':'logi','VINI - BOLLICINE':'logi','VINI - COLOMBAIO':'logi','VINI - DESSERT':'logi','VINI - ROSSI':'logi'
   };
   const byCat = {};
   const catOrder = [];
@@ -1611,12 +1777,12 @@ function buildTxtGrouped(sup,items,date){
   return t.trim();
 }
 function copyAll(){
-  const byS={prince:[],gloo:[],online:[],altro:[]};
+  const byS={prince:[],gloo:[],online:[],altro:[],logi:[]};
   CATALOG.forEach(p=>{ const st=state[p.name]; if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat,noUnit:!!p.noUnit}); });
   const now=new Date();
   const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
   let full=`🗂 ORDINE SETTIMANALE — ${ds}\n${'─'.repeat(34)}\n\n`;
-  ['prince','gloo','online','altro'].forEach(sup=>{ if(byS[sup].length) full+=buildTxtGrouped(sup,byS[sup],now)+'\n\n'; });
+  ['prince','gloo','online','altro','logi'].forEach(sup=>{ if(byS[sup].length) full+=buildTxtGrouped(sup,byS[sup],now)+'\n\n'; });
   const nota=document.getElementById('modalNoteInput').value.trim();
   if(nota) full+=`\n📝 NOTA:\n${nota}\n`;
   navigator.clipboard.writeText(full.trim()).then(()=>{
@@ -1666,6 +1832,7 @@ function downloadImg(sup){
     gloo:  {bg:isDark?'#2e2800':'#fdf6d8',accent:isDark?'#d4a820':'#b8960c'},
     online:{bg:isDark?'#1b2730':'#dce7ef',accent:isDark?'#9dbed0':'#58758b'},
     altro: {bg:isDark?'#1f2a20':'#dfe8d9',accent:isDark?'#a9c697':'#5f7a56'},
+    logi:  {bg:isDark?'#251930':'#f0e6f5',accent:isDark?'#c49ad4':'#8b5e9e'},
   };
   const pal=palette[sup]||palette.altro;
   const bgPage=isDark?'#182117':'#f7f8f2';
@@ -1873,6 +2040,57 @@ window.showLastOrder=showLastOrder;
     sync();
   });
 })();
+
+/* ── STORICO ORDINI ── */
+function openStorico(){
+  const overlay=document.getElementById('storicoOverlay');
+  const body=document.getElementById('storicoBody');
+  overlay.classList.add('open');
+  body.innerHTML='<p class="storico-empty">Caricamento…</p>';
+
+  loadStorico().then(list=>{
+    if(!list.length){
+      body.innerHTML='<p class="storico-empty">Nessun ordine salvato nell\'ultimo mese.</p>';
+      return;
+    }
+    body.innerHTML='';
+    list.forEach(entry=>{
+      const d=new Date(entry.date);
+      const dateStr=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      const timeStr=d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      // Conta prodotti totali
+      const totProd=Object.values(entry.order||{}).reduce((acc,arr)=>acc+arr.length,0);
+      const suppliers=Object.keys(entry.order||{}).filter(k=>(entry.order[k]||[]).length).join(', ');
+      const item=document.createElement('div');
+      item.className='storico-item';
+      item.innerHTML=`
+        <div>
+          <div class="storico-item-date">${dateStr} · ${timeStr}</div>
+          <div class="storico-item-meta">${totProd} prodotti · ${suppliers}</div>
+        </div>
+        <span class="storico-item-arrow">→</span>`;
+      item.addEventListener('click',()=>{ openStoricOrdine(entry); });
+      body.appendChild(item);
+    });
+  });
+}
+function openStoricOrdine(entry){
+  closeStorico();
+  const d=new Date(entry.date);
+  document.getElementById('modalDate').textContent=
+    'Ordine del '+d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderModal(entry.order, d);
+  renderGiacenzePanel(null);
+  switchModalTab('ordine');
+  document.getElementById('modalNoteInput').value='';
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeStorico(){
+  document.getElementById('storicoOverlay').classList.remove('open');
+}
+window.openStorico=openStorico;
+window.closeStorico=closeStorico;
 
 /* ── CARICA DA FIREBASE → UI + localStorage ── */
 function caricaDaFirebase(){
