@@ -85,7 +85,7 @@
   --shadow-md: 0 8px 22px rgba(33,45,24,.12);
 
   --prince: #9a6660; --prince-soft: #efdfdb; --prince-mid: rgba(154,102,96,.25);
-  --gloo:   #55664a; --gloo-soft:   #e6ebde; --gloo-mid:   rgba(85,102,74,.20);
+  --gloo:   #b8960c; --gloo-soft:   #fdf6d8; --gloo-mid:   rgba(184,150,12,.20);
   --online: #58758b; --online-soft: #dce7ef; --online-mid: rgba(88,117,139,.22);
   --altro:  #5f7a56; --altro-soft:  #dfe8d9; --altro-mid:  rgba(95,122,86,.22);
 }
@@ -116,7 +116,7 @@
   --shadow-md: 0 12px 28px rgba(0,0,0,.22);
 
   --prince: #d7a094; --prince-soft: #2d211d; --prince-mid: rgba(215,160,148,.30);
-  --gloo:   #b5beab; --gloo-soft:   #223022; --gloo-mid:   rgba(181,190,171,.25);
+  --gloo:   #d4a820; --gloo-soft:   #2e2800; --gloo-mid:   rgba(212,168,32,.25);
   --online: #9dbed0; --online-soft: #1b2730; --online-mid: rgba(157,190,208,.28);
   --altro:  #a9c697; --altro-soft:  #1f2a20; --altro-mid:  rgba(169,198,151,.28);
 }
@@ -193,6 +193,22 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   transition: all var(--transition);
 }
 .btn-reset:hover { border-color: var(--color-accent-red); color: var(--color-accent-red); }
+
+.btn-carica-cloud {
+  height: 32px; padding: 0 12px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: 1.5px solid color-mix(in srgb, var(--color-primary) 50%, var(--color-border));
+  color: var(--color-primary);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs); font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  white-space: nowrap;
+}
+.btn-carica-cloud:hover { background: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+.btn-carica-cloud.loading { opacity: .6; cursor: wait; }
+.btn-carica-cloud.done { background: var(--color-primary); color: #f7f8f2; border-color: var(--color-primary); }
 
 .theme-btn {
   width: 38px; height: 38px;
@@ -798,6 +814,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="topbar-title">Magazzino <span>/ Ordini</span></div>
     <div style="display:flex;align-items:center;gap:8px">
       <button class="theme-btn" id="themeToggle" aria-label="Cambia tema"><span id="themeIcon">☀️</span></button>
+      <button class="btn-carica-cloud" id="btnCaricaCloud" onclick="caricaDaFirebase()" title="Carica ultimo ordine e giacenze dal cloud">☁️ Carica</button>
       <button class="btn-reset" onclick="resetAll()">↺ Azzera</button>
     </div>
   </div>
@@ -1646,7 +1663,7 @@ function downloadImg(sup){
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
   const palette={
     prince:{bg:isDark?'#2d211d':'#efdfdb',accent:isDark?'#d7a094':'#9a6660'},
-    gloo:  {bg:isDark?'#223022':'#e6ebde',accent:isDark?'#b5beab':'#55664a'},
+    gloo:  {bg:isDark?'#2e2800':'#fdf6d8',accent:isDark?'#d4a820':'#b8960c'},
     online:{bg:isDark?'#1b2730':'#dce7ef',accent:isDark?'#9dbed0':'#58758b'},
     altro: {bg:isDark?'#1f2a20':'#dfe8d9',accent:isDark?'#a9c697':'#5f7a56'},
   };
@@ -1856,6 +1873,58 @@ window.showLastOrder=showLastOrder;
     sync();
   });
 })();
+
+/* ── CARICA DA FIREBASE → UI + localStorage ── */
+function caricaDaFirebase(){
+  const btn = document.getElementById('btnCaricaCloud');
+  btn.classList.add('loading');
+  btn.textContent = '☁️ …';
+
+  Promise.all([loadStore(), loadGiacenze()]).then(([savedOrd, savedGiac])=>{
+    let loaded = 0;
+
+    // Ripristina ordine: qty + unità
+    if(savedOrd && savedOrd.order){
+      Object.values(savedOrd.order).forEach(items=>{
+        items.forEach(it=>{
+          if(!state[it.name]) return;
+          state[it.name].qty  = it.qty  || 0;
+          state[it.name].unit = it.unit || state[it.name].unit;
+          loaded++;
+        });
+      });
+    }
+
+    // Ripristina giacenze: giac + giacUnit
+    if(savedGiac && savedGiac.data){
+      Object.entries(savedGiac.data).forEach(([name, entry])=>{
+        if(!state[name]) return;
+        state[name].giac     = entry.giac     || 0;
+        state[name].giacUnit = entry.giacUnit || state[name].giacUnit;
+        loaded++;
+      });
+    }
+
+    // Aggiorna tutta l'UI e salva in localStorage
+    syncUIFromState();
+    saveLocalState();
+
+    // Feedback visivo
+    btn.classList.remove('loading');
+    if(loaded > 0){
+      btn.textContent = '✓ Caricato';
+      btn.classList.add('done');
+    } else {
+      btn.textContent = '☁️ Vuoto';
+    }
+    setTimeout(()=>{ btn.textContent='☁️ Carica'; btn.classList.remove('done'); }, 2500);
+  }).catch(()=>{
+    btn.classList.remove('loading');
+    btn.textContent = '⚠️ Errore';
+    setTimeout(()=>{ btn.textContent='☁️ Carica'; }, 2500);
+  });
+}
+window.caricaDaFirebase = caricaDaFirebase;
 
 /* ── INIT ── */
 restoreLocalState();  // sincrono: carica qty/unit/giac/giacUnit da localStorage
