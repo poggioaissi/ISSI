@@ -913,6 +913,7 @@ const CATALOG = [
   {cat:'WHISKY',name:'Bulleit Bourbon',        sup:'prince',unit:'bott'},
   {cat:'WHISKY',name:'Bulleit Rye',            sup:'prince',unit:'bott'},
   {cat:'WHISKY',name:"Dewar's White Label",    sup:'gloo',  unit:'bott'},
+  {cat:'WHISKY',name:"Jack Daniel's",            sup:'gloo',  unit:'bott'},
   {cat:'WHISKY',name:'Laphroaig 10',           sup:'gloo',  unit:'bott'},
   {cat:'WHISKY',name:'Macallan 12',            sup:'prince',unit:'bott'},
   {cat:'WHISKY',name:'Nikka from the Barrel',  sup:'gloo',  unit:'bott'},
@@ -1065,79 +1066,102 @@ const CATALOG = [
 const state = {};
 CATALOG.forEach(p => { state[p.name] = { qty:0, unit:p.unit, giac:0, giacUnit:p.unit, noUnit:!!p.noUnit }; });
 
-const STORE       = 'poggio-ordine-v2';   // usato solo come chiave Firebase
-const STORE_GIAC  = 'poggio-giacenze-v1'; // usato solo come chiave Firebase
+const STORE       = 'poggio-ordine-v2';
+const STORE_GIAC  = 'poggio-giacenze-v1';
+const LS_STATE    = 'poggio-state-v1'; // localStorage: qty ordine + unità + giacenze
 
-/* ── ORDINE: salva/carica su Firebase ── */
-function saveStore(data){
-  try{
-    db.ref('ordine').set({date:new Date().toISOString(), order:data});
-  }catch(e){ console.warn('saveStore error',e); }
-}
-function loadStore(){
-  return new Promise(resolve=>{
-    db.ref('ordine').once('value').then(snap=>{
-      resolve(snap.exists() ? snap.val() : null);
-    }).catch(()=>resolve(null));
-  });
-}
-
-/* ── GIACENZE: salva snapshot completo su Firebase ── */
-function saveGiacenze(){
+/* ── SALVA STATO COMPLETO IN LOCALSTORAGE ── */
+function saveLocalState(){
   try{
     const snap={};
     CATALOG.forEach(p=>{
       const st=state[p.name];
-      if(st.giac>0) snap[p.name]={giac:st.giac, giacUnit:st.giacUnit};
+      const entry={};
+      if(st.qty>0)           entry.qty=st.qty;
+      if(st.unit!==p.unit)   entry.unit=st.unit;
+      if(st.giac>0)          entry.giac=st.giac;
+      if(st.giacUnit!==p.unit) entry.giacUnit=st.giacUnit;
+      if(Object.keys(entry).length) snap[p.name]=entry;
     });
+    localStorage.setItem(LS_STATE, JSON.stringify(snap));
+  }catch(e){}
+}
+
+/* ── RIPRISTINA STATO DA LOCALSTORAGE (sincrono, prima di buildUI) ── */
+function restoreLocalState(){
+  try{
+    const raw=localStorage.getItem(LS_STATE);
+    if(!raw) return;
+    const snap=JSON.parse(raw);
+    CATALOG.forEach(p=>{
+      const entry=snap[p.name];
+      if(!entry) return;
+      if(entry.qty!=null)      state[p.name].qty=entry.qty;
+      if(entry.unit!=null)     state[p.name].unit=entry.unit;
+      if(entry.giac!=null)     state[p.name].giac=entry.giac;
+      if(entry.giacUnit!=null) state[p.name].giacUnit=entry.giacUnit;
+    });
+  }catch(e){}
+}
+
+/* ── AGGIORNA UI DA STATE (chiamato dopo buildUI) ── */
+function syncUIFromState(){
+  CATALOG.forEach(p=>{
+    const st=state[p.name];
+    const s=sid(p.name);
+    if(st.qty>0){
+      const inp=document.getElementById('qty_'+s);
+      if(inp) inp.value=st.qty;
+    }
+    if(!p.noUnit){
+      const bct=document.getElementById('ubct_'+s);
+      const bbott=document.getElementById('ubbott_'+s);
+      if(bct)   bct.classList.toggle('active',st.unit==='ct');
+      if(bbott) bbott.classList.toggle('active',st.unit==='bott');
+    }
+    if(st.giac>0){
+      const ginp=document.getElementById('giac_'+s);
+      if(ginp) ginp.value=st.giac;
+    }
+    if(!p.noUnit){
+      const gct=document.getElementById('gct_'+s);
+      const gbott=document.getElementById('gbott_'+s);
+      if(gct)   gct.classList.toggle('active',st.giacUnit==='ct');
+      if(gbott) gbott.classList.toggle('active',st.giacUnit==='bott');
+    }
+  });
+  updateCounters();
+}
+
+/* ── ORDINE: salva/carica su Firebase ── */
+function saveStore(data){
+  try{ db.ref('ordine').set({date:new Date().toISOString(), order:data}); }catch(e){ console.warn('saveStore error',e); }
+}
+function loadStore(){
+  return new Promise(resolve=>{
+    db.ref('ordine').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+  });
+}
+
+/* ── GIACENZE: salva snapshot su Firebase ── */
+function saveGiacenze(){
+  try{
+    const snap={};
+    CATALOG.forEach(p=>{ const st=state[p.name]; if(st.giac>0) snap[p.name]={giac:st.giac,giacUnit:st.giacUnit}; });
     db.ref('giacenze').set({date:new Date().toISOString(), data:snap});
   }catch(e){ console.warn('saveGiacenze error',e); }
 }
 function loadGiacenze(){
   return new Promise(resolve=>{
-    db.ref('giacenze').once('value').then(snap=>{
-      resolve(snap.exists() ? snap.val() : null);
-    }).catch(()=>resolve(null));
+    db.ref('giacenze').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
   });
 }
 
-/* ── RIPRISTINA GIACENZE all'avvio ── */
-function restoreGiacenze(){
-  db.ref('giacenze').once('value').then(snap=>{
-    if(!snap.exists()) return;
-    const saved=snap.val();
-    CATALOG.forEach(p=>{
-      const entry=saved.data && saved.data[p.name];
-      if(entry){
-        state[p.name].giac=entry.giac||0;
-        state[p.name].giacUnit=entry.giacUnit||p.unit;
-      }
-    });
-    // Aggiorna UI giacenze dopo il caricamento
-    CATALOG.forEach(p=>{
-      const st=state[p.name];
-      if(st.giac>0){
-        const inp=document.getElementById('giac_'+sid(p.name));
-        if(inp) inp.value=st.giac;
-        setGiacUnit(p.name,st.giacUnit);
-      }
-    });
-    loadLastOrderBar();
-  });
-}
+/* ── RIPRISTINA GIACENZE: gestito da restoreLocalState + syncUIFromState ── */
+function restoreGiacenze(){ /* no-op: stato caricato da localStorage */ }
 
-/* ── RIPRISTINA UNITÀ ORDINE all'avvio (da ultimo ordine salvato) ── */
-function restoreOrderUnits(){
-  db.ref('ordine').once('value').then(snap=>{
-    if(!snap.exists()) return;
-    const saved=snap.val();
-    Object.values(saved.order||{}).forEach(items=>{
-      items.forEach(it=>{
-        if(state[it.name]) state[it.name].unit=it.unit;
-      });
-    });
-  });
-}
+/* ── RIPRISTINA UNITÀ ORDINE: gestito da restoreLocalState + syncUIFromState ── */
+function restoreOrderUnits(){ /* no-op: stato caricato da localStorage */ }
 function sid(name){ return name.replace(/[^a-z0-9]/gi,'_'); }
 function escQ(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
@@ -1259,6 +1283,7 @@ function setUnit(name,unit){
   const bbott=document.getElementById('ubbott_'+s);
   if(bct)   bct.classList.toggle('active',unit==='ct');
   if(bbott) bbott.classList.toggle('active',unit==='bott');
+  saveLocalState();
 }
 function setGiacUnit(name,unit){
   state[name].giacUnit = unit;
@@ -1267,6 +1292,7 @@ function setGiacUnit(name,unit){
   const gbott=document.getElementById('gbott_'+s);
   if(gct)   gct.classList.toggle('active',unit==='ct');
   if(gbott) gbott.classList.toggle('active',unit==='bott');
+  saveLocalState();
 }
 
 /* ── GIACENZE ── */
@@ -1276,6 +1302,7 @@ function setGiac(name,val){
   state[name].giac = val;
   const inp=document.getElementById('giac_'+sid(name));
   if(inp) inp.value=val;
+  saveLocalState();
 }
 
 /* ── QTY ── */
@@ -1289,6 +1316,7 @@ function setQty(name,val){
   const row = document.getElementById('row_'+s);
   if(row) row.classList.toggle('has-qty',val>0);
   updateCounters();
+  saveLocalState();
 }
 
 /* ── COUNTERS ── */
@@ -1331,11 +1359,17 @@ function doReset(type){
   document.getElementById('resetDialogOverlay').classList.remove('open');
   if(type==='cancel') return;
   CATALOG.forEach(p=>{
-    if(type==='ordine' || type==='tutto') setQty(p.name,0);
-    if(type==='giacenze' || type==='tutto'){ setGiac(p.name,0); state[p.name].giacUnit=p.unit; }
+    if(type==='ordine' || type==='tutto'){ state[p.name].qty=0; state[p.name].unit=p.unit; }
+    if(type==='giacenze' || type==='tutto'){ state[p.name].giac=0; state[p.name].giacUnit=p.unit; }
   });
+  // Aggiorna UI
+  syncUIFromState();
+  // Pulizia Firebase
   if(type==='giacenze' || type==='tutto') try{ db.ref('giacenze').remove(); }catch(e){}
-  if(type==='ordine')  try{ db.ref('ordine').remove(); }catch(e){}
+  if(type==='ordine'   || type==='tutto') try{ db.ref('ordine').remove(); }catch(e){}
+  // Pulizia localStorage (sempre, salva stato azzerato)
+  saveLocalState();
+  loadLastOrderBar();
   const btn=document.querySelector('.btn-reset');
   if(btn){ const orig=btn.textContent; btn.textContent='✓ Ok'; setTimeout(()=>btn.textContent=orig,1400); }
 }
@@ -1824,10 +1858,10 @@ window.showLastOrder=showLastOrder;
 })();
 
 /* ── INIT ── */
-buildUI();
-restoreGiacenze();   // async: carica da Firebase e aggiorna UI da sola
-restoreOrderUnits(); // async: ripristina unità da ultimo ordine
-loadLastOrderBar();  // async: mostra barra ultimo salvataggio
+restoreLocalState();  // sincrono: carica qty/unit/giac/giacUnit da localStorage
+buildUI();            // costruisce il DOM
+syncUIFromState();    // aggiorna tutti i campi e i pulsanti unit
+loadLastOrderBar();   // async: mostra barra ultimo salvataggio Firebase
 })();
 </script>
 </body>

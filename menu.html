@@ -1304,8 +1304,9 @@
   function syncThemeIcon() {
     themeIcon.textContent = root.getAttribute("data-theme") === "dark" ? "🌙" : "☀️";
   }
+  /* Tema: Light alla prima visita, rispetta la scelta dell'utente nelle sessioni successive */
   const savedTheme = localStorage.getItem(THEME_KEY);
-  root.setAttribute("data-theme", savedTheme || "light");
+  if(savedTheme) root.setAttribute("data-theme", savedTheme);
   syncThemeIcon();
   themeToggle.addEventListener("click", () => {
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
