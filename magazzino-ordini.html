@@ -1247,20 +1247,22 @@ function syncUIFromState(){
   CATALOG.forEach(p=>{
     const st=state[p.name];
     const s=sid(p.name);
-    if(st.qty>0){
-      const inp=document.getElementById('qty_'+s);
-      if(inp) inp.value=st.qty;
-    }
+    // Qty ordine — aggiorna sempre (anche a 0 per azzeramento)
+    const inp=document.getElementById('qty_'+s);
+    if(inp) inp.value=st.qty;
+    const row=document.getElementById('row_'+s);
+    if(row) row.classList.toggle('has-qty',st.qty>0);
+    // Unità ordine
     if(!p.noUnit){
       const bct=document.getElementById('ubct_'+s);
       const bbott=document.getElementById('ubbott_'+s);
       if(bct)   bct.classList.toggle('active',st.unit==='ct');
       if(bbott) bbott.classList.toggle('active',st.unit==='bott');
     }
-    if(st.giac>0){
-      const ginp=document.getElementById('giac_'+s);
-      if(ginp) ginp.value=st.giac;
-    }
+    // Giacenza — aggiorna sempre (anche a 0 per azzeramento)
+    const ginp=document.getElementById('giac_'+s);
+    if(ginp) ginp.value=st.giac;
+    // Unità giacenza
     if(!p.noUnit){
       const gct=document.getElementById('gct_'+s);
       const gbott=document.getElementById('gbott_'+s);
