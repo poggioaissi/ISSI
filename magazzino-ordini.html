@@ -409,6 +409,194 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .storico-item-date { font-size: var(--text-sm); font-weight: 700; }
 .storico-item-meta { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 2px; }
 .storico-item-arrow { color: var(--color-text-faint); font-size: .85rem; flex-shrink: 0; }
+.storico-item-actions {
+  display: flex; gap: 6px; flex-shrink: 0; align-items: center;
+}
+.btn-storico-edit, .btn-storico-delete {
+  min-width: 30px; min-height: 30px; border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface);
+  font-size: .8rem; display: grid; place-items: center;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.btn-storico-edit { color: var(--color-accent-blue); }
+.btn-storico-edit:hover { background: var(--color-accent-blue-soft); border-color: var(--color-accent-blue); }
+.btn-storico-delete { color: var(--color-accent-red); }
+.btn-storico-delete:hover { background: var(--color-accent-red-soft); border-color: var(--color-accent-red); }
+
+/* ── EDIT ORDINE OVERLAY ── */
+.edit-ordine-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s;
+}
+.edit-ordine-overlay.open { opacity: 1; pointer-events: all; }
+.edit-ordine-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: min(640px, 100%);
+  max-height: 90vh;
+  display: flex; flex-direction: column;
+  transform: translateY(40px);
+  transition: transform .28s cubic-bezier(.16,1,.3,1);
+  overflow: hidden;
+  padding-bottom: var(--safe-bottom);
+}
+.edit-ordine-overlay.open .edit-ordine-modal { transform: translateY(0); }
+.edit-ordine-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  flex-shrink: 0;
+}
+.edit-ordine-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem);
+  letter-spacing: -.02em; line-height: 1;
+}
+.edit-ordine-subtitle {
+  font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 4px;
+}
+.edit-ordine-body {
+  flex: 1; overflow-y: auto; padding: 14px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.edit-supplier-block {
+  border-radius: var(--radius-md); overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+}
+.edit-supplier-header {
+  padding: 9px 14px; font-size: var(--text-xs); font-weight: 800;
+  letter-spacing: .07em; text-transform: uppercase;
+}
+.edit-supplier-header.prince { background: var(--prince-soft); color: var(--prince); border-bottom: 1px solid var(--prince-mid); }
+.edit-supplier-header.gloo   { background: var(--gloo-soft);   color: var(--gloo);   border-bottom: 1px solid var(--gloo-mid); }
+.edit-supplier-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
+.edit-supplier-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
+.edit-supplier-header.logi   { background: var(--logi-soft);   color: var(--logi);   border-bottom: 1px solid var(--logi-mid); }
+.edit-item-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  font-size: var(--text-sm);
+}
+.edit-item-row:last-child { border-bottom: 0; }
+.edit-item-name { flex: 1; min-width: 0; }
+.edit-item-unit {
+  font-size: var(--text-xs); color: var(--color-text-faint);
+  background: var(--color-surface-3);
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  border-radius: 6px; padding: 2px 7px; flex-shrink: 0;
+  white-space: nowrap;
+}
+.edit-qty-ctrl {
+  display: flex; align-items: center;
+  background: var(--color-surface-3);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: 9px; overflow: hidden; flex-shrink: 0;
+}
+.edit-qty-btn {
+  background: none; border: 0;
+  color: var(--color-text-muted);
+  width: 28px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; cursor: pointer;
+  transition: background var(--transition);
+}
+.edit-qty-btn:hover { background: var(--color-surface-2); color: var(--color-text); }
+.edit-qty-val {
+  font-size: .82rem; font-weight: 700;
+  width: 28px; text-align: center;
+  color: var(--color-text); background: transparent;
+  border: 0; outline: none;
+}
+.btn-edit-delete-item {
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--color-accent-red) 30%, var(--color-border));
+  color: var(--color-accent-red);
+  font-size: .7rem; font-weight: 600;
+  padding: 3px 8px; border-radius: 6px;
+  transition: all var(--transition); flex-shrink: 0; cursor: pointer;
+}
+.btn-edit-delete-item:hover { background: var(--color-accent-red-soft); }
+.edit-ordine-footer {
+  padding: 12px 18px;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  display: flex; gap: 8px; flex-shrink: 0;
+}
+.btn-edit-save {
+  flex: 1; min-height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary); color: #f7f8f2;
+  font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 800;
+  letter-spacing: .04em;
+  transition: opacity var(--transition);
+}
+.btn-edit-save:hover { opacity: .88; }
+.btn-edit-cancel {
+  min-height: 44px; padding: 0 18px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: var(--color-surface-2); color: var(--color-text-muted);
+  font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600;
+  transition: all var(--transition);
+}
+.btn-edit-cancel:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+
+/* ── CONFIRM DELETE DIALOG ── */
+.confirm-delete-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.confirm-delete-overlay.open { opacity: 1; pointer-events: all; }
+.confirm-delete-dialog {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: var(--radius-lg);
+  padding: 24px 22px 20px;
+  width: min(340px, 100%);
+  box-shadow: var(--shadow-md);
+  transform: scale(.94);
+  transition: transform .22s cubic-bezier(.16,1,.3,1);
+}
+.confirm-delete-overlay.open .confirm-delete-dialog { transform: scale(1); }
+.confirm-delete-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + .4vw, 1.3rem);
+  margin-bottom: 8px;
+}
+.confirm-delete-body {
+  font-size: var(--text-sm); color: var(--color-text-muted);
+  margin-bottom: 20px; line-height: 1.5;
+}
+.confirm-delete-actions { display: flex; flex-direction: column; gap: 8px; }
+.btn-confirm-delete {
+  width: 100%; min-height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--color-accent-red) 50%, var(--color-border));
+  background: var(--color-accent-red-soft);
+  color: var(--color-accent-red);
+  font-family: var(--font-body); font-size: var(--text-sm); font-weight: 700;
+  transition: all var(--transition); cursor: pointer;
+}
+.btn-confirm-delete:hover { background: var(--color-accent-red); color: #f7f8f2; }
+.btn-confirm-cancel {
+  width: 100%; min-height: 38px;
+  border-radius: var(--radius-md);
+  border: 0; background: none;
+  color: var(--color-text-faint);
+  font-family: var(--font-body); font-size: var(--text-xs); font-weight: 500;
+  cursor: pointer; transition: color var(--transition);
+}
+.btn-confirm-cancel:hover { color: var(--color-text-muted); }
 
 /* ── CATEGORY SECTION ── */
 .cat-section {
@@ -964,6 +1152,36 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
         <span>🗑️</span><span>Azzera tutto</span>
       </button>
       <button class="reset-btn-cancel" onclick="doReset('cancel')">Annulla</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT ORDINE OVERLAY -->
+<div class="edit-ordine-overlay" id="editOrdineOverlay" onclick="if(event.target===this)closeEditOrdine()">
+  <div class="edit-ordine-modal" onclick="event.stopPropagation()">
+    <div class="edit-ordine-header">
+      <div>
+        <div class="edit-ordine-title">✏️ Modifica ordine</div>
+        <div class="edit-ordine-subtitle" id="editOrdineSubtitle"></div>
+      </div>
+      <button class="btn-close" onclick="closeEditOrdine()">✕</button>
+    </div>
+    <div class="edit-ordine-body" id="editOrdineBody"></div>
+    <div class="edit-ordine-footer">
+      <button class="btn-edit-cancel" onclick="closeEditOrdine()">Annulla</button>
+      <button class="btn-edit-save" onclick="saveEditedOrdine()">💾 Salva modifiche</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE OVERLAY -->
+<div class="confirm-delete-overlay" id="confirmDeleteOverlay" onclick="if(event.target===this)closeConfirmDelete()">
+  <div class="confirm-delete-dialog" onclick="event.stopPropagation()">
+    <div class="confirm-delete-title">🗑️ Elimina ordine</div>
+    <div class="confirm-delete-body" id="confirmDeleteBody">Vuoi eliminare questo ordine dallo storico? L'operazione non può essere annullata.</div>
+    <div class="confirm-delete-actions">
+      <button class="btn-confirm-delete" onclick="confirmDeleteOrdine()">Elimina definitivamente</button>
+      <button class="btn-confirm-cancel" onclick="closeConfirmDelete()">Annulla</button>
     </div>
   </div>
 </div>
@@ -2077,13 +2295,21 @@ function openStorico(){
       const suppliers=Object.keys(entry.order||{}).filter(k=>(entry.order[k]||[]).length).join(', ');
       const item=document.createElement('div');
       item.className='storico-item';
+      item.style.cursor='default';
       item.innerHTML=`
-        <div>
+        <div style="flex:1;min-width:0;cursor:pointer" data-open="1">
           <div class="storico-item-date">${dateStr} · ${timeStr}</div>
           <div class="storico-item-meta">${totProd} prodotti · ${suppliers}</div>
         </div>
-        <span class="storico-item-arrow">→</span>`;
-      item.addEventListener('click',()=>{ openStoricOrdine(entry); });
+        <div class="storico-item-actions">
+          <button class="btn-storico-edit" title="Modifica ordine">✏️</button>
+          <button class="btn-storico-delete" title="Elimina ordine">🗑️</button>
+          <span class="storico-item-arrow" style="cursor:pointer" data-open="1">→</span>
+        </div>`;
+      item.querySelector('[data-open]')?.addEventListener('click',()=>{ openStoricOrdine(entry); });
+      item.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openStoricOrdine(entry)));
+      item.querySelector('.btn-storico-edit').addEventListener('click', e=>{ e.stopPropagation(); openEditOrdine(entry); });
+      item.querySelector('.btn-storico-delete').addEventListener('click', e=>{ e.stopPropagation(); openConfirmDelete(entry); });
       body.appendChild(item);
     });
   });
@@ -2105,6 +2331,172 @@ function closeStorico(){
 }
 window.openStorico=openStorico;
 window.closeStorico=closeStorico;
+
+/* ── EDIT ORDINE ── */
+let _editEntry = null; // entry corrente in modifica
+let _editData  = null; // copia modificabile dell'ordine
+
+function openEditOrdine(entry){
+  closeStorico();
+  _editEntry = entry;
+  // Deep clone dell'ordine
+  _editData = {};
+  Object.entries(entry.order||{}).forEach(([sup,items])=>{
+    if(items&&items.length) _editData[sup] = items.map(it=>({...it}));
+  });
+
+  const d = new Date(entry.date);
+  document.getElementById('editOrdineSubtitle').textContent =
+    d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  renderEditOrdineBody();
+  document.getElementById('editOrdineOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderEditOrdineBody(){
+  const body = document.getElementById('editOrdineBody');
+  body.innerHTML = '';
+
+  const SUPS = ['prince','gloo','online','altro','logi'];
+  SUPS.forEach(sup=>{
+    const items = _editData[sup];
+    if(!items||!items.length) return;
+
+    const block = document.createElement('div');
+    block.className = 'edit-supplier-block';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'edit-supplier-header '+sup;
+    hdr.textContent = SUPPLIERS[sup].label.toUpperCase();
+    if(SUPPLIERS[sup].note) hdr.textContent += '  ·  '+SUPPLIERS[sup].note;
+    block.appendChild(hdr);
+
+    items.forEach((it, idx)=>{
+      const row = document.createElement('div');
+      row.className = 'edit-item-row';
+
+      const unitLabel = it.noUnit ? '' : it.unit+'.';
+      row.innerHTML = `
+        <span class="edit-item-name">${it.name}</span>
+        ${unitLabel ? `<span class="edit-item-unit">${unitLabel}</span>` : ''}
+        <div class="edit-qty-ctrl">
+          <button class="edit-qty-btn" data-sup="${sup}" data-idx="${idx}" data-delta="-1">−</button>
+          <input class="edit-qty-val" type="number" min="1" value="${it.qty}" data-sup="${sup}" data-idx="${idx}"/>
+          <button class="edit-qty-btn" data-sup="${sup}" data-idx="${idx}" data-delta="1">+</button>
+        </div>
+        <button class="btn-edit-delete-item" data-sup="${sup}" data-idx="${idx}">✕ Rimuovi</button>`;
+
+      row.querySelectorAll('.edit-qty-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const s = btn.dataset.sup;
+          const i = parseInt(btn.dataset.idx);
+          const delta = parseInt(btn.dataset.delta);
+          const newVal = Math.max(1, (_editData[s][i].qty||1) + delta);
+          _editData[s][i].qty = newVal;
+          row.querySelector('.edit-qty-val').value = newVal;
+        });
+      });
+      row.querySelector('.edit-qty-val').addEventListener('change', e=>{
+        const s = e.target.dataset.sup;
+        const i = parseInt(e.target.dataset.idx);
+        _editData[s][i].qty = Math.max(1, parseInt(e.target.value)||1);
+        e.target.value = _editData[s][i].qty;
+      });
+      row.querySelector('.btn-edit-delete-item').addEventListener('click', e=>{
+        const s = e.target.dataset.sup;
+        const i = parseInt(e.target.dataset.idx);
+        _editData[s].splice(i,1);
+        if(!_editData[s].length) delete _editData[s];
+        renderEditOrdineBody();
+      });
+
+      block.appendChild(row);
+    });
+    body.appendChild(block);
+  });
+
+  if(!Object.keys(_editData).length){
+    body.innerHTML = '<p style="padding:20px;text-align:center;color:var(--color-text-faint);font-size:var(--text-sm)">Nessun prodotto rimasto.<br>Salva per eliminare l\'ordine, oppure annulla.</p>';
+  }
+}
+
+function closeEditOrdine(){
+  document.getElementById('editOrdineOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  _editEntry = null;
+  _editData  = null;
+}
+
+function saveEditedOrdine(){
+  if(!_editEntry || !window.db) {
+    closeEditOrdine();
+    return;
+  }
+  const key  = _editEntry.key;
+  const date = _editEntry.date;
+
+  // Se non ci sono più prodotti → elimina direttamente
+  if(!Object.keys(_editData).length){
+    db.ref('storico/'+key).remove().then(()=>{
+      db.ref('ordine').once('value').then(snap=>{
+        if(snap.exists() && snap.val().date === date) db.ref('ordine').remove();
+      });
+      closeEditOrdine();
+      openStorico();
+    }).catch(()=>{ alert('Errore durante il salvataggio.'); });
+    return;
+  }
+
+  const updated = { date, order: _editData };
+  db.ref('storico/'+key).set(updated).then(()=>{
+    db.ref('ordine').once('value').then(snap=>{
+      if(snap.exists() && snap.val().date === date) db.ref('ordine').set(updated);
+    });
+    closeEditOrdine();
+    loadLastOrderBar();
+    openStorico();
+  }).catch(()=>{ alert('Errore durante il salvataggio.'); });
+}
+window.saveEditedOrdine = saveEditedOrdine;
+window.closeEditOrdine  = closeEditOrdine;
+
+/* ── DELETE ORDINE ── */
+let _deleteEntry = null;
+
+function openConfirmDelete(entry){
+  _deleteEntry = entry;
+  const d = new Date(entry.date);
+  const dateStr = d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('confirmDeleteBody').textContent =
+    `Eliminare l'ordine del ${dateStr}? L'operazione non può essere annullata.`;
+  document.getElementById('confirmDeleteOverlay').classList.add('open');
+}
+
+function closeConfirmDelete(){
+  document.getElementById('confirmDeleteOverlay').classList.remove('open');
+  _deleteEntry = null;
+}
+
+function confirmDeleteOrdine(){
+  if(!_deleteEntry || !window.db){ closeConfirmDelete(); return; }
+  const key  = _deleteEntry.key;
+  const date = _deleteEntry.date;
+
+  db.ref('storico/'+key).remove().then(()=>{
+    db.ref('ordine').once('value').then(snap=>{
+      if(snap.exists() && snap.val().date === date){
+        db.ref('ordine').remove().then(()=>loadLastOrderBar());
+      }
+    });
+    closeConfirmDelete();
+    openStorico();
+    loadLastOrderBar();
+  }).catch(()=>{ alert('Errore durante l\'eliminazione.'); });
+}
+window.openConfirmDelete   = openConfirmDelete;
+window.closeConfirmDelete  = closeConfirmDelete;
+window.confirmDeleteOrdine = confirmDeleteOrdine;
 
 /* ── CARICA DA FIREBASE → UI + localStorage ── */
 function caricaDaFirebase(){
