@@ -353,7 +353,13 @@
     .gin-grid {
       display: grid;
       gap: var(--space-4);
-      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 560px) {
+      .gin-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      }
     }
 
     .gin-card {
@@ -362,7 +368,8 @@
       padding: var(--space-4);
       border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
       box-shadow: var(--shadow-sm);
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: var(--space-3);
     }
 
@@ -433,7 +440,7 @@
 
     .gin-name-row {
       display: flex;
-      align-items: baseline;
+      align-items: flex-start;
       flex-wrap: wrap;
       gap: var(--space-2);
     }
@@ -594,7 +601,8 @@
             <div class="gin-name">Bombay Sapphire Premier Cru</div>
             <p class="gin-desc">Agrumato ampio ed elegante. Limone murciano, mandarino e arancia in evidenza.</p>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro toscano</span><span class="bot-tag">Cubeb giavanesi</span><span class="bot-tag">Grains of paradise africani</span><span class="bot-tag">Liquirizia cinese</span><span class="bot-tag">Cassia vietnamita</span><span class="bot-tag">Mandorle spagnole</span><span class="bot-tag">Scorza di limone murciana</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Angelica</span><span class="bot-tag">Orris root</span></div>
-            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro toscano</span><span class="bot-tag">Limone murciano</span><span class="bot-tag">Mandarino</span><span class="bot-tag">Arancia dolce</span><span class="bot-tag">Cubeb</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Angelica</span></div>
+            
+            
             <p class="gin-garnish"><strong>Garnish:</strong> Twist di limone.</p>
             <p class="gin-similar"><strong>Simili in carta:</strong> Tanqueray Ten (secco e agrumato), Barbarasa London Dry (secco e agrumato), Etsu Double Yuzu (agrumato fine)</p>
           </article>
@@ -635,7 +643,8 @@
             <div class="gin-name-row"><div class="gin-name">J Rose</div><span class="badge-in-carta">★ In carta</span></div>
             <p class="gin-desc">Floreale, fruttato, leggermente agrumato e speziato.</p>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Cannella</span><span class="bot-tag">Vaniglia</span><span class="bot-tag">Agrumi</span><span class="bot-tag">Spezie dolci floreali</span></div>
-            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Rosa</span><span class="bot-tag">Pompelmo</span><span class="bot-tag">Agrumi</span><span class="bot-tag">Pepe rosa</span></div>
+            
+            
             <p class="gin-garnish"><strong>Garnish:</strong> Petali di rosa o scorza di pompelmo.</p>
             <p class="gin-similar"><strong>Simili in carta:</strong> Garnet Gin (floreale e fruttato), Ginecologo Sensualmente (floreale con rosa), Silent Pool (floreale ed elegante)</p>
           </article>
@@ -762,7 +771,8 @@
             <div class="gin-name-row"><div class="gin-name">Nordes</div><span class="badge-in-carta">★ In carta</span></div>
             <p class="gin-desc">Morbido, fresco, fruttato.</p>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Uva Albariño (base)</span><span class="bot-tag">Salvia galiziana</span><span class="bot-tag">Alloro</span><span class="bot-tag">Verbena al limone</span><span class="bot-tag">Eucalipto</span><span class="bot-tag">Menta</span><span class="bot-tag">Salicornia marina</span><span class="bot-tag">Ibisco</span><span class="bot-tag">Cardamomo</span><span class="bot-tag">Tè nero</span><span class="bot-tag">Zenzero</span></div>
-            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Citronella</span><span class="bot-tag">Garofano</span><span class="bot-tag">Cubeb</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Cardamomo</span><span class="bot-tag">Scorza d'arancia</span></div>
+            
+            
             <p class="gin-garnish"><strong>Garnish:</strong> Uva bianca o scorza di limone.</p>
             <p class="gin-similar"><strong>Simili in carta:</strong> Gin Malfy Rosa (morbido e fruttato), Frantuono (morbido e delicato), Boca Mucho Mas (morbido e fresco)</p>
           </article>
@@ -807,7 +817,7 @@
       <details class="category" data-category="erbacei e mediterranei">
         <summary class="category-header">
           <h3>🌿 Erbacei e mediterranei</h3>
-          <div class="category-meta">19 gin</div>
+          <div class="category-meta">23 gin</div>
         </summary>
         <div class="gin-grid">
           <article class="gin-card esaurito" data-search="amazzoni dry gin erbaceo e complesso. agrumato e balsamico, con anima vegetale molto chiara. scorza di lime o foglia di alloro.">
@@ -973,6 +983,38 @@
             <p class="gin-similar"><strong>Simili in carta:</strong> Argintario (macchia sarda), Punta Mari (mirto e balsamico), Selvatiq Desert (stesso produttore)</p>
           </article>
         </div>
+          <article class="gin-card" data-search="occitan gin alpino, erbaceo, balsamico. ginepro dominante con note di pino, lavanda e erbe alpine occitane. scorza di limone o rametto di rosmarino.">
+            <div class="gin-name">Occitan Gin</div>
+            <p class="gin-desc">Alpino, erbaceo, balsamico. Ginepro dominante con note di pino, lavanda e erbe delle Alpi Occitane.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Lavanda alpina</span><span class="bot-tag">Pino</span><span class="bot-tag">Achillea</span><span class="bot-tag">Genziana</span><span class="bot-tag">Erbe alpine occitane</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o rametto di rosmarino.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Amiata (montano e balsamico), Nevaio Gin (alpino e gineproso), Selvatiq Desert (erbaceo e aromatico)</p>
+          </article>
+
+          <article class="gin-card" data-search="condesa gin clasica mediterraneo, floreale, leggermente erbaceo. agrumi e fiori bianchi in equilibrio con base gineprosa. scorza di limone o arancia.">
+            <div class="gin-name">Condesa Gin Clasica</div>
+            <p class="gin-desc">Mediterraneo, floreale, leggermente erbaceo. Agrumi e fiori bianchi in equilibrio con base gineprosa.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Fiori bianchi</span><span class="bot-tag">Scorza di limone</span><span class="bot-tag">Erbe mediterranee</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Angelica</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o arancia.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Gin Amiata (erbaceo e mediterraneo), Rame Italian Dry (mediterraneo aromatico), Maite Spiaggialunga (costiero e aromatico)</p>
+          </article>
+
+          <article class="gin-card" data-search="crosskeys gin erbaceo, secco, pulito. profilo classico con tocchi vegetali e agrumati. scorza di limone.">
+            <div class="gin-name">Crosskeys Gin</div>
+            <p class="gin-desc">Erbaceo, secco, pulito. Profilo classico con tocchi vegetali e agrumati.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Erbe aromatiche</span><span class="bot-tag">Scorza di limone</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Angelica</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Rame Italian Dry (erbaceo e mediterraneo), Gin Amiata (erbaceo e montano), Bombay Dry (secco e classico)</p>
+          </article>
+
+          <article class="gin-card" data-search="portofino dry gin mediterraneo costiero, fresco, floreale. note di basilico ligure, agrumi e fiori di ginestra. fetta di limone o basilico fresco.">
+            <div class="gin-name">Portofino Dry Gin</div>
+            <p class="gin-desc">Mediterraneo e costiero. Note di basilico ligure, agrumi e fiori di ginestra — profumo diretto della Riviera.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Basilico ligure</span><span class="bot-tag">Scorza di limone</span><span class="bot-tag">Fiori di ginestra</span><span class="bot-tag">Maggiorana</span><span class="bot-tag">Rosa canina</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Fetta di limone o basilico fresco.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Upperhand (fresco e erbaceo), Rame Italian Dry (mediterraneo), Maite Spiaggialunga (costiero e aromatico)</p>
+          </article>
+
       </details>
 
       <details class="category" data-category="sapidi e marini">
@@ -1043,8 +1085,9 @@
           <article class="gin-card" data-search="neverin veneziano compound gineproso balsamico speziato sapido. acqua di mare adriatico vino bianco ricetta 1724 frati cappuccini venezia. venti botaniche salvia rosmarino cardamomo pepe timut scorza di limone o oliva delicata.">
             <div class="gin-name">Neverin</div>
             <p class="gin-desc">Gineproso e balsamico con anima veneziana. Compound premium ispirato a una ricetta conventuale del 1724: oltre venti botaniche — salvia, alloro, cardamomo, pepe di Timut e molte altre — legate da acqua di mare dell'Adriatico e vino bianco, per una struttura secca, sapida e persistente.</p>
-            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Acqua di mare adriatico</span><span class="bot-tag">Vino bianco</span><span class="bot-tag">Oltre 20 botaniche conventuali veneziane</span></div>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Acqua di mare adriatico</span><span class="bot-tag">Vino bianco</span><span class="bot-tag">Salvia</span><span class="bot-tag">Alloro</span><span class="bot-tag">Cardamomo</span><span class="bot-tag">Pepe di Timut</span><span class="bot-tag">20+ botaniche da ricetta conventuale 1724</span></div>
+            
+            
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o oliva delicata.</p>
             <p class="gin-similar"><strong>Simili in carta:</strong> Gin Sale (sapido e balsamico), Laguna (veneziano e minerale), Capperi Gin (marino e gineproso)</p>
           </article>
@@ -1054,7 +1097,7 @@
       <details class="category" data-category="speziati e orientali">
         <summary class="category-header">
           <h3>🌶️ Speziati e orientali</h3>
-          <div class="category-meta">7 gin</div>
+          <div class="category-meta">8 gin</div>
         </summary>
         <div class="gin-grid">
           <article class="gin-card" data-search="il gin del bisonte intenso e originale, con peperoncino trinidad perfume, sentori tropicali, floreali e agrumati senza vera piccantezza. scorza d’arancia o pompelmo.">
@@ -1097,8 +1140,11 @@
             <p class="gin-similar"><strong>Simili in carta:</strong> Maite Furia (speziato e orientale), Il Gin del Bisonte (speziato e fruttato), Rame London Dry (speziato e pepato)</p>
           </article>
 
-          <article class="gin-card" data-search="piero xmas caldo e avvolgente. cannella, zenzero e arancia per un chiaro profilo natalizio. arancia disidratata e cannella.">
-            <div class="gin-name">Piero Xmas</div>
+          <article class="gin-card esaurito" data-search="piero xmas caldo e avvolgente. cannella, zenzero e arancia per un chiaro profilo natalizio. arancia disidratata e cannella.">
+            <div class="gin-name-row">
+              <div class="gin-name">Piero Xmas</div>
+              <span class="badge-esaurito">⛔ Esaurito</span>
+            </div>
             <p class="gin-desc">Caldo e avvolgente. Cannella, zenzero e arancia per un chiaro profilo natalizio.</p>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Cannella</span><span class="bot-tag">Zenzero</span><span class="bot-tag">Arancia disidratata</span><span class="bot-tag">Chiodi di garofano</span><span class="bot-tag">Spezie natalizie</span></div>
             <p class="gin-garnish"><strong>Garnish:</strong> Arancia disidratata e cannella.</p>
@@ -1113,12 +1159,20 @@
             <p class="gin-similar"><strong>Simili in carta:</strong> Opihr (speziato e pepato), Lavico Mangiantosa (speziato e secco), Maite Furia (pepato e speziato)</p>
           </article>
         </div>
+          <article class="gin-card" data-search="porcelain shanghai dry gin orientale, speziato, elegante. tè bianco cinese, pepe di sichuan e botaniche asiatiche in un profilo raffinato. scorza di limone o pepe di sichuan.">
+            <div class="gin-name">Porcelain Shanghai Dry Gin</div>
+            <p class="gin-desc">Orientale, speziato, elegante. Tè bianco cinese, pepe di Sichuan e botaniche asiatiche in un profilo raffinato.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Tè bianco cinese</span><span class="bot-tag">Pepe di Sichuan</span><span class="bot-tag">Radice di loto</span><span class="bot-tag">Gelsomino</span><span class="bot-tag">Angelica</span><span class="bot-tag">Zenzero</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o pepe di Sichuan.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Etsu Double Yuzu (orientale e agrumato), Arigatuono (giapponese e speziato), Opihr (speziato e orientale)</p>
+          </article>
+
       </details>
 
       <details class="category" data-category="secchi e gineprosi">
         <summary class="category-header">
           <h3>🌲 Secchi e gineprosi</h3>
-          <div class="category-meta">6 gin</div>
+          <div class="category-meta">9 gin</div>
         </summary>
         <div class="gin-grid">
           <article class="gin-card in-carta" data-search="bombay dry secco, classico, pulito. lemon twist.">
@@ -1132,14 +1186,18 @@
           <article class="gin-card in-carta" data-search="bombay sapphire secco, speziato, leggermente agrumato e floreale. spicchio di lime o zest di limone.">
             <div class="gin-name-row"><div class="gin-name">Bombay Sapphire</div><span class="badge-in-carta">★ In carta</span></div>
             <p class="gin-desc">Secco, speziato, leggermente agrumato e floreale.</p>
-            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Agrumi cornovagliesi</span><span class="bot-tag">Ginepro netto</span><span class="bot-tag">Botaniche secche e pulite</span></div>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro toscano</span><span class="bot-tag">Cubeb giavanesi</span><span class="bot-tag">Grains of paradise africani</span><span class="bot-tag">Liquirizia cinese</span><span class="bot-tag">Cassia vietnamita</span><span class="bot-tag">Mandorle spagnole</span><span class="bot-tag">Scorza di limone murciana</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Angelica</span><span class="bot-tag">Orris root</span></div>
+            
+            
             <p class="gin-garnish"><strong>Garnish:</strong> Spicchio di lime o zest di limone.</p>
             <p class="gin-similar"><strong>Simili in carta:</strong> Bombay Dry (stesso produttore, più secco), Bombay Sapphire Premier Cru (versione agrumata premium), Tanqueray Ten (secco e agrumato)</p>
           </article>
 
-          <article class="gin-card" data-search="piucinque ultra secco e classico. ginepro deciso, rifinito da salvia, bergamotto e angelica. scorza di bergamotto o limone.">
-            <div class="gin-name">PiuCinque</div>
+          <article class="gin-card esaurito" data-search="piucinque ultra secco e classico. ginepro deciso, rifinito da salvia, bergamotto e angelica. scorza di bergamotto o limone.">
+            <div class="gin-name-row">
+              <div class="gin-name">PiuCinque</div>
+              <span class="badge-esaurito">⛔ Esaurito</span>
+            </div>
             <p class="gin-desc">Ultra secco e classico. Ginepro deciso, rifinito da salvia, bergamotto e angelica.</p>
             <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Salvia</span><span class="bot-tag">Bergamotto</span><span class="bot-tag">Angelica</span><span class="bot-tag">Botaniche classiche ultra-secche</span></div>
             <p class="gin-garnish"><strong>Garnish:</strong> Scorza di bergamotto o limone.</p>
@@ -1173,6 +1231,30 @@
             <p class="gin-similar"><strong>Simili in carta:</strong> Malanova Old Tom (old tom speziato), Ginsanto e Cantucci Piatto al Bicchiere (old tom dolce), Nordes (morbido e fruttato)</p>
           </article>
         </div>
+          <article class="gin-card" data-search="broken bones gin gineproso, secco, deciso. ginepro in primo piano con radici classiche e lieve tocco speziato. scorza di limone.">
+            <div class="gin-name">Broken Bones Gin</div>
+            <p class="gin-desc">Gineproso, secco, deciso. Ginepro in primo piano con radici classiche e lieve tocco speziato.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Radice di angelica</span><span class="bot-tag">Orris root</span><span class="bot-tag">Liquirizia</span><span class="bot-tag">Scorza di limone</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Bombay Dry (secco e classico), Tarquin's Cornish Dry Gin (gineproso e pulito), PiuCinque (ultra secco)</p>
+          </article>
+
+          <article class="gin-card" data-search="london dry gin winestillery secco, classico, elegante. prodotto da un'enoteca, usa botaniche selezionate per un london dry equilibrato. scorza di limone.">
+            <div class="gin-name">London Dry Gin Winestillery</div>
+            <p class="gin-desc">Secco, classico, elegante. Prodotto da un'enoteca, usa botaniche selezionate per un London Dry equilibrato.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Scorza di limone</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Angelica</span><span class="bot-tag">Orris root</span><span class="bot-tag">Liquirizia</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Bombay Dry (secco e classico), Tarquin's Cornish Dry Gin (secco e pulito), Broken Bones Gin (gineproso e deciso)</p>
+          </article>
+
+          <article class="gin-card" data-search="bulldog gin secco, morbido, leggermente speziato. botaniche insolite come foglie di loto e semi di papavero per un london dry originale. scorza di limone o lime.">
+            <div class="gin-name">Bulldog Gin</div>
+            <p class="gin-desc">Secco, morbido, leggermente speziato. Botaniche insolite — foglie di loto e semi di papavero — per un London Dry originale.</p>
+            <div class="gin-botaniche"><strong>🌿 Botaniche chiave:</strong> <span class="bot-tag">Ginepro</span><span class="bot-tag">Foglie di loto</span><span class="bot-tag">Semi di papavero</span><span class="bot-tag">Scorza di limone</span><span class="bot-tag">Coriandolo</span><span class="bot-tag">Radice di angelica</span></div>
+            <p class="gin-garnish"><strong>Garnish:</strong> Scorza di limone o lime.</p>
+            <p class="gin-similar"><strong>Simili in carta:</strong> Bombay Sapphire (secco e speziato), Broken Bones Gin (gineproso e deciso), Tanqueray Ten (secco e agrumato)</p>
+          </article>
+
       </details>
 
       <details class="category" data-category="altri gin della carta">
