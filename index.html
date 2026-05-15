@@ -11,12 +11,10 @@
   <title>Poggio a Issi</title>
   <meta name="description" content="Poggio a Issi — Guide operative per il personale di sala."/>
 
-  <!-- Font ottimizzato: solo i pesi usati, display=swap evita blocco render -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 
-  <!-- Tema inline: evita flash bianco prima dello script -->
   <script>
     (function(){var t=localStorage.getItem('poggio-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
   </script>
@@ -38,6 +36,8 @@
       --gin:#768d45;     --gin-s:#dfe7cc;
       --cocktail:#7a5c8f;--cocktail-s:#ede0f5;
       --menu:#a06a45;    --menu-s:#f3e0d2;
+      --listino:#5b7a6e; --listino-s:#d8ebe6;
+      --prenotaz:#7a6b3a;--prenotaz-s:#ede8d0;
       --sh-sm:0 1px 3px rgba(33,45,24,.09);
       --sh-md:0 8px 20px rgba(33,45,24,.12);
     }
@@ -51,6 +51,8 @@
       --gin:#bfd78a;     --gin-s:#24301d;
       --cocktail:#c4a8e0;--cocktail-s:#2b2038;
       --menu:#d8a07a;    --menu-s:#2d221c;
+      --listino:#8ecaba; --listino-s:#1a2e2a;
+      --prenotaz:#d4c07a;--prenotaz-s:#2a2510;
       --sh-sm:0 1px 3px rgba(0,0,0,.22);
       --sh-md:0 8px 22px rgba(0,0,0,.36);
     }
@@ -65,7 +67,6 @@
       line-height:1.6;
       color:var(--text);
       background:var(--bg);
-      /* Un solo gradiente leggero invece dei 3 radial pesanti */
       background-image:linear-gradient(150deg,
         color-mix(in srgb,var(--primary) 7%,transparent) 0%,
         transparent 50%);
@@ -76,13 +77,9 @@
     a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
     button{cursor:pointer;border:none;background:none;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
-    /* ── VIEW TRANSITIONS API (Safari 18+, Chrome 111+) ── */
     @view-transition{navigation:auto}
-
-    /* Fallback fade per browser che non supportano View Transitions */
     @keyframes pgIn{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}
     main{animation:pgIn .2s ease both}
-    /* Se View Transitions è supportato, non serve il fallback */
     @supports(view-transition-name:none){main{animation:none}}
 
     /* ── TOPBAR ── */
@@ -127,7 +124,6 @@
     .nav-grid{
       display:grid;
       gap:1rem;
-      /* desktop: auto-fit min 220px; mobile: 2 col */
       grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));
     }
 
@@ -139,7 +135,6 @@
       border:1px solid color-mix(in srgb,var(--border) 78%,transparent);
       box-shadow:var(--sh-sm);
       display:flex;flex-direction:column;gap:.75rem;
-      /* Promuove il layer GPU: hover immediato, no jank */
       will-change:transform;
       transform:translateZ(0);
       transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease);
@@ -165,19 +160,30 @@
       background:color-mix(in srgb,var(--surface-2) 70%,transparent);
       color:var(--text-muted);font-weight:700;font-size:.85rem;flex-shrink:0;
     }
+    /* external link arrow */
+    .nav-arrow.ext::after{content:"↗"}
+    .nav-arrow:not(.ext)::after{content:"→"}
+    .nav-arrow{font-size:0}
+    .nav-arrow::after{font-size:.85rem}
+
     .nav-title{
       font-family:var(--font-display);
       font-size:clamp(1rem,.95rem + .3vw,1.25rem);
       line-height:1.1;
     }
+    .nav-sub{
+      font-size:.78rem;color:var(--text-muted);margin-top:.15rem;
+    }
 
     /* ── ACCENTI ── */
-    .wine-ui     .nav-icon{background:var(--wine-s);    color:var(--wine);    border-color:color-mix(in srgb,var(--wine) 18%,transparent)}
-    .food-ui     .nav-icon{background:var(--food-s);    color:var(--food);    border-color:color-mix(in srgb,var(--food) 18%,transparent)}
-    .stock-ui    .nav-icon{background:var(--stock-s);   color:var(--stock);   border-color:color-mix(in srgb,var(--stock) 18%,transparent)}
-    .gin-ui      .nav-icon{background:var(--gin-s);     color:var(--gin);     border-color:color-mix(in srgb,var(--gin) 18%,transparent)}
-    .cocktail-ui .nav-icon{background:var(--cocktail-s);color:var(--cocktail);border-color:color-mix(in srgb,var(--cocktail) 18%,transparent)}
-    .menu-ui     .nav-icon{background:var(--menu-s);    color:var(--menu);    border-color:color-mix(in srgb,var(--menu) 18%,transparent)}
+    .wine-ui      .nav-icon{background:var(--wine-s);     color:var(--wine);     border-color:color-mix(in srgb,var(--wine) 18%,transparent)}
+    .food-ui      .nav-icon{background:var(--food-s);     color:var(--food);     border-color:color-mix(in srgb,var(--food) 18%,transparent)}
+    .stock-ui     .nav-icon{background:var(--stock-s);    color:var(--stock);    border-color:color-mix(in srgb,var(--stock) 18%,transparent)}
+    .gin-ui       .nav-icon{background:var(--gin-s);      color:var(--gin);      border-color:color-mix(in srgb,var(--gin) 18%,transparent)}
+    .cocktail-ui  .nav-icon{background:var(--cocktail-s); color:var(--cocktail); border-color:color-mix(in srgb,var(--cocktail) 18%,transparent)}
+    .menu-ui      .nav-icon{background:var(--menu-s);     color:var(--menu);     border-color:color-mix(in srgb,var(--menu) 18%,transparent)}
+    .listino-ui   .nav-icon{background:var(--listino-s);  color:var(--listino);  border-color:color-mix(in srgb,var(--listino) 18%,transparent)}
+    .prenotaz-ui  .nav-icon{background:var(--prenotaz-s); color:var(--prenotaz); border-color:color-mix(in srgb,var(--prenotaz) 18%,transparent)}
 
     /* ── RESPONSIVE ── */
     @media(max-width:640px){
@@ -218,39 +224,48 @@
       <nav class="nav-grid" aria-label="Sezioni principali">
 
         <a class="nav-card food-ui" href="abbinamenti.html">
-          <div class="nav-top"><div class="nav-icon">🍽️</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">🍽️</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">Abbinamenti</div>
         </a>
 
         <a class="nav-card wine-ui" href="abc-dei-vini.html">
-          <div class="nav-top"><div class="nav-icon">🍷</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">🍷</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">ABC dei Vini</div>
         </a>
 
         <a class="nav-card gin-ui" href="guida-gin-sala.html">
-          <div class="nav-top"><div class="nav-icon">🍸</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">🍸</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">Guida Gin</div>
         </a>
 
         <a class="nav-card cocktail-ui" href="guida-cocktail.html">
-          <div class="nav-top"><div class="nav-icon">🍹</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">🍹</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">Guida Cocktail</div>
         </a>
 
-        <!-- ⚠️ href corretto: verifica che il file si chiami esattamente "menu.html" -->
         <a class="nav-card menu-ui" href="menu.html">
-          <div class="nav-top"><div class="nav-icon">📋</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">📋</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">Menù 2026</div>
         </a>
 
         <a class="nav-card stock-ui" href="giacenze.html">
-          <div class="nav-top"><div class="nav-icon">📦</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">📦</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">Giacenze</div>
         </a>
 
         <a class="nav-card stock-ui" href="magazzino-ordini.html">
-          <div class="nav-top"><div class="nav-icon">🛒</div><span class="nav-arrow">→</span></div>
+          <div class="nav-top"><div class="nav-icon">🛒</div><span class="nav-arrow" aria-hidden="true"></span></div>
           <div class="nav-title">Ordini</div>
+        </a>
+
+        <a class="nav-card listino-ui" href="listino_fornitori.html">
+          <div class="nav-top"><div class="nav-icon">💶</div><span class="nav-arrow" aria-hidden="true"></span></div>
+          <div class="nav-title">Listino Prezzi</div>
+        </a>
+
+        <a class="nav-card prenotaz-ui" href="https://prenotazioni-poggioaissi.netlify.app/" target="_blank" rel="noopener noreferrer">
+          <div class="nav-top"><div class="nav-icon">📅</div><span class="nav-arrow ext" aria-label="link esterno"></span></div>
+          <div class="nav-title">Gestionale Prenotazioni</div>
         </a>
 
       </nav>

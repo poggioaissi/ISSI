@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="theme-color" content="#eef1e8" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#111611" media="(prefers-color-scheme: dark)"/>
+<title>Listino Fornitori – Poggio a Issi</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<script>(function(){var t=localStorage.getItem('poggio-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<style>
+/* ── Design tokens identici al sito ── */
+:root {
+  --font-display:"Baloo 2",cursive;
+  --font-body:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+  --radius-full:9999px;
+  --ease:160ms cubic-bezier(.16,1,.3,1);
+  --text-xs:clamp(0.72rem,.68rem + .2vw,.8rem);
+  --text-sm:clamp(0.82rem,.78rem + .2vw,.9rem);
+  --text-base:clamp(.95rem,.9rem + .22vw,1.05rem);
+}
+:root,[data-theme="light"]{
+  --bg:#eef1e8;--surface:#f7f8f2;--surface-2:#e6ebde;--border:#bcc7b1;
+  --text:#2d3a23;--text-muted:#55664a;--text-faint:#87957d;
+  --primary:#7a8f49;--primary-hi:#dde6c9;
+  --stock:#58758b;--stock-s:#dce7ef;
+  --sh-sm:0 1px 3px rgba(33,45,24,.09);
+  --sh-md:0 8px 20px rgba(33,45,24,.12);
+  /* fornitori */
+  --prinz-bg:#dbeafe;--prinz-fg:#1e40af;
+  --glou-bg:#dcfce7;--glou-fg:#15803d;
+  --gros-bg:#fef3c7;--gros-fg:#92400e;
+  /* categorie */
+  --c-gin:#e3f2fd;--c-gin-t:#1565c0;
+  --c-birra:#fff8e1;--c-birra-t:#e65100;
+  --c-mixer:#f3e5f5;--c-mixer-t:#6a1b9a;
+  --c-soft:#e8f5e9;--c-soft-t:#2e7d32;
+  --c-co2:#eceff1;--c-co2-t:#37474f;
+  --c-bar:#fff3e0;--c-bar-t:#bf360c;
+  --c-spirit:#fce4ec;--c-spirit-t:#880e4f;
+  --c-acqua:#e0f7fa;--c-acqua-t:#006064;
+  --c-vino:#f9fbe7;--c-vino-t:#558b2f;
+  --green:#27ae60;
+}
+[data-theme="dark"]{
+  --bg:#111611;--surface:#1a2219;--surface-2:#253026;--border:#394738;
+  --text:#e6eadc;--text-muted:#b4bea8;--text-faint:#7f8b77;
+  --primary:#a6bf67;--primary-hi:#2d3a24;
+  --stock:#9dbed0;--stock-s:#1b2730;
+  --sh-sm:0 1px 3px rgba(0,0,0,.22);
+  --sh-md:0 8px 22px rgba(0,0,0,.36);
+  --prinz-bg:#1e3a8a;--prinz-fg:#93c5fd;
+  --glou-bg:#14532d;--glou-fg:#86efac;
+  --gros-bg:#451a03;--gros-fg:#fcd34d;
+  --c-gin:#1e3a5f;--c-gin-t:#93c5fd;
+  --c-birra:#3b2a00;--c-birra-t:#fbbf24;
+  --c-mixer:#2d1b4e;--c-mixer-t:#c084fc;
+  --c-soft:#14532d;--c-soft-t:#86efac;
+  --c-co2:#1c2526;--c-co2-t:#94a3b8;
+  --c-bar:#431407;--c-bar-t:#fb923c;
+  --c-spirit:#4a0e24;--c-spirit-t:#f9a8d4;
+  --c-acqua:#0c2a2e;--c-acqua-t:#67e8f9;
+  --c-vino:#1a2e05;--c-vino-t:#a3e635;
+  --green:#4ade80;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  min-height:100dvh;
+  font-family:var(--font-body);
+  font-size:var(--text-base);
+  line-height:1.6;
+  color:var(--text);
+  background:var(--bg);
+  background-image:linear-gradient(150deg,color-mix(in srgb,var(--primary) 7%,transparent) 0%,transparent 50%);
+  overscroll-behavior-y:none;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;border:none;background:none;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  border-bottom:1px solid color-mix(in srgb,var(--border) 70%,transparent);
+}
+.topbar-inner{
+  width:min(1100px,calc(100% - 2rem));margin-inline:auto;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:.9rem 0;
+}
+.brand{display:flex;align-items:center;gap:.65rem;min-width:0}
+.brand-back{
+  display:grid;place-items:center;width:36px;height:36px;border-radius:10px;
+  flex-shrink:0;border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+  background:var(--surface);color:var(--text-muted);font-size:1rem;font-weight:700;
+  box-shadow:var(--sh-sm);transition:background var(--ease),color var(--ease);
+}
+.brand-back:hover{background:var(--surface-2);color:var(--text)}
+.brand-mark{
+  width:40px;height:40px;border-radius:13px;flex-shrink:0;
+  background:var(--primary-hi);color:var(--primary);
+  display:grid;place-items:center;font-size:1.1rem;
+  box-shadow:var(--sh-sm);
+  border:1px solid color-mix(in srgb,var(--primary) 18%,var(--border));
+}
+.brand-title{font-family:var(--font-display);font-size:clamp(1.2rem,1rem + 1vw,1.7rem);line-height:.95;letter-spacing:.02em}
+.brand-sub{color:var(--text-muted);font-size:var(--text-xs);margin-top:2px}
+.theme-btn{
+  width:44px;height:44px;border-radius:var(--radius-full);flex-shrink:0;
+  border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+  background:var(--surface);box-shadow:var(--sh-sm);
+  display:grid;place-items:center;font-size:1.1rem;
+  transition:background var(--ease);
+}
+.theme-btn:hover{background:var(--surface-2)}
+@media(max-width:760px){
+  .topbar-inner{width:min(100%,calc(100% - 1rem))}
+  .brand-sub{display:none}
+}
+
+/* ── SHELL ── */
+.shell{
+  width:min(1100px,calc(100% - 2rem));
+  margin-inline:auto;
+  padding:1.2rem 0 4rem;
+  display:grid;gap:1rem;
+}
+@media(max-width:760px){.shell{width:min(100%,calc(100% - 1rem))}}
+
+/* ── SEARCH + FILTRI ── */
+.controls{display:flex;flex-direction:column;gap:.6rem}
+.search-wrap{
+  display:flex;align-items:center;gap:.75rem;
+  background:var(--surface);
+  border:1px solid color-mix(in srgb,var(--border) 85%,transparent);
+  border-radius:14px;padding:0 1rem;min-height:50px;
+  box-shadow:var(--sh-sm);
+  transition:border-color var(--ease),box-shadow var(--ease);
+}
+.search-wrap:focus-within{
+  border-color:color-mix(in srgb,var(--primary) 40%,var(--border));
+  box-shadow:var(--sh-md);
+}
+.search-wrap svg{color:var(--text-faint);flex-shrink:0}
+.search-wrap input{
+  width:100%;background:transparent;border:0;outline:none;
+  font-size:var(--text-sm);color:var(--text);
+}
+.search-wrap input::placeholder{color:var(--text-faint)}
+
+.filter-row{display:flex;gap:.4rem;flex-wrap:wrap}
+.filter-btn{
+  padding:.4rem .9rem;border-radius:var(--radius-full);
+  border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+  background:var(--surface);color:var(--text-muted);
+  font-size:var(--text-xs);font-weight:700;
+  box-shadow:var(--sh-sm);
+  transition:background var(--ease),color var(--ease),border-color var(--ease);
+  touch-action:manipulation;min-height:34px;
+}
+.filter-btn:hover{border-color:var(--primary);color:var(--primary)}
+.filter-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.filter-btn.f-prinz.active{background:var(--prinz-fg);border-color:var(--prinz-fg);color:#fff}
+.filter-btn.f-glou.active{background:var(--glou-fg);border-color:var(--glou-fg);color:#fff}
+.filter-btn.f-gros.active{background:var(--gros-fg);border-color:var(--gros-fg);color:#fff}
+
+/* ── COUNT ── */
+.count-label{font-size:var(--text-xs);color:var(--text-faint);padding:0 2px}
+
+/* ── TABELLA ── */
+.table-wrap{
+  background:var(--surface);
+  border:1px solid color-mix(in srgb,var(--border) 78%,transparent);
+  border-radius:18px;overflow:hidden;
+  box-shadow:var(--sh-sm);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+table{width:100%;border-collapse:collapse;min-width:360px}
+thead{background:color-mix(in srgb,var(--primary) 90%,var(--text))}
+thead th{
+  padding:10px 12px;text-align:left;
+  font-size:var(--text-xs);font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+  color:#fff;white-space:nowrap;cursor:pointer;user-select:none;
+  transition:background var(--ease);
+}
+thead th:hover{background:color-mix(in srgb,var(--primary) 75%,var(--text))}
+tbody tr{border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 50%,transparent)}
+tbody tr:hover{background:color-mix(in srgb,var(--primary) 8%,transparent)}
+td{padding:9px 12px;font-size:var(--text-sm)}
+td.t-desc{white-space:normal;min-width:180px}
+td.t-um{color:var(--text-faint);font-size:var(--text-xs);white-space:nowrap}
+td.t-price{
+  font-weight:700;color:var(--green);
+  text-align:right;white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  font-size:var(--text-sm);
+}
+
+/* ── BADGE fornitore ── */
+.badge{
+  display:inline-block;padding:2px 7px;
+  border-radius:var(--radius-full);
+  font-size:.68rem;font-weight:700;margin-right:5px;
+  vertical-align:middle;white-space:nowrap;
+}
+.b-prinz{background:var(--prinz-bg);color:var(--prinz-fg)}
+.b-glou {background:var(--glou-bg); color:var(--glou-fg)}
+.b-gros {background:var(--gros-bg); color:var(--gros-fg)}
+
+/* ── BADGE categoria ── */
+.cat{
+  display:inline-block;padding:2px 6px;
+  border-radius:var(--radius-full);
+  font-size:.65rem;font-weight:600;margin-right:4px;
+  vertical-align:middle;white-space:nowrap;
+}
+.c-gin   {background:var(--c-gin);   color:var(--c-gin-t)}
+.c-birra {background:var(--c-birra); color:var(--c-birra-t)}
+.c-mixer {background:var(--c-mixer); color:var(--c-mixer-t)}
+.c-soft  {background:var(--c-soft);  color:var(--c-soft-t)}
+.c-co2   {background:var(--c-co2);   color:var(--c-co2-t)}
+.c-bar   {background:var(--c-bar);   color:var(--c-bar-t)}
+.c-spirit{background:var(--c-spirit);color:var(--c-spirit-t)}
+.c-acqua {background:var(--c-acqua); color:var(--c-acqua-t)}
+.c-vino  {background:var(--c-vino);  color:var(--c-vino-t)}
+
+/* ── EMPTY ── */
+.empty{
+  padding:2.5rem 1rem;text-align:center;
+  color:var(--text-muted);font-size:var(--text-sm);
+}
+
+/* ── NOTE ── */
+.note{
+  font-size:var(--text-xs);color:var(--text-faint);
+  padding:.5rem 2px;line-height:1.8;
+}
+
+/* ── MOBILE: nasconde colonna U.M. sotto 500px ── */
+@media(max-width:500px){
+  .col-um{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a href="index.html" class="brand-back" aria-label="Torna alla home">←</a>
+      <div class="brand-mark" aria-hidden="true">💶</div>
+      <div>
+        <div class="brand-title">Listino Fornitori</div>
+        <div class="brand-sub">Prezzi netti · IVA esclusa · Agg. 13/05/2026</div>
+      </div>
+    </div>
+    <button class="theme-btn" id="themeToggle" aria-label="Cambia tema">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Cerca articolo o categoria…"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        aria-label="Cerca nel listino" oninput="applyFilters()"/>
+    </div>
+    <div class="filter-row" role="group" aria-label="Filtra per fornitore">
+      <button class="filter-btn active"    onclick="setFornitore('all',event)">Tutti</button>
+      <button class="filter-btn f-prinz"   onclick="setFornitore('PRINZ',event)">PRINZ</button>
+      <button class="filter-btn f-glou"    onclick="setFornitore('GLOU',event)">GlouGlou</button>
+      <button class="filter-btn f-gros"    onclick="setFornitore('GROS',event)">GrosMarket</button>
+    </div>
+  </div>
+
+  <div class="count-label" id="countLabel" aria-live="polite"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">Fornitore ↕</th>
+          <th onclick="sortTable(1)">Descrizione ↕</th>
+          <th class="col-um">U.M.</th>
+          <th onclick="sortTable(3)">Prezzo Netto ↕</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty" id="emptyState" style="display:none">Nessun articolo trovato.</div>
+  </div>
+
+  <p class="note">
+    <strong>PRINZ</strong>: include già sconto pagamento 2% &nbsp;·&nbsp;
+    <strong>GlouGlou</strong>: Totale riga ÷ Qtà &nbsp;·&nbsp;
+    <strong>GrosMarket</strong>: Listino × (1–15,59%) sconto "A" &nbsp;·&nbsp;
+    IVA esclusa
+  </p>
+
+</div>
+
+<script>
+// ── COSTANTI ──────────────────────────────────────────────────────────────────
+const PRINZ='PRINZ', GLOU='GLOU', GROS='GROS';
+
+const CAT={
+  gin:   {label:'Gin',            cls:'c-gin'},
+  birra: {label:'Birra/Fusto',    cls:'c-birra'},
+  mixer: {label:'Mixer/Sciroppo', cls:'c-mixer'},
+  soft:  {label:'Soft Drink',     cls:'c-soft'},
+  co2:   {label:'CO2',            cls:'c-co2'},
+  bar:   {label:'Bar/Garnish',    cls:'c-bar'},
+  spirit:{label:'Spirit/Liquore', cls:'c-spirit'},
+  acqua: {label:'Acqua',          cls:'c-acqua'},
+  vino:  {label:'Vino/Bollicine', cls:'c-vino'},
+};
+
+// ── PRINZ ─────────────────────────────────────────────────────────────────────
+const prinzRaw=[
+  {desc:"Gin J.Rose Manara – Tutte le referenze (JR01/02/04/05/06/Flamenco)", um:"CL.70X1 SB",       l:44.66, sc:20, cat:"gin"},
+  {desc:"Gin Maite Spiaggia Lunga",                                           um:"CL.70X1 SB",       l:44.66, sc:20, cat:"gin"},
+  {desc:"Gin Maite Fiamma",                                                   um:"CL.50X1 SB",       l:38.67, sc:20, cat:"gin"},
+  {desc:"Gin Amiata CL.70",                                                   um:"CL.70X1 SB",       l:37.35, sc:20, cat:"gin"},
+  {desc:"Gin Peter in Florence London Dry",                                   um:"LT.1X1 SB",        l:63.00, sc:30, cat:"gin"},
+  {desc:"Birra Raffo Grezza",                                                 um:"FS LT.20 FR",      l:112.85,sc:30, cat:"birra"},
+  {desc:"Kinley Tonica Premix",                                               um:"FS LT.18 FR",      l:54.46, sc:40, cat:"soft"},
+  {desc:"Kinley Lemon Premix",                                                um:"FS LT.18 FR",      l:54.46, sc:40, cat:"soft"},
+  {desc:"Coca Cola Premix",                                                   um:"FS LT.18 FR",      l:61.74, sc:40, cat:"soft"},
+  {desc:"Promo Dandydrink Tonica",                                            um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Tonica Zero",                                       um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Gingerbeer",                                        um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Limone",                                            um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Double Pink",                                       um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Mixer Succo di Lime",                                                um:"CL.70X1 SB",       l:8.68,  sc:20, cat:"mixer"},
+  {desc:"Polot Sciroppo di Agave",                                            um:"CL.70X1 SB",       l:14.45, sc:20, cat:"mixer"},
+  {desc:"Mixer Zucchero di Canna",                                            um:"LT.1X1 SB",        l:9.07,  sc:20, cat:"mixer"},
+  {desc:"Polot Sciroppo Granatina",                                           um:"CL.70X1 SB",       l:10.00, sc:20, cat:"mixer"},
+  {desc:"Naturera Succo di Limone 100% PET",                                  um:"LT.1X1 SB",        l:8.70,  sc:20, cat:"mixer"},
+  {desc:"Lillet Blanc",                                                       um:"CL.75X1 SB",       l:22.23, sc:20, cat:"spirit"},
+  {desc:"Liquore Ancho Reyes Verde",                                          um:"CL.70X1 SB",       l:43.20, sc:20, cat:"spirit"},
+  {desc:"Bombola Prestop CO2 LT.14",                                          um:"LT.14 CO",         l:49.12, sc:0,  cat:"co2"},
+  {desc:"Dietor Dolcificante Box 300 bustine",                                um:"BOX 300 BUST CR",  l:16.00, sc:18, cat:"bar"},
+  {desc:"Ciliegie al Maraschino c/Gambo",                                     um:"GR 750X1 PZ",      l:15.38, sc:18, cat:"bar"},
+  {desc:"Olive Verdi Denoccolate V.V.",                                       um:"KG 1.5/0.75X1 PZ", l:12.90, sc:18, cat:"bar"},
+];
+
+// ── GLOU GLOU ─────────────────────────────────────────────────────────────────
+const glouRaw=[
+  {desc:"Gin Bombay Dry LT 1",                              um:"BT",       n:16.02, cat:"gin"},
+  {desc:"Gin Bombay Sapphire CL 70",                        um:"BT",       n:14.37, cat:"gin"},
+  {desc:"Gin Bombay Sapphire LT 1",                         um:"BT",       n:18.99, cat:"gin"},
+  {desc:"Gin Bombay Sapphire LT 1.75",                      um:"BT",       n:40.07, cat:"gin"},
+  {desc:"Gin Monkey 47 CL 50 Premium",                      um:"BT",       n:39.30, cat:"gin"},
+  {desc:"Gin Nordes CL 70 Super Premium",                   um:"BT",       n:31.55, cat:"gin"},
+  {desc:"Gin Piero London Dry CL 70 STG Super Premium",     um:"BT",       n:33.69, cat:"gin"},
+  {desc:"Gin Tanqueray Ten LT 1 Premium",                   um:"BT",       n:30.48, cat:"gin"},
+  {desc:"Birra Beck's Pils CL 33 VAP",                      um:"CT 24pz",  n:17.66, cat:"birra"},
+  {desc:"Birra Ceres Strong CL 33 VAP DOQR",                um:"CT 24pz",  n:28.57, cat:"birra"},
+  {desc:"Birra Corona CL 33 VAP",                           um:"CT 24pz",  n:24.51, cat:"birra"},
+  {desc:"Birra Menabrea Bionda CL 33 VAP",                  um:"CT 24pz",  n:27.56, cat:"birra"},
+  {desc:"Birra Tennent's Super CL 33 VAP",                  um:"CT 24pz",  n:33.57, cat:"birra"},
+  {desc:"Coca Cola Lattina Sleek CL 33 x24",                um:"CF",       n:13.84, cat:"soft"},
+  {desc:"Coca Cola Zero Lattina Sleek CL 33 x24",           um:"CF",       n:13.84, cat:"soft"},
+  {desc:"Coca Cola LT 1.5 PET",                             um:"CF 6pz",   n:11.97, cat:"soft"},
+  {desc:"Fanta Lattina Sleek CL 33 x24",                    um:"CF",       n:13.84, cat:"soft"},
+  {desc:"Fuze Tea Limone Lattina Sleek CL 33",              um:"CF 24pz",  n:17.51, cat:"soft"},
+  {desc:"Fuze Tea Pesca Lattina Sleek CL 33",               um:"CF 24pz",  n:17.51, cat:"soft"},
+  {desc:"Lemonsoda LT 1 PET",                               um:"CF 6pz",   n:10.04, cat:"soft"},
+  {desc:"Red Bull CL 25 Lattina",                           um:"CF 24pz",  n:27.20, cat:"soft"},
+  {desc:"Schweppes Lemon LT 1 PET",                         um:"CF 6pz",   n:9.92,  cat:"soft"},
+  {desc:"Schweppes Tonica LT 1 PET",                        um:"CF 6pz",   n:13.78, cat:"soft"},
+  {desc:"Sprite Lattina Sleek CL 33 x24",                   um:"CF",       n:13.44, cat:"soft"},
+  {desc:"Succo Yoga Ananas 100% ML 200 VAP",                um:"CF 24pz",  n:22.77, cat:"soft"},
+  {desc:"Succo Yoga Arancia Sicilia 100% ML 200 VAP",       um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Succo Yoga Mela Verde ML 200 VAP",                 um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Succo Yoga Pera ML 200 VAP",                       um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Succo Yoga Pesca ML 200 VAP",                      um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Acqua San Benedetto Gas CL 50 PET",                um:"CF 24pz",  n:6.14,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Nat CL 50 PET",                um:"CF 24pz",  n:6.14,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Tower Gas LT 1 PET",           um:"CF 12pz",  n:5.10,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Tower Nat LT 1 PET",           um:"CF 12pz",  n:5.10,  cat:"acqua"},
+  {desc:"Amaretto Disaronno LT 1",                          um:"BT",       n:20.11, cat:"spirit"},
+  {desc:"Amaro Jagermeister LT 1 Est.",                     um:"BT",       n:14.53, cat:"spirit"},
+  {desc:"Amaro Montenegro CL 70",                           um:"BT",       n:15.94, cat:"spirit"},
+  {desc:"Amaro Montenegro LT 1",                            um:"BT",       n:19.64, cat:"spirit"},
+  {desc:"Amaro Montenegro LT 1.5",                          um:"BT",       n:34.15, cat:"spirit"},
+  {desc:"Aperitivo Bitter Martini LT 1",                    um:"BT",       n:12.25, cat:"spirit"},
+  {desc:"Brandy Vecchia Romagna CL.150_40",                 um:"BT",       n:27.19, cat:"spirit"},
+  {desc:"Crema Baileys Irish Cream LT 1",                   um:"BT",       n:18.22, cat:"spirit"},
+  {desc:"Liquore Passoa LT 1",                              um:"BT",       n:15.92, cat:"spirit"},
+  {desc:"Liquore Saint Germain CL 70 Premium",              um:"BT",       n:29.84, cat:"spirit"},
+  {desc:"Liquore Sambuca Molinari LT 1 Est.",               um:"BT",       n:15.35, cat:"spirit"},
+  {desc:"Liquore Sambuca Molinari LT 1.5",                  um:"BT",       n:33.11, cat:"spirit"},
+  {desc:"Martini Ambrato CL 75",                            um:"BT",       n:14.26, cat:"spirit"},
+  {desc:"Martini Bitter Riserva Speciale CL 70",            um:"BT",       n:15.44, cat:"spirit"},
+  {desc:"Martini Rubino CL 75",                             um:"BT",       n:13.29, cat:"spirit"},
+  {desc:"Martini Vibrante CL 75 Analcolico",                um:"BT",       n:10.32, cat:"spirit"},
+  {desc:"Rum Bacardi Carta Blanca LT 1",                    um:"BT",       n:14.94, cat:"spirit"},
+  {desc:"Rum Bacardi Carta Oro LT 1",                       um:"BT",       n:15.94, cat:"spirit"},
+  {desc:"Rum Gosling's Black Seal LT 1 Super Premium",      um:"BT",       n:23.06, cat:"spirit"},
+  {desc:"Rum Plantation OFTD Overproof CL 70 Super Premium",um:"BT",       n:30.07, cat:"spirit"},
+  {desc:"Rum Santa Teresa 1796 CL 70",                      um:"BT",       n:40.59, cat:"spirit"},
+  {desc:"Tequila Cazadores Blanco CL 70",                   um:"BT",       n:17.02, cat:"spirit"},
+  {desc:"Tequila Patron Reposado CL 70 Premium",            um:"BT",       n:52.28, cat:"spirit"},
+  {desc:"Tequila Patron Silver CL 70 Premium",              um:"BT",       n:46.99, cat:"spirit"},
+  {desc:"Tequila Patron XO Café CL 70 Premium",             um:"BT",       n:42.90, cat:"spirit"},
+  {desc:"Vecchio Amaro del Capo LT 1 F.lli Caffo",          um:"BT",       n:19.52, cat:"spirit"},
+  {desc:"Vecchio Amaro del Capo LT 1.5 F.lli Caffo",        um:"BT",       n:25.14, cat:"spirit"},
+  {desc:"Vermouth Martini Bianco LT 1 New",                 um:"BT",       n:8.12,  cat:"spirit"},
+  {desc:"Vermouth Martini Extra Dry LT 1",                  um:"BT",       n:9.29,  cat:"spirit"},
+  {desc:"Vermouth Martini Rosso LT 1 New",                  um:"BT",       n:8.50,  cat:"spirit"},
+  {desc:"Vodka Eristoff Bianca LT 1",                       um:"BT",       n:10.67, cat:"spirit"},
+  {desc:"Vodka Grey Goose CL 70 Premium",                   um:"BT",       n:34.48, cat:"spirit"},
+  {desc:"Vodka Grey Goose LT 1.5 Premium",                  um:"BT",       n:121.00,cat:"spirit"},
+  {desc:"Vodka Keglevich Pesca LT 1",                       um:"BT",       n:10.25, cat:"spirit"},
+  {desc:"Whisky Dewar's White Label CL 70",                 um:"BT",       n:14.90, cat:"spirit"},
+  {desc:"Whisky Wild Turkey 101 Bourbon CL 70",             um:"BT",       n:31.00, cat:"spirit"},
+  {desc:"Gran Cuvée Brut CL 75 Corte delle Calli Serena",   um:"BT",       n:14.75, cat:"vino"},
+  {desc:"Arachidi KG 1",                                    um:"PZ",       n:4.86,  cat:"bar"},
+  {desc:"Patatina Classica GR 475 x5",                      um:"CT",       n:2.90,  cat:"bar"},
+  {desc:"Tortilla Natural GR 400 x7",                       um:"CT",       n:2.60,  cat:"bar"},
+];
+
+// ── GROS MARKET ───────────────────────────────────────────────────────────────
+const grosRaw=[
+  {desc:"Gin Sale Marino CL 70",              um:"BT",      n:18.49, cat:"gin"},
+  {desc:"Gin LT.1 Bulldog",                   um:"BT",      n:21.19, cat:"gin"},
+  {desc:"Gin CL.70 Nouaison",                 um:"BT",      n:16.80, cat:"gin"},
+  {desc:"Gin CL.70 Botanist",                 um:"BT",      n:16.80, cat:"gin"},
+  {desc:"Amaro Montenegro LT 1.5",            um:"BT",      n:20.17, cat:"spirit"},
+  {desc:"Vecchia Romagna CL.150_40",          um:"BT",      n:19.33, cat:"spirit"},
+  {desc:"Acqua San Benedetto Gas CL 50 PET",  um:"CF 24pz", n:3.12,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Nat CL 50 PET",  um:"CF 24pz", n:3.12,  cat:"acqua"},
+];
+
+// ── CALCOLO ───────────────────────────────────────────────────────────────────
+const prinzData = prinzRaw.map(r => {
+  const netto = r.l * (1 - r.sc/100);
+  return {fornitore:PRINZ, desc:r.desc, um:r.um, cat:r.cat, netto:netto*0.98};
+});
+const glouData  = glouRaw.map(r  => ({fornitore:GLOU, desc:r.desc,  um:r.um,  cat:r.cat, netto:r.n}));
+const grosData  = grosRaw.map(r  => ({fornitore:GROS, desc:r.desc,  um:r.um,  cat:r.cat, netto:r.n}));
+
+let allData = [...prinzData, ...glouData, ...grosData];
+let activeFor = 'all';
+let activeSortCol = null;
+
+// ── ORDINAMENTO ───────────────────────────────────────────────────────────────
+const CAT_ORDER = ['acqua','bar','birra','co2','gin','mixer','soft','spirit','vino'];
+function defaultSort(arr){
+  return [...arr].sort((a,b)=>{
+    const ca=CAT_ORDER.indexOf(a.cat), cb=CAT_ORDER.indexOf(b.cat);
+    if(ca!==cb) return (ca===-1?99:ca)-(cb===-1?99:cb);
+    return a.desc.localeCompare(b.desc,'it');
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function fmt(n){ return '€\u202f'+n.toFixed(2).replace('.',','); }
+function forBadge(f){
+  if(f===PRINZ) return `<span class="badge b-prinz">PRINZ</span>`;
+  if(f===GLOU)  return `<span class="badge b-glou">GlouGlou</span>`;
+  return `<span class="badge b-gros">GrosMarket</span>`;
+}
+function catBadge(cat){
+  const c=CAT[cat]||CAT.spirit;
+  return `<span class="cat ${c.cls}">${c.label}</span>`;
+}
+
+function renderTable(rows){
+  const tb = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  if(!rows.length){
+    tb.innerHTML=''; empty.style.display='';
+    document.getElementById('countLabel').textContent='';
+    return;
+  }
+  empty.style.display='none';
+  tb.innerHTML = rows.map(r=>`
+    <tr>
+      <td style="white-space:nowrap">${forBadge(r.fornitore)}</td>
+      <td class="t-desc">${catBadge(r.cat)}${r.desc}</td>
+      <td class="t-um col-um">${r.um}</td>
+      <td class="t-price">${fmt(r.netto)}</td>
+    </tr>`).join('');
+  document.getElementById('countLabel').textContent = rows.length+' articoli';
+}
+
+function applyFilters(){
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let rows = allData;
+  if(activeFor!=='all') rows=rows.filter(r=>r.fornitore===activeFor);
+  if(q) rows=rows.filter(r=>
+    r.desc.toLowerCase().includes(q)||
+    (CAT[r.cat]?.label||'').toLowerCase().includes(q)||
+    r.fornitore.toLowerCase().includes(q)
+  );
+  if(!activeSortCol) rows=defaultSort(rows);
+  renderTable(rows);
+}
+
+function setFornitore(f,e){
+  activeFor=f; activeSortCol=null;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  applyFilters();
+}
+
+let sortDir={};
+function sortTable(col){
+  activeSortCol=col;
+  const keys=['fornitore','desc','um','netto'];
+  const k=keys[col];
+  sortDir[col]=!sortDir[col];
+  const get=r=>{ const v=r[k]; return typeof v==='number'?v:v.toLowerCase(); };
+  allData=[...allData].sort((a,b)=>{ const av=get(a),bv=get(b); return sortDir[col]?(av>bv?1:-1):(av<bv?1:-1); });
+  applyFilters();
+}
+
+// ── TEMA ──────────────────────────────────────────────────────────────────────
+(function(){
+  const root=document.documentElement;
+  const toggle=document.getElementById('themeToggle');
+  const icon=document.getElementById('themeIcon');
+  function sync(){ icon.textContent=root.getAttribute('data-theme')==='dark'?'☀️':'🌙'; }
+  sync();
+  toggle.addEventListener('click',function(){
+    const next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    localStorage.setItem('poggio-theme',next);
+    sync();
+  });
+})();
+
+applyFilters();
+</script>
+</body>
+</html>
