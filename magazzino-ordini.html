@@ -861,9 +861,14 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   background: var(--color-surface-3);
   border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   border-radius: 8px; padding: 3px 10px; flex-shrink: 0;
-  white-space: nowrap; min-width: 80px; text-align: center;
+  white-space: nowrap; min-width: 130px; text-align: center;
 }
 .order-item-name { flex: 1; }
+.order-item-note {
+  font-size: .7rem; font-weight: 400;
+  color: var(--color-text-faint);
+  margin-left: 4px;
+}
 
 /* ── MODAL BUTTONS ── */
 .btn-copy {
@@ -1055,9 +1060,149 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 }
 .scroll-top.visible { opacity: 1; pointer-events: all; }
 .scroll-top:hover { color: var(--color-text); }
+
+/* ── LOCK SCREEN ── */
+#lockScreen {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 50%),
+    radial-gradient(circle at 75% 80%, color-mix(in srgb, var(--color-surface-2) 60%, transparent), transparent 40%),
+    var(--color-bg);
+  transition: opacity .35s ease, visibility .35s ease;
+}
+#lockScreen.unlocked {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.lock-card {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 2.8rem) clamp(1.5rem, 5vw, 2.5rem);
+  width: min(380px, 100%);
+  box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  text-align: center;
+}
+.lock-logo {
+  width: 64px; height: 64px;
+  border-radius: 20px;
+  background: var(--color-primary-highlight);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+  display: grid; place-items: center;
+  font-size: 1.9rem;
+  margin-bottom: 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+.lock-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.2rem + 1vw, 1.9rem);
+  line-height: 1;
+  letter-spacing: -.02em;
+  margin-bottom: .35rem;
+}
+.lock-subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+.lock-input-wrap {
+  position: relative; width: 100%; margin-bottom: 1rem;
+}
+.lock-input {
+  width: 100%;
+  background: var(--color-surface-2);
+  border: 1.5px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 13px 46px 13px 16px;
+  outline: none;
+  letter-spacing: .06em;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.lock-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+.lock-input.error {
+  border-color: var(--color-accent-red);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-red) 15%, transparent);
+}
+.lock-eye {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--color-text-faint); font-size: 1.1rem;
+  cursor: pointer; padding: 4px;
+  transition: color var(--transition);
+  line-height: 1;
+}
+.lock-eye:hover { color: var(--color-text-muted); }
+.lock-btn {
+  width: 100%;
+  min-height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: #f7f8f2;
+  font-family: var(--font-ui);
+  font-size: var(--text-base); font-weight: 800;
+  letter-spacing: .04em;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-primary) 35%, transparent);
+  transition: opacity var(--transition), transform 80ms, background var(--transition);
+  margin-bottom: .75rem;
+}
+.lock-btn:hover { opacity: .88; }
+.lock-btn:active { transform: scale(.97); }
+.lock-btn.shaking {
+  animation: lockShake .38s cubic-bezier(.36,.07,.19,.97);
+}
+.lock-error {
+  font-size: var(--text-xs);
+  color: var(--color-accent-red);
+  min-height: 1.2em;
+  margin-bottom: .5rem;
+  font-weight: 600;
+  transition: opacity .2s;
+}
+.lock-error:empty { opacity: 0; }
+.lock-footer {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  margin-top: .5rem;
+}
+@keyframes lockShake {
+  10%, 90% { transform: translateX(-3px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-5px); }
+  40%, 60% { transform: translateX(5px); }
+}
 </style>
 </head>
 <body>
+
+<!-- ── LOCK SCREEN ── -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-logo">🔐</div>
+    <div class="lock-title">Poggio a Issi</div>
+    <div class="lock-subtitle">Magazzino &amp; Ordini<br>Inserisci la password per continuare</div>
+    <div class="lock-input-wrap">
+      <input class="lock-input" id="lockInput" type="password"
+        placeholder="Password…"
+        autocomplete="current-password"
+        autocorrect="off" autocapitalize="off" spellcheck="false"
+        onkeydown="if(event.key==='Enter')lockTry()"/>
+      <button class="lock-eye" id="lockEye" onclick="lockToggleEye()" aria-label="Mostra/nascondi password">👁</button>
+    </div>
+    <div class="lock-error" id="lockError"></div>
+    <button class="lock-btn" onclick="lockTry()">Accedi</button>
+    <div class="lock-footer">Accesso riservato allo staff · Poggio a Issi</div>
+  </div>
+</div>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -1260,13 +1405,13 @@ const CATALOG = [
   {cat:'GIN',name:"Brockman's",              sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Ciauru Gin Pompelmo Rosa', sup:'online',unit:'bott'},
   {cat:'GIN',name:'Frantuono',               sup:'online',unit:'bott'},
-  {cat:'GIN',name:'Gin Amiata',                 sup:'online',unit:'bott'},
+  {cat:'GIN',name:'Gin Amiata',                 sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:"Hendrick's",              sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'J Rose',                  sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Maite Fiamma',            sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Maite Spiaggialunga',     sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Monkey 47',               sup:'gloo',  unit:'bott'},
-  {cat:'GIN',name:'Nordes',                  sup:'prince',unit:'bott'},
+  {cat:'GIN',name:'Nordes',                  sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Peter in Florence',           sup:'online',unit:'bott'},
   {cat:'GIN',name:'Piero Dry Gin',           sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'Poseidon',                sup:'online',unit:'bott'},
@@ -1772,8 +1917,37 @@ function doReset(type){
   if(btn){ const orig=btn.textContent; btn.textContent='✓ Ok'; setTimeout(()=>btn.textContent=orig,1400); }
 }
 
+/* ── BOTTIGLIE PER CARTONE ── */
+const BOTT_PER_CT = { 'Bombay Dry': 12 }; // default 6, eccezioni qui
+function bottPerCt(name){ return BOTT_PER_CT[name] || 6; }
+
+/* Categorie per cui si mostra (N BOTT.) sul cartone */
+const CAT_SHOW_BOTT = new Set(['GIN','WHISKY','RUM','AGAVE / VODKA','VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI']);
+
 /* ── FORMAT LINE ── */
-function fmtLine(name,qty,unit,noUnit){ return String(qty).padStart(2,'0')+'x'+(noUnit?'':(' '+unit+'.')) +' '+name; }
+function fmtLine(name,qty,unit,noUnit,cat){
+  if(noUnit) return String(qty).padStart(2,'0')+' — '+name;
+  if(unit==='bott') return String(qty).padStart(2,'0')+' BOTT. '+name;
+  // cartone
+  let line = String(qty).padStart(2,'0')+' CT. '+name;
+  if(cat && CAT_SHOW_BOTT.has(cat)){
+    const nb = bottPerCt(name);
+    line += ' ('+String(nb).padStart(2,'0')+' BOTT.)';
+  }
+  return line;
+}
+/* Formato doppio per la visualizzazione nella modal (bott // ct) */
+function fmtLinePair(name,qty,unit,noUnit,cat){
+  if(noUnit) return String(qty).padStart(2,'0')+' — '+name;
+  if(unit==='bott') return String(qty).padStart(2,'0')+' BOTT. // — '+name;
+  // cartone
+  const nb = (cat && CAT_SHOW_BOTT.has(cat)) ? bottPerCt(name) : null;
+  const bottTot = nb ? (qty * nb) : null;
+  let line = (bottTot ? String(bottTot).padStart(2,'0')+' BOTT. // ' : '— // ')
+           + String(qty).padStart(2,'0')+' CT. '+name;
+  if(nb) line += ' ('+String(nb).padStart(2,'0')+' BOTT.)';
+  return line;
+}
 
 /* ── MACRO GRUPPI per output ordine ── */
 const MACRO_GROUPS=[
@@ -1896,8 +2070,26 @@ function renderModal(byS, date){
       } else {
         const row=document.createElement('div');
         row.className='order-item';
-        row.dataset.line=fmtLine(it.name,it.qty,it.unit,it.noUnit);
-        row.innerHTML=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')}x${it.noUnit?'':(' '+it.unit+'.')}</span><span class="order-item-name">${it.name}</span>`;
+        row.dataset.line=fmtLine(it.name,it.qty,it.unit,it.noUnit,it.cat);
+        // Visualizzazione nella modal: "01 BOTT. // 01 CT. Nome (06 BOTT.)"
+        let qtyHtml, nameHtml;
+        if(it.noUnit){
+          qtyHtml=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')} —</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}</span>`;
+        } else if(it.unit==='bott'){
+          qtyHtml=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')} BOTT.</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}</span>`;
+        } else {
+          // cartone
+          const nb = (it.cat && CAT_SHOW_BOTT.has(it.cat)) ? bottPerCt(it.name) : null;
+          const bottTot = nb ? (it.qty * nb) : null;
+          const qtyStr = (bottTot ? String(bottTot).padStart(2,'0')+' BOTT. // ' : '')
+                       + String(it.qty).padStart(2,'0')+' CT.';
+          const bottNote = nb ? ` <span class="order-item-note">(${String(nb).padStart(2,'0')} BOTT.)</span>` : '';
+          qtyHtml=`<span class="order-item-qty">${qtyStr}</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}${bottNote}</span>`;
+        }
+        row.innerHTML=qtyHtml+nameHtml;
         itemsDiv.appendChild(row);
       }
     });
@@ -2004,7 +2196,7 @@ function buildTxtGrouped(sup,items,date){
   const grouped=groupItems(items);
   grouped.forEach(it=>{
     if(it===null) t+='\n';
-    else t+=fmtLine(it.name,it.qty,it.unit,it.noUnit)+'\n';
+    else t+=fmtLine(it.name,it.qty,it.unit,it.noUnit,it.cat)+'\n';
   });
   return t.trim();
 }
@@ -2121,7 +2313,7 @@ function downloadImg(sup){
   lines.forEach(line=>{
     if(line===null){ y+=lineH*0.5; return; }
     // Qty badge
-    const qtyW=88;
+    const qtyW=150;
     ctx.fillStyle=qtyBg;
     roundRect(ctx, paddingX, y+4, qtyW, lineH-10, 8);
     ctx.fill();
@@ -2555,6 +2747,98 @@ restoreLocalState();  // sincrono: carica qty/unit/giac/giacUnit da localStorage
 buildUI();            // costruisce il DOM
 syncUIFromState();    // aggiorna tutti i campi e i pulsanti unit
 loadLastOrderBar();   // async: mostra barra ultimo salvataggio Firebase
+})();
+</script>
+<script>
+/* ── LOCK SCREEN ── */
+(function(){
+  // Hash SHA-256 della password di accesso
+  const HASH = 'dff0ea39859d8f58f579f71959ece87fa60e25548768deec571d59814f235493';
+
+  async function sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  const LS_KEY = 'poggio-lock-v1';
+  const SESSION_KEY = 'poggio-session-v1';
+
+  function isUnlocked(){
+    // Controlla sessionStorage (tab corrente) o localStorage (persistente 24h)
+    if(sessionStorage.getItem(SESSION_KEY) === '1') return true;
+    const saved = localStorage.getItem(LS_KEY);
+    if(!saved) return false;
+    try{
+      const {ts} = JSON.parse(saved);
+      // Scade dopo 24 ore
+      if(Date.now() - ts < 24*60*60*1000){ sessionStorage.setItem(SESSION_KEY,'1'); return true; }
+      localStorage.removeItem(LS_KEY);
+    }catch(e){ localStorage.removeItem(LS_KEY); }
+    return false;
+  }
+
+  function unlock(){
+    sessionStorage.setItem(SESSION_KEY,'1');
+    localStorage.setItem(LS_KEY, JSON.stringify({ts:Date.now()}));
+    const screen = document.getElementById('lockScreen');
+    screen.classList.add('unlocked');
+    setTimeout(()=>{ screen.style.display='none'; }, 380);
+    // Focus sul primo campo utile
+    const inp = document.getElementById('searchInput');
+    if(inp) setTimeout(()=>inp.focus(), 400);
+  }
+
+  window.lockTry = async function(){
+    const input = document.getElementById('lockInput');
+    const errEl = document.getElementById('lockError');
+    const btn   = document.querySelector('.lock-btn');
+    const val   = input.value;
+    if(!val){ errEl.textContent = 'Inserisci la password.'; return; }
+    btn.textContent = '…';
+    btn.style.opacity = '.6';
+    const h = await sha256(val);
+    btn.textContent = 'Accedi';
+    btn.style.opacity = '';
+    if(h === HASH){
+      errEl.textContent = '';
+      input.value = '';
+      unlock();
+    } else {
+      errEl.textContent = 'Password errata. Riprova.';
+      input.value = '';
+      input.classList.add('error');
+      btn.classList.add('shaking');
+      setTimeout(()=>{ input.classList.remove('error'); btn.classList.remove('shaking'); }, 500);
+      input.focus();
+    }
+  };
+
+  window.lockToggleEye = function(){
+    const inp = document.getElementById('lockInput');
+    const eye = document.getElementById('lockEye');
+    if(inp.type === 'password'){ inp.type='text'; eye.textContent='🙈'; }
+    else { inp.type='password'; eye.textContent='👁'; }
+  };
+
+  // All'avvio: se già autenticato, nascondi subito senza animazione
+  if(isUnlocked()){
+    const screen = document.getElementById('lockScreen');
+    screen.style.display = 'none';
+  } else {
+    // Blocca scroll del body mentre il lock è attivo
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('lockInput').focus();
+      // Riabilita scroll dopo unlock
+      const obs = new MutationObserver(()=>{
+        if(document.getElementById('lockScreen').classList.contains('unlocked')){
+          document.body.style.overflow = '';
+          obs.disconnect();
+        }
+      });
+      obs.observe(document.getElementById('lockScreen'),{attributes:true});
+    });
+  }
 })();
 </script>
 </body>
