@@ -17,9 +17,10 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script>
   var firebaseConfig = {
-    apiKey: "***REMOVED***",
+    apiKey: "AIzaSyCcwKMZcooQIvzVQTK6NbdoaKccvepSFrg",
     authDomain: "poggio-a-issi.firebaseapp.com",
     databaseURL: "https://poggio-a-issi-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "poggio-a-issi",
@@ -29,10 +30,15 @@
   };
   try {
     firebase.initializeApp(firebaseConfig);
-    window.db = firebase.database();
+    window.db = null; // inizializzato dopo il login anonimo
+    firebase.auth().signInAnonymously().then(function() {
+      window.db = firebase.database();
+      // Notifica il resto dell'app che Firebase è pronto
+      document.dispatchEvent(new Event('firebase-ready'));
+    }).catch(function(e) {
+      console.warn('Firebase auth non disponibile:', e.message);
+    });
   } catch(e) {
-    // Firebase non disponibile (es. apertura locale senza rete)
-    // db rimane undefined — le funzioni che lo usano gestiscono il caso
     window.db = null;
     console.warn('Firebase non disponibile:', e.message);
   }
