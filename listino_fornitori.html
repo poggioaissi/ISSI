@@ -88,6 +88,51 @@ body{
 a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
 button{cursor:pointer;border:none;background:none;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
 
+/* ── SCHERMATA PASSWORD ── */
+#pwdScreen{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+  background-image:linear-gradient(150deg,color-mix(in srgb,var(--primary) 7%,transparent) 0%,transparent 50%);
+}
+#pwdBox{
+  background:var(--surface);
+  border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+  border-radius:20px;
+  padding:2rem 2rem 1.75rem;
+  box-shadow:var(--sh-md);
+  width:min(360px,calc(100% - 2rem));
+  display:flex;flex-direction:column;gap:1.1rem;
+  text-align:center;
+}
+#pwdBox .pwd-logo{font-size:2rem;margin-bottom:.25rem}
+#pwdBox h2{font-family:var(--font-display);font-size:1.4rem;color:var(--text)}
+#pwdBox p{font-size:var(--text-sm);color:var(--text-muted)}
+#pwdInput{
+  width:100%;height:48px;
+  border:1.5px solid var(--border);border-radius:12px;
+  background:var(--bg);color:var(--text);
+  font-size:1rem;font-family:var(--font-body);
+  padding:0 1rem;outline:none;
+  transition:border-color var(--ease),box-shadow var(--ease);
+  text-align:center;letter-spacing:.08em;
+}
+#pwdInput:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent);
+}
+#pwdBtn{
+  width:100%;height:46px;
+  background:var(--primary);color:#fff;
+  border-radius:12px;font-weight:700;font-size:1rem;
+  transition:opacity var(--ease);
+}
+#pwdBtn:hover{opacity:.88}
+#pwdErr{
+  font-size:var(--text-xs);color:#c0392b;
+  min-height:1.2em;display:none;
+}
+
 /* ── TOPBAR ── */
 .topbar{
   position:sticky;top:0;z-index:100;
@@ -187,7 +232,6 @@ button{cursor:pointer;border:none;background:none;color:inherit;font:inherit;-we
   box-shadow:var(--sh-sm);
 }
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-/* Larghezze colonne: fornitore e prezzo al minimo, desc prende il resto */
 col.col-for  {width:48px}
 col.col-desc {width:auto}
 col.col-um   {width:64px}
@@ -208,13 +252,9 @@ tbody tr:last-child{border-bottom:none}
 tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 50%,transparent)}
 tbody tr:hover{background:color-mix(in srgb,var(--primary) 8%,transparent)}
 td{padding:7px 6px;font-size:var(--text-sm);overflow:hidden}
-/* Fornitore: solo dot colorato + sigla */
 td.t-for{width:48px;text-align:center;padding:7px 4px;vertical-align:middle}
-/* Descrizione: wrappa liberamente */
 td.t-desc{white-space:normal;word-break:break-word;padding-left:4px}
-/* U.M. */
 td.t-um{color:var(--text-faint);font-size:.65rem;white-space:nowrap;padding:7px 4px}
-/* Prezzo: compatto, allineato a destra */
 td.t-price{
   font-weight:700;color:var(--green);
   text-align:right;white-space:nowrap;
@@ -223,7 +263,7 @@ td.t-price{
   padding-right:8px;
 }
 
-/* ── BADGE fornitore: pill colorata con sigla brevissima ── */
+/* ── BADGE fornitore ── */
 .badge{
   display:inline-flex;align-items:center;justify-content:center;
   width:32px;height:22px;
@@ -278,6 +318,19 @@ td.t-price{
 </head>
 <body>
 
+<!-- ── SCHERMATA PASSWORD ── -->
+<div id="pwdScreen">
+  <div id="pwdBox">
+    <div class="pwd-logo">🔐</div>
+    <h2>Listino Fornitori</h2>
+    <p>Inserisci la password per accedere</p>
+    <input id="pwdInput" type="password" placeholder="Password…"
+           autocomplete="current-password" autocorrect="off" spellcheck="false"/>
+    <div id="pwdErr">Password errata. Riprova.</div>
+    <button id="pwdBtn">Accedi</button>
+  </div>
+</div>
+
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
@@ -285,7 +338,7 @@ td.t-price{
       <div class="brand-mark" aria-hidden="true">💶</div>
       <div>
         <div class="brand-title">Listino Fornitori</div>
-        <div class="brand-sub">Prezzi netti · IVA esclusa · Agg. 13/05/2026</div>
+        <div class="brand-sub">Prezzi netti · IVA esclusa · Agg. 21/05/2026</div>
       </div>
     </div>
     <button class="theme-btn" id="themeToggle" aria-label="Cambia tema">
@@ -344,6 +397,48 @@ td.t-price{
 </div>
 
 <script>
+// ── PASSWORD ──────────────────────────────────────────────────────────────────
+(function(){
+  var PWD = 'King.Kong26!';
+  var screen = document.getElementById('pwdScreen');
+  var input  = document.getElementById('pwdInput');
+  var btn    = document.getElementById('pwdBtn');
+  var err    = document.getElementById('pwdErr');
+
+  // Se già autenticato in questa sessione, salta subito
+  if(sessionStorage.getItem('listino-auth')==='1'){
+    screen.style.display='none';
+    return;
+  }
+
+  // Blocca lo scroll del contenuto sotto
+  document.body.style.overflow='hidden';
+
+  function tryLogin(){
+    if(input.value === PWD){
+      sessionStorage.setItem('listino-auth','1');
+      screen.style.display='none';
+      document.body.style.overflow='';
+      err.style.display='none';
+    } else {
+      err.style.display='block';
+      input.value='';
+      input.focus();
+      // Breve shake visivo
+      input.style.borderColor='#c0392b';
+      setTimeout(function(){ input.style.borderColor=''; }, 1000);
+    }
+  }
+
+  btn.addEventListener('click', tryLogin);
+  input.addEventListener('keydown', function(e){
+    if(e.key==='Enter') tryLogin();
+  });
+
+  // Focus automatico sull'input
+  setTimeout(function(){ input.focus(); }, 100);
+})();
+
 // ── COSTANTI ──────────────────────────────────────────────────────────────────
 const PRINZ='PRINZ', GLOU='GLOU', GROS='GROS';
 
@@ -380,6 +475,7 @@ const prinzRaw=[
   {desc:"Mixer Zucchero di Canna",                                            um:"LT.1X1 SB",        l:9.07,  sc:20, cat:"mixer"},
   {desc:"Polot Sciroppo Granatina",                                           um:"CL.70X1 SB",       l:10.00, sc:20, cat:"mixer"},
   {desc:"Naturera Succo di Limone 100% PET",                                  um:"LT.1X1 SB",        l:8.70,  sc:20, cat:"mixer"},
+  {desc:"Mixer Puree Mango Mix",                                              um:"PZ",               l:10.61, sc:0,  cat:"mixer"},
   {desc:"Lillet Blanc",                                                       um:"CL.75X1 SB",       l:22.23, sc:20, cat:"spirit"},
   {desc:"Liquore Ancho Reyes Verde",                                          um:"CL.70X1 SB",       l:43.20, sc:20, cat:"spirit"},
   {desc:"Bombola Prestop CO2 LT.14",                                          um:"LT.14 CO",         l:49.12, sc:0,  cat:"co2"},
@@ -411,6 +507,7 @@ const glouRaw=[
   {desc:"Fuze Tea Pesca Lattina Sleek CL 33",               um:"CF 24pz",  n:17.51, cat:"soft"},
   {desc:"Lemonsoda LT 1 PET",                               um:"CF 6pz",   n:10.04, cat:"soft"},
   {desc:"Red Bull CL 25 Lattina",                           um:"CF 24pz",  n:27.20, cat:"soft"},
+  {desc:"Red Bull Zero CL 25",                              um:"CT",       n:34.04, cat:"soft"},
   {desc:"Schweppes Lemon LT 1 PET",                         um:"CF 6pz",   n:9.92,  cat:"soft"},
   {desc:"Schweppes Tonica LT 1 PET",                        um:"CF 6pz",   n:13.78, cat:"soft"},
   {desc:"Sprite Lattina Sleek CL 33 x24",                   um:"CF",       n:13.44, cat:"soft"},
@@ -448,6 +545,7 @@ const glouRaw=[
   {desc:"Tequila Patron Reposado CL 70 Premium",            um:"BT",       n:52.28, cat:"spirit"},
   {desc:"Tequila Patron Silver CL 70 Premium",              um:"BT",       n:46.99, cat:"spirit"},
   {desc:"Tequila Patron XO Café CL 70 Premium",             um:"BT",       n:42.90, cat:"spirit"},
+  {desc:"Vecchio Amaro del Capo LT 1",                      um:"BT",       n:19.54, cat:"spirit"},
   {desc:"Vecchio Amaro del Capo LT 1 F.lli Caffo",          um:"BT",       n:19.52, cat:"spirit"},
   {desc:"Vecchio Amaro del Capo LT 1.5 F.lli Caffo",        um:"BT",       n:25.14, cat:"spirit"},
   {desc:"Vermouth Martini Bianco LT 1 New",                 um:"BT",       n:8.12,  cat:"spirit"},
@@ -459,6 +557,7 @@ const glouRaw=[
   {desc:"Vodka Keglevich Pesca LT 1",                       um:"BT",       n:10.25, cat:"spirit"},
   {desc:"Whisky Dewar's White Label CL 70",                 um:"BT",       n:14.90, cat:"spirit"},
   {desc:"Whisky Wild Turkey 101 Bourbon CL 70",             um:"BT",       n:31.00, cat:"spirit"},
+  {desc:"Prosecco da miscelazione Corte delle Calli",        um:"CT 6bt",   n:14.75, cat:"vino"},
   {desc:"Gran Cuvée Brut CL 75 Corte delle Calli Serena",   um:"BT",       n:14.75, cat:"vino"},
   {desc:"Arachidi KG 1",                                    um:"PZ",       n:4.86,  cat:"bar"},
   {desc:"Patatina Classica GR 475 x5",                      um:"CT",       n:2.90,  cat:"bar"},
