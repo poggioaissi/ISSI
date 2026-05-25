@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="theme-color" content="#eef1e8" media="(prefers-color-scheme: light)"/>
+  <meta name="theme-color" content="#111611" media="(prefers-color-scheme: dark)"/>
+  <title>Poggio a Issi — Personale</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <script>
+    (function(){var t=localStorage.getItem('poggio-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+
+  <style>
+    :root{
+      --font-display:"Baloo 2",cursive;
+      --font-body:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+      --radius-full:9999px;
+      --ease:160ms cubic-bezier(.16,1,.3,1);
+    }
+    :root,[data-theme="light"]{
+      --bg:#eef1e8;--surface:#f7f8f2;--surface-2:#e6ebde;--border:#bcc7b1;
+      --text:#2d3a23;--text-muted:#55664a;
+      --primary:#7a8f49;--primary-hi:#dde6c9;
+      --wine:#81505b;    --wine-s:#ead8dd;
+      --food:#5c7650;    --food-s:#dfe8d9;
+      --stock:#58758b;   --stock-s:#dce7ef;
+      --gin:#768d45;     --gin-s:#dfe7cc;
+      --cocktail:#7a5c8f;--cocktail-s:#ede0f5;
+      --menu:#a06a45;    --menu-s:#f3e0d2;
+      --listino:#5b7a6e; --listino-s:#d8ebe6;
+      --sh-sm:0 1px 3px rgba(33,45,24,.09);
+      --sh-md:0 8px 20px rgba(33,45,24,.12);
+    }
+    [data-theme="dark"]{
+      --bg:#111611;--surface:#1a2219;--surface-2:#253026;--border:#394738;
+      --text:#e6eadc;--text-muted:#b4bea8;
+      --primary:#a6bf67;--primary-hi:#2d3a24;
+      --wine:#d6a7b1;    --wine-s:#2e2125;
+      --food:#a9c697;    --food-s:#1f2a20;
+      --stock:#9dbed0;   --stock-s:#1b2730;
+      --gin:#bfd78a;     --gin-s:#24301d;
+      --cocktail:#c4a8e0;--cocktail-s:#2b2038;
+      --menu:#d8a07a;    --menu-s:#2d221c;
+      --listino:#8ecaba; --listino-s:#1a2e2a;
+      --sh-sm:0 1px 3px rgba(0,0,0,.22);
+      --sh-md:0 8px 22px rgba(0,0,0,.36);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-text-size-adjust:100%}
+
+    body{
+      min-height:100dvh;
+      font-family:var(--font-body);
+      font-size:clamp(1rem,.95rem + .22vw,1.08rem);
+      line-height:1.6;
+      color:var(--text);
+      background:var(--bg);
+      background-image:linear-gradient(150deg,
+        color-mix(in srgb,var(--primary) 7%,transparent) 0%,
+        transparent 50%);
+      overscroll-behavior-y:none;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+    button{cursor:pointer;border:none;background:none;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+    @view-transition{navigation:auto}
+    @keyframes pgIn{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}
+    main{animation:pgIn .2s ease both}
+    @supports(view-transition-name:none){main{animation:none}}
+
+    /* ── TOPBAR ── */
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      background:color-mix(in srgb,var(--bg) 82%,transparent);
+      border-bottom:1px solid color-mix(in srgb,var(--border) 70%,transparent);
+    }
+    .topbar-inner{
+      width:min(1100px,calc(100% - 2rem));margin-inline:auto;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:1rem;padding:.9rem 0;
+    }
+    .brand{display:flex;align-items:center;gap:.75rem;min-width:0}
+    .brand-back{
+      width:36px;height:36px;border-radius:10px;flex-shrink:0;
+      display:grid;place-items:center;font-size:1.1rem;
+      background:var(--surface);box-shadow:var(--sh-sm);
+      border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+      transition:background var(--ease);
+    }
+    .brand-back:hover{background:var(--surface-2)}
+    .brand-mark{
+      width:42px;height:42px;border-radius:13px;flex-shrink:0;
+      background:var(--primary-hi);color:var(--primary);
+      display:grid;place-items:center;font-size:1.2rem;
+      box-shadow:var(--sh-sm);
+      border:1px solid color-mix(in srgb,var(--primary) 18%,var(--border));
+    }
+    .brand-title{font-family:var(--font-display);font-size:clamp(1.5rem,1.2rem + 1vw,2.1rem);line-height:.95;letter-spacing:.02em}
+    .brand-sub{color:var(--text-muted);font-size:.85rem;margin-top:2px}
+    .topbar-right{display:flex;align-items:center;gap:.5rem}
+    .theme-btn{
+      width:44px;height:44px;border-radius:var(--radius-full);flex-shrink:0;
+      border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+      background:var(--surface);box-shadow:var(--sh-sm);
+      display:grid;place-items:center;font-size:1.1rem;
+      transition:background var(--ease);
+    }
+    .theme-btn:hover{background:var(--surface-2)}
+    .logout-btn{
+      height:36px;padding:0 .875rem;border-radius:var(--radius-full);flex-shrink:0;
+      border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+      background:var(--surface);box-shadow:var(--sh-sm);
+      font-size:.8rem;font-weight:600;color:var(--text-muted);
+      display:flex;align-items:center;gap:.4rem;
+      transition:background var(--ease),color var(--ease);
+    }
+    .logout-btn:hover{background:var(--surface-2);color:var(--text)}
+
+    /* ── CONTENT ── */
+    .content{
+      width:min(1100px,calc(100% - 2rem));
+      margin-inline:auto;
+      padding:1.5rem 0 4rem;
+    }
+
+    /* ── GRID ── */
+    .nav-grid{
+      display:grid;
+      gap:1rem;
+      grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));
+    }
+
+    /* ── CARD ── */
+    .nav-card{
+      background:var(--surface);
+      border-radius:18px;
+      padding:1rem 1rem 1.25rem;
+      border:1px solid color-mix(in srgb,var(--border) 78%,transparent);
+      box-shadow:var(--sh-sm);
+      display:flex;flex-direction:column;gap:.75rem;
+      will-change:transform;
+      transform:translateZ(0);
+      transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease);
+    }
+    .nav-card:hover,.nav-card:focus-visible{
+      transform:translateY(-3px) translateZ(0);
+      box-shadow:var(--sh-md);
+      border-color:color-mix(in srgb,var(--primary) 24%,var(--border));
+      outline:none;
+    }
+    .nav-card:active{transform:translateY(-1px) translateZ(0)}
+
+    .nav-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+    .nav-icon{
+      width:48px;height:48px;border-radius:14px;
+      display:grid;place-items:center;font-size:1.3rem;
+      flex-shrink:0;border:1px solid transparent;
+    }
+    .nav-arrow{
+      width:28px;height:28px;border-radius:9px;
+      display:grid;place-items:center;
+      border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+      background:color-mix(in srgb,var(--surface-2) 70%,transparent);
+      color:var(--text-muted);font-weight:700;font-size:0;flex-shrink:0;
+    }
+    .nav-arrow::after{content:"→";font-size:.85rem}
+    .nav-title{
+      font-family:var(--font-display);
+      font-size:clamp(1rem,.95rem + .3vw,1.25rem);
+      line-height:1.1;
+    }
+
+    /* ── ACCENTI ── */
+    .wine-ui      .nav-icon{background:var(--wine-s);     color:var(--wine);     border-color:color-mix(in srgb,var(--wine) 18%,transparent)}
+    .food-ui      .nav-icon{background:var(--food-s);     color:var(--food);     border-color:color-mix(in srgb,var(--food) 18%,transparent)}
+    .stock-ui     .nav-icon{background:var(--stock-s);    color:var(--stock);    border-color:color-mix(in srgb,var(--stock) 18%,transparent)}
+    .gin-ui       .nav-icon{background:var(--gin-s);      color:var(--gin);      border-color:color-mix(in srgb,var(--gin) 18%,transparent)}
+    .cocktail-ui  .nav-icon{background:var(--cocktail-s); color:var(--cocktail); border-color:color-mix(in srgb,var(--cocktail) 18%,transparent)}
+    .listino-ui   .nav-icon{background:var(--listino-s);  color:var(--listino);  border-color:color-mix(in srgb,var(--listino) 18%,transparent)}
+
+    /* ── LOCK SCREEN ── */
+    #lockScreen{
+      position:fixed;inset:0;z-index:9999;
+      display:flex;align-items:center;justify-content:center;
+      background:var(--bg);
+      background-image:linear-gradient(150deg,
+        color-mix(in srgb,var(--primary) 9%,transparent) 0%,
+        transparent 55%);
+      transition:opacity .35s ease,transform .35s ease;
+    }
+    #lockScreen.unlocked{
+      opacity:0;pointer-events:none;transform:scale(1.03);
+    }
+    .lock-card{
+      background:var(--surface);
+      border:1px solid color-mix(in srgb,var(--border) 80%,transparent);
+      border-radius:24px;
+      padding:2.25rem 2rem;
+      box-shadow:var(--sh-md);
+      width:min(340px,calc(100vw - 2.5rem));
+      display:flex;flex-direction:column;align-items:center;gap:.75rem;
+      text-align:center;
+    }
+    .lock-logo{font-size:2.2rem;line-height:1;margin-bottom:.1rem}
+    .lock-title{font-family:var(--font-display);font-size:1.6rem;line-height:1;letter-spacing:.02em}
+    .lock-subtitle{font-size:.85rem;color:var(--text-muted);line-height:1.5}
+    .lock-input-wrap{position:relative;width:100%;margin-top:.25rem}
+    .lock-input{
+      width:100%;
+      padding:.7rem 2.8rem .7rem 1rem;
+      border-radius:12px;
+      border:1.5px solid var(--border);
+      background:var(--surface-2);
+      color:var(--text);
+      font-family:var(--font-body);
+      font-size:1rem;
+      outline:none;
+      transition:border-color var(--ease);
+    }
+    .lock-input:focus{border-color:var(--primary)}
+    .lock-input.error{border-color:#c0392b;animation:lockShake .4s ease}
+    .lock-eye{
+      position:absolute;right:.75rem;top:50%;translate:0 -50%;
+      font-size:1.1rem;background:none;border:none;cursor:pointer;
+      color:var(--text-muted);padding:.2rem;
+    }
+    .lock-eye:hover{color:var(--text)}
+    .lock-btn{
+      width:100%;margin-top:.35rem;
+      padding:.75rem 1rem;
+      border-radius:12px;
+      background:var(--primary);
+      color:#fff;font-weight:700;font-size:.95rem;
+      transition:opacity var(--ease),transform var(--ease);
+    }
+    .lock-btn:hover{opacity:.88}
+    .lock-btn:active{transform:scale(.97)}
+    .lock-btn.shaking{animation:lockShake .4s ease}
+    .lock-error{
+      font-size:.82rem;color:#c0392b;min-height:1.2em;
+      transition:opacity var(--ease);
+    }
+    .lock-error:empty{opacity:0}
+    .lock-footer{font-size:.75rem;color:var(--text-muted);margin-top:.25rem}
+    @keyframes lockShake{
+      10%,90%{transform:translateX(-3px)}
+      20%,80%{transform:translateX(4px)}
+      30%,50%,70%{transform:translateX(-5px)}
+      40%,60%{transform:translateX(5px)}
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:640px){
+      .nav-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
+      .nav-card{padding:.875rem .875rem 1.1rem}
+      .nav-icon{width:44px;height:44px;font-size:1.2rem}
+    }
+    @media(max-width:760px){
+      .topbar-inner,.content{width:min(100%,calc(100% - 1rem))}
+      .brand-title{font-size:1.5rem}
+      .brand-sub{display:none}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+      main{animation:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOCK SCREEN ── -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-logo">🐿️</div>
+    <div class="lock-title">Poggio a Issi</div>
+    <div class="lock-subtitle">Area Personale<br>Inserisci la password per continuare</div>
+    <div class="lock-input-wrap">
+      <input class="lock-input" id="lockInput" type="password"
+        placeholder="Password…"
+        autocomplete="current-password"
+        autocorrect="off" autocapitalize="off" spellcheck="false"
+        onkeydown="if(event.key==='Enter')lockTry()"/>
+      <button class="lock-eye" id="lockEye" onclick="lockToggleEye()" aria-label="Mostra/nascondi password">👁</button>
+    </div>
+    <div class="lock-error" id="lockError"></div>
+    <button class="lock-btn" onclick="lockTry()">Accedi</button>
+    <div class="lock-footer">Accesso riservato allo staff · Poggio a Issi</div>
+  </div>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a class="brand-back" href="index.html" aria-label="Torna alla home">←</a>
+      <div class="brand-mark" aria-hidden="true">🐿️</div>
+      <div>
+        <div class="brand-title">Personale</div>
+        <div class="brand-sub">Guide operative per il personale</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="logout-btn" id="logoutBtn" aria-label="Esci dall'area personale">🔒 Esci</button>
+      <button class="theme-btn" id="themeToggle" aria-label="Cambia tema">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="content">
+    <nav class="nav-grid" aria-label="Strumenti personale">
+
+      <a class="nav-card food-ui" href="abbinamenti.html">
+        <div class="nav-top"><div class="nav-icon">🍽️</div><span class="nav-arrow" aria-hidden="true"></span></div>
+        <div class="nav-title">Abbinamenti</div>
+      </a>
+
+      <a class="nav-card wine-ui" href="abc-dei-vini.html">
+        <div class="nav-top"><div class="nav-icon">🍷</div><span class="nav-arrow" aria-hidden="true"></span></div>
+        <div class="nav-title">ABC dei Vini</div>
+      </a>
+
+      <a class="nav-card gin-ui" href="guida-gin-sala.html">
+        <div class="nav-top"><div class="nav-icon">🍸</div><span class="nav-arrow" aria-hidden="true"></span></div>
+        <div class="nav-title">Guida Gin</div>
+      </a>
+
+      <a class="nav-card cocktail-ui" href="guida-cocktail.html">
+        <div class="nav-top"><div class="nav-icon">🍹</div><span class="nav-arrow" aria-hidden="true"></span></div>
+        <div class="nav-title">Guida Cocktail</div>
+      </a>
+
+      <a class="nav-card stock-ui" href="magazzino-ordini.html">
+        <div class="nav-top"><div class="nav-icon">🛒</div><span class="nav-arrow" aria-hidden="true"></span></div>
+        <div class="nav-title">Ordini</div>
+      </a>
+
+      <a class="nav-card listino-ui" href="listino_fornitori.html">
+        <div class="nav-top"><div class="nav-icon">💶</div><span class="nav-arrow" aria-hidden="true"></span></div>
+        <div class="nav-title">Listino Prezzi</div>
+      </a>
+
+    </nav>
+  </section>
+</main>
+
+<script>
+/* ── LOCK SCREEN ── */
+(function(){
+  // ─────────────────────────────────────────────────────────────────────────
+  // SHA-256 della password di accesso.
+  // Per cambiare password:
+  //   1. Vai su https://emn178.github.io/online-tools/sha256.html
+  //   2. Digita la nuova password e copia l'hash risultante
+  //   3. Incolla l'hash qui sotto sostituendo il valore esistente
+  // La password NON appare mai nel codice — solo il suo hash.
+  // ─────────────────────────────────────────────────────────────────────────
+  const HASH = '70c4d1efd9ec4fc7812aa3dd4e2fd5d96a6036321cd3296ba71e71c7bb2cee09';
+  // Password attuale: Personale2026!
+
+  const SESSION_KEY = 'poggio-personale-session';
+  const LS_KEY      = 'poggio-personale-lock';
+
+  async function sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function isUnlocked(){
+    if(sessionStorage.getItem(SESSION_KEY)==='1') return true;
+    const saved = localStorage.getItem(LS_KEY);
+    if(!saved) return false;
+    try{
+      const {ts} = JSON.parse(saved);
+      if(Date.now()-ts < 24*60*60*1000){
+        sessionStorage.setItem(SESSION_KEY,'1');
+        return true;
+      }
+      localStorage.removeItem(LS_KEY);
+    }catch(e){ localStorage.removeItem(LS_KEY); }
+    return false;
+  }
+
+  function unlock(){
+    sessionStorage.setItem(SESSION_KEY,'1');
+    localStorage.setItem(LS_KEY, JSON.stringify({ts:Date.now()}));
+    const screen = document.getElementById('lockScreen');
+    screen.classList.add('unlocked');
+    setTimeout(()=>{ screen.style.display='none'; document.body.style.overflow=''; }, 380);
+  }
+
+  function logout(){
+    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(LS_KEY);
+    const screen = document.getElementById('lockScreen');
+    screen.style.display='flex';
+    screen.classList.remove('unlocked');
+    document.body.style.overflow='hidden';
+    document.getElementById('lockInput').value='';
+    document.getElementById('lockError').textContent='';
+    setTimeout(()=>document.getElementById('lockInput').focus(), 100);
+  }
+
+  window.lockTry = async function(){
+    const input = document.getElementById('lockInput');
+    const errEl = document.getElementById('lockError');
+    const btn   = document.querySelector('.lock-btn');
+    const val   = input.value;
+    if(!val){ errEl.textContent='Inserisci la password.'; return; }
+    btn.textContent='…';
+    btn.style.opacity='.6';
+    const h = await sha256(val);
+    btn.textContent='Accedi';
+    btn.style.opacity='';
+    if(h===HASH){
+      errEl.textContent='';
+      input.value='';
+      unlock();
+    } else {
+      errEl.textContent='Password errata. Riprova.';
+      input.value='';
+      input.classList.add('error');
+      btn.classList.add('shaking');
+      setTimeout(()=>{ input.classList.remove('error'); btn.classList.remove('shaking'); }, 500);
+      input.focus();
+    }
+  };
+
+  window.lockToggleEye = function(){
+    const inp = document.getElementById('lockInput');
+    const eye = document.getElementById('lockEye');
+    if(inp.type==='password'){ inp.type='text'; eye.textContent='🙈'; }
+    else { inp.type='password'; eye.textContent='👁'; }
+  };
+
+  // Avvio
+  if(isUnlocked()){
+    document.getElementById('lockScreen').style.display='none';
+  } else {
+    document.body.style.overflow='hidden';
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.getElementById('lockInput').focus();
+    });
+  }
+
+  // Logout button
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+  });
+})();
+</script>
+
+<script>
+/* ── TEMA ── */
+(function(){
+  var root   = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  var icon   = document.getElementById('themeIcon');
+  function sync(){ icon.textContent = root.getAttribute('data-theme')==='dark' ? '☀️' : '🌙'; }
+  sync();
+  toggle.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('poggio-theme', next);
+    sync();
+  });
+})();
+</script>
+
+</body>
+</html>
