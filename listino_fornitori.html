@@ -339,6 +339,244 @@ td.t-price{
 
 </div>
 
+<script>
+// ── COSTANTI ──────────────────────────────────────────────────────────────────
+const PRINZ='PRINZ', GLOU='GLOU', GROS='GROS';
 
+const CAT={
+  gin:   {label:'Gin',            cls:'c-gin'},
+  birra: {label:'Birra/Fusto',    cls:'c-birra'},
+  mixer: {label:'Mixer/Sciroppo', cls:'c-mixer'},
+  soft:  {label:'Soft Drink',     cls:'c-soft'},
+  co2:   {label:'CO2',            cls:'c-co2'},
+  bar:   {label:'Bar/Garnish',    cls:'c-bar'},
+  spirit:{label:'Spirit/Liquore', cls:'c-spirit'},
+  acqua: {label:'Acqua',          cls:'c-acqua'},
+  vino:  {label:'Vino/Bollicine', cls:'c-vino'},
+};
+
+// ── PRINZ ─────────────────────────────────────────────────────────────────────
+const prinzRaw=[
+  {desc:"Gin J.Rose Manara – Tutte le referenze (JR01/02/04/05/06/Flamenco)", um:"CL.70X1 SB",       l:44.66, sc:20, cat:"gin"},
+  {desc:"Gin Maite Spiaggia Lunga",                                           um:"CL.70X1 SB",       l:44.66, sc:20, cat:"gin"},
+  {desc:"Gin Maite Fiamma",                                                   um:"CL.50X1 SB",       l:38.67, sc:20, cat:"gin"},
+  {desc:"Gin Amiata CL.70",                                                   um:"CL.70X1 SB",       l:37.35, sc:20, cat:"gin"},
+  {desc:"Gin Peter in Florence London Dry",                                   um:"LT.1X1 SB",        l:63.00, sc:30, cat:"gin"},
+  {desc:"Birra Raffo Grezza",                                                 um:"FS LT.20 FR",      l:112.85,sc:30, cat:"birra"},
+  {desc:"Kinley Tonica Premix",                                               um:"FS LT.18 FR",      l:54.46, sc:40, cat:"soft"},
+  {desc:"Kinley Lemon Premix",                                                um:"FS LT.18 FR",      l:54.46, sc:40, cat:"soft"},
+  {desc:"Coca Cola Premix",                                                   um:"FS LT.18 FR",      l:61.74, sc:40, cat:"soft"},
+  {desc:"Promo Dandydrink Tonica",                                            um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Tonica Zero",                                       um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Gingerbeer",                                        um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Limone",                                            um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Promo Dandydrink Double Pink",                                       um:"VAP CL VP",        l:20.16, sc:0,  cat:"soft"},
+  {desc:"Mixer Succo di Lime",                                                um:"CL.70X1 SB",       l:8.68,  sc:20, cat:"mixer"},
+  {desc:"Polot Sciroppo di Agave",                                            um:"CL.70X1 SB",       l:14.45, sc:20, cat:"mixer"},
+  {desc:"Mixer Zucchero di Canna",                                            um:"LT.1X1 SB",        l:9.07,  sc:20, cat:"mixer"},
+  {desc:"Polot Sciroppo Granatina",                                           um:"CL.70X1 SB",       l:10.00, sc:20, cat:"mixer"},
+  {desc:"Naturera Succo di Limone 100% PET",                                  um:"LT.1X1 SB",        l:8.70,  sc:20, cat:"mixer"},
+  {desc:"Mixer Puree Mango Mix",                                              um:"PZ",               l:10.61, sc:0,  cat:"mixer"},
+  {desc:"Lillet Blanc",                                                       um:"CL.75X1 SB",       l:22.23, sc:20, cat:"spirit"},
+  {desc:"Liquore Ancho Reyes Verde",                                          um:"CL.70X1 SB",       l:43.20, sc:20, cat:"spirit"},
+  {desc:"Bombola Prestop CO2 LT.14",                                          um:"LT.14 CO",         l:49.12, sc:0,  cat:"co2"},
+  {desc:"Dietor Dolcificante Box 300 bustine",                                um:"BOX 300 BUST CR",  l:16.00, sc:18, cat:"bar"},
+  {desc:"Ciliegie al Maraschino c/Gambo",                                     um:"GR 750X1 PZ",      l:15.38, sc:18, cat:"bar"},
+  {desc:"Olive Verdi Denoccolate V.V.",                                       um:"KG 1.5/0.75X1 PZ", l:12.90, sc:18, cat:"bar"},
+];
+
+// ── GLOU GLOU ─────────────────────────────────────────────────────────────────
+const glouRaw=[
+  {desc:"Gin Bombay Dry LT 1",                              um:"BT",       n:16.02, cat:"gin"},
+  {desc:"Gin Bombay Sapphire CL 70",                        um:"BT",       n:14.37, cat:"gin"},
+  {desc:"Gin Bombay Sapphire LT 1",                         um:"BT",       n:18.99, cat:"gin"},
+  {desc:"Gin Bombay Sapphire LT 1.75",                      um:"BT",       n:40.07, cat:"gin"},
+  {desc:"Gin Monkey 47 CL 50 Premium",                      um:"BT",       n:39.30, cat:"gin"},
+  {desc:"Gin Nordes CL 70 Super Premium",                   um:"BT",       n:31.55, cat:"gin"},
+  {desc:"Gin Piero London Dry CL 70 STG Super Premium",     um:"BT",       n:33.69, cat:"gin"},
+  {desc:"Gin Tanqueray Ten LT 1 Premium",                   um:"BT",       n:30.48, cat:"gin"},
+  {desc:"Birra Beck's Pils CL 33 VAP",                      um:"CT 24pz",  n:17.66, cat:"birra"},
+  {desc:"Birra Ceres Strong CL 33 VAP DOQR",                um:"CT 24pz",  n:28.57, cat:"birra"},
+  {desc:"Birra Corona CL 33 VAP",                           um:"CT 24pz",  n:24.51, cat:"birra"},
+  {desc:"Birra Menabrea Bionda CL 33 VAP",                  um:"CT 24pz",  n:27.56, cat:"birra"},
+  {desc:"Birra Tennent's Super CL 33 VAP",                  um:"CT 24pz",  n:33.57, cat:"birra"},
+  {desc:"Coca Cola Lattina Sleek CL 33 x24",                um:"CF",       n:13.84, cat:"soft"},
+  {desc:"Coca Cola Zero Lattina Sleek CL 33 x24",           um:"CF",       n:13.84, cat:"soft"},
+  {desc:"Coca Cola LT 1.5 PET",                             um:"CF 6pz",   n:11.97, cat:"soft"},
+  {desc:"Fanta Lattina Sleek CL 33 x24",                    um:"CF",       n:13.84, cat:"soft"},
+  {desc:"Fuze Tea Limone Lattina Sleek CL 33",              um:"CF 24pz",  n:17.51, cat:"soft"},
+  {desc:"Fuze Tea Pesca Lattina Sleek CL 33",               um:"CF 24pz",  n:17.51, cat:"soft"},
+  {desc:"Lemonsoda LT 1 PET",                               um:"CF 6pz",   n:10.04, cat:"soft"},
+  {desc:"Red Bull CL 25 Lattina",                           um:"CF 24pz",  n:27.20, cat:"soft"},
+  {desc:"Red Bull Zero CL 25",                              um:"CT",       n:34.04, cat:"soft"},
+  {desc:"Schweppes Lemon LT 1 PET",                         um:"CF 6pz",   n:9.92,  cat:"soft"},
+  {desc:"Schweppes Tonica LT 1 PET",                        um:"CF 6pz",   n:13.78, cat:"soft"},
+  {desc:"Sprite Lattina Sleek CL 33 x24",                   um:"CF",       n:13.44, cat:"soft"},
+  {desc:"Succo Yoga Ananas 100% ML 200 VAP",                um:"CF 24pz",  n:22.77, cat:"soft"},
+  {desc:"Succo Yoga Arancia Sicilia 100% ML 200 VAP",       um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Succo Yoga Mela Verde ML 200 VAP",                 um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Succo Yoga Pera ML 200 VAP",                       um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Succo Yoga Pesca ML 200 VAP",                      um:"CF 24pz",  n:20.27, cat:"soft"},
+  {desc:"Acqua San Benedetto Gas CL 50 PET",                um:"CF 24pz",  n:6.14,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Nat CL 50 PET",                um:"CF 24pz",  n:6.14,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Tower Gas LT 1 PET",           um:"CF 12pz",  n:5.10,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Tower Nat LT 1 PET",           um:"CF 12pz",  n:5.10,  cat:"acqua"},
+  {desc:"Amaretto Disaronno LT 1",                          um:"BT",       n:20.11, cat:"spirit"},
+  {desc:"Amaro Jagermeister LT 1 Est.",                     um:"BT",       n:14.53, cat:"spirit"},
+  {desc:"Amaro Montenegro CL 70",                           um:"BT",       n:15.94, cat:"spirit"},
+  {desc:"Amaro Montenegro LT 1",                            um:"BT",       n:19.64, cat:"spirit"},
+  {desc:"Amaro Montenegro LT 1.5",                          um:"BT",       n:34.15, cat:"spirit"},
+  {desc:"Aperitivo Bitter Martini LT 1",                    um:"BT",       n:12.25, cat:"spirit"},
+  {desc:"Brandy Vecchia Romagna CL.150_40",                 um:"BT",       n:27.19, cat:"spirit"},
+  {desc:"Crema Baileys Irish Cream LT 1",                   um:"BT",       n:18.22, cat:"spirit"},
+  {desc:"Liquore Passoa LT 1",                              um:"BT",       n:15.92, cat:"spirit"},
+  {desc:"Liquore Saint Germain CL 70 Premium",              um:"BT",       n:29.84, cat:"spirit"},
+  {desc:"Liquore Sambuca Molinari LT 1 Est.",               um:"BT",       n:15.35, cat:"spirit"},
+  {desc:"Liquore Sambuca Molinari LT 1.5",                  um:"BT",       n:33.11, cat:"spirit"},
+  {desc:"Martini Ambrato CL 75",                            um:"BT",       n:14.26, cat:"spirit"},
+  {desc:"Martini Bitter Riserva Speciale CL 70",            um:"BT",       n:15.44, cat:"spirit"},
+  {desc:"Martini Rubino CL 75",                             um:"BT",       n:13.29, cat:"spirit"},
+  {desc:"Martini Vibrante CL 75 Analcolico",                um:"BT",       n:10.32, cat:"spirit"},
+  {desc:"Rum Bacardi Carta Blanca LT 1",                    um:"BT",       n:14.94, cat:"spirit"},
+  {desc:"Rum Bacardi Carta Oro LT 1",                       um:"BT",       n:15.94, cat:"spirit"},
+  {desc:"Rum Gosling's Black Seal LT 1 Super Premium",      um:"BT",       n:23.06, cat:"spirit"},
+  {desc:"Rum Plantation OFTD Overproof CL 70 Super Premium",um:"BT",       n:30.07, cat:"spirit"},
+  {desc:"Rum Santa Teresa 1796 CL 70",                      um:"BT",       n:40.59, cat:"spirit"},
+  {desc:"Tequila Cazadores Blanco CL 70",                   um:"BT",       n:17.02, cat:"spirit"},
+  {desc:"Tequila Patron Reposado CL 70 Premium",            um:"BT",       n:52.28, cat:"spirit"},
+  {desc:"Tequila Patron Silver CL 70 Premium",              um:"BT",       n:46.99, cat:"spirit"},
+  {desc:"Tequila Patron XO Café CL 70 Premium",             um:"BT",       n:42.90, cat:"spirit"},
+  {desc:"Vecchio Amaro del Capo LT 1",                      um:"BT",       n:19.54, cat:"spirit"},
+  {desc:"Vecchio Amaro del Capo LT 1 F.lli Caffo",          um:"BT",       n:19.52, cat:"spirit"},
+  {desc:"Vecchio Amaro del Capo LT 1.5 F.lli Caffo",        um:"BT",       n:25.14, cat:"spirit"},
+  {desc:"Vermouth Martini Bianco LT 1 New",                 um:"BT",       n:8.12,  cat:"spirit"},
+  {desc:"Vermouth Martini Extra Dry LT 1",                  um:"BT",       n:9.29,  cat:"spirit"},
+  {desc:"Vermouth Martini Rosso LT 1 New",                  um:"BT",       n:8.50,  cat:"spirit"},
+  {desc:"Vodka Eristoff Bianca LT 1",                       um:"BT",       n:10.67, cat:"spirit"},
+  {desc:"Vodka Grey Goose CL 70 Premium",                   um:"BT",       n:34.48, cat:"spirit"},
+  {desc:"Vodka Grey Goose LT 1.5 Premium",                  um:"BT",       n:121.00,cat:"spirit"},
+  {desc:"Vodka Keglevich Pesca LT 1",                       um:"BT",       n:10.25, cat:"spirit"},
+  {desc:"Whisky Dewar's White Label CL 70",                 um:"BT",       n:14.90, cat:"spirit"},
+  {desc:"Whisky Wild Turkey 101 Bourbon CL 70",             um:"BT",       n:31.00, cat:"spirit"},
+  {desc:"Prosecco da miscelazione Corte delle Calli",        um:"CT 6bt",   n:14.75, cat:"vino"},
+  {desc:"Gran Cuvée Brut CL 75 Corte delle Calli Serena",   um:"BT",       n:14.75, cat:"vino"},
+  {desc:"Arachidi KG 1",                                    um:"PZ",       n:4.86,  cat:"bar"},
+  {desc:"Patatina Classica GR 475 x5",                      um:"CT",       n:2.90,  cat:"bar"},
+  {desc:"Tortilla Natural GR 400 x7",                       um:"CT",       n:2.60,  cat:"bar"},
+];
+
+// ── GROS MARKET ───────────────────────────────────────────────────────────────
+const grosRaw=[
+  {desc:"Gin Sale Marino CL 70",              um:"BT",      n:18.49, cat:"gin"},
+  {desc:"Gin LT.1 Bulldog",                   um:"BT",      n:21.19, cat:"gin"},
+  {desc:"Gin CL.70 Nouaison",                 um:"BT",      n:16.80, cat:"gin"},
+  {desc:"Gin CL.70 Botanist",                 um:"BT",      n:16.80, cat:"gin"},
+  {desc:"Amaro Montenegro LT 1.5",            um:"BT",      n:20.17, cat:"spirit"},
+  {desc:"Vecchia Romagna CL.150_40",          um:"BT",      n:19.33, cat:"spirit"},
+  {desc:"Acqua San Benedetto Gas CL 50 PET",  um:"CF 24pz", n:3.12,  cat:"acqua"},
+  {desc:"Acqua San Benedetto Nat CL 50 PET",  um:"CF 24pz", n:3.12,  cat:"acqua"},
+];
+
+// ── CALCOLO ───────────────────────────────────────────────────────────────────
+const prinzData = prinzRaw.map(r => {
+  const netto = r.l * (1 - r.sc/100);
+  return {fornitore:PRINZ, desc:r.desc, um:r.um, cat:r.cat, netto:netto*0.98};
+});
+const glouData  = glouRaw.map(r  => ({fornitore:GLOU, desc:r.desc,  um:r.um,  cat:r.cat, netto:r.n}));
+const grosData  = grosRaw.map(r  => ({fornitore:GROS, desc:r.desc,  um:r.um,  cat:r.cat, netto:r.n}));
+
+let allData = [...prinzData, ...glouData, ...grosData];
+let activeFor = 'all';
+let activeSortCol = null;
+
+// ── ORDINAMENTO ───────────────────────────────────────────────────────────────
+const CAT_ORDER = ['acqua','bar','birra','co2','gin','mixer','soft','spirit','vino'];
+function defaultSort(arr){
+  return [...arr].sort((a,b)=>{
+    const ca=CAT_ORDER.indexOf(a.cat), cb=CAT_ORDER.indexOf(b.cat);
+    if(ca!==cb) return (ca===-1?99:ca)-(cb===-1?99:cb);
+    return a.desc.localeCompare(b.desc,'it');
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function fmt(n){ return '€\u202f'+n.toFixed(2).replace('.',','); }
+function forBadge(f){
+  if(f===PRINZ) return `<span class="badge b-prinz">PRZ</span>`;
+  if(f===GLOU)  return `<span class="badge b-glou">GLU</span>`;
+  return `<span class="badge b-gros">GRS</span>`;
+}
+function catBadge(cat){
+  const c=CAT[cat]||CAT.spirit;
+  return `<span class="cat ${c.cls}">${c.label}</span>`;
+}
+
+function renderTable(rows){
+  const tb = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  if(!rows.length){
+    tb.innerHTML=''; empty.style.display='';
+    document.getElementById('countLabel').textContent='';
+    return;
+  }
+  empty.style.display='none';
+  tb.innerHTML = rows.map(r=>`
+    <tr>
+      <td class="t-for">${forBadge(r.fornitore)}</td>
+      <td class="t-desc">${catBadge(r.cat)}${r.desc}</td>
+      <td class="t-um col-um">${r.um}</td>
+      <td class="t-price">${fmt(r.netto)}</td>
+    </tr>`).join('');
+  document.getElementById('countLabel').textContent = rows.length+' articoli';
+}
+
+function applyFilters(){
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let rows = allData;
+  if(activeFor!=='all') rows=rows.filter(r=>r.fornitore===activeFor);
+  if(q) rows=rows.filter(r=>
+    r.desc.toLowerCase().includes(q)||
+    (CAT[r.cat]?.label||'').toLowerCase().includes(q)||
+    r.fornitore.toLowerCase().includes(q)
+  );
+  if(!activeSortCol) rows=defaultSort(rows);
+  renderTable(rows);
+}
+
+function setFornitore(f,e){
+  activeFor=f; activeSortCol=null;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  applyFilters();
+}
+
+let sortDir={};
+function sortTable(col){
+  activeSortCol=col;
+  const keys=['fornitore','desc','um','netto'];
+  const k=keys[col];
+  sortDir[col]=!sortDir[col];
+  const get=r=>{ const v=r[k]; return typeof v==='number'?v:v.toLowerCase(); };
+  allData=[...allData].sort((a,b)=>{ const av=get(a),bv=get(b); return sortDir[col]?(av>bv?1:-1):(av<bv?1:-1); });
+  applyFilters();
+}
+
+// ── TEMA ──────────────────────────────────────────────────────────────────────
+(function(){
+  const root=document.documentElement;
+  const toggle=document.getElementById('themeToggle');
+  const icon=document.getElementById('themeIcon');
+  function sync(){ icon.textContent=root.getAttribute('data-theme')==='dark'?'☀️':'🌙'; }
+  sync();
+  toggle.addEventListener('click',function(){
+    const next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    localStorage.setItem('poggio-theme',next);
+    sync();
+  });
+})();
+
+applyFilters();
+</script>
 </body>
 </html>
