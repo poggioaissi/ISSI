@@ -264,14 +264,31 @@ signInAnonymously(auth).then(()=>{ // --- Carica stati da Firestore all'avvio (r
 const colRef = collection(db,'gin_status');
 onSnapshot(colRef, (snapshot)=>{ snapshot.forEach(docSnap=>{ const ginId = docSnap.id; const status = docSnap.data().status || 'disponibile'; applyStatus(ginId, status); });
 }, (err)=>{ console.warn('onSnapshot error:', err.code); });
-}).catch(e => console.warn('Auth anonima non disponibile:', e.message)); // --- Mostra indicatore sync ---
+// --- Salva su Firestore (definita qui per garantire auth attiva) ---
+window.setStatus = async function(ginId, status, btn){
+  applyStatus(ginId, status);
+  try{
+    await setDoc(doc(db,'gin_status', ginId),{status});
+    showSync();
+  } catch(e){
+    console.error('Errore salvataggio stato gin:', e.code, e.message);
+    const el = document.getElementById('syncIndicator');
+    el.textContent = '⚠️ Errore salvataggio';
+    el.style.background = '#efdfdb';
+    el.style.color = '#9a3a3a';
+    el.style.borderColor = '#cda8a1';
+    el.classList.add('show');
+    setTimeout(()=>{ el.classList.remove('show'); el.textContent='✓ Salvato'; el.style.background=''; el.style.color=''; el.style.borderColor=''; }, 3000);
+  }
+};
+}).catch(e => console.warn('Auth anonima non disponibile:', e.message));
+// --- Mostra indicatore sync ---
 function showSync(){ const el=document.getElementById('syncIndicator'); el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2000);
 } // --- Applica stato a una card ---
 function applyStatus(ginId, status){ const card = document.querySelector(`article[data-gin="${ginId}"]`); if(!card) return; card.dataset.status = status; // aggiorna bottoni card.querySelectorAll('.status-btn').forEach(b=>{ b.classList.remove('active-disponibile','active-esaurito','active-magazzino'); }); const activeBtn = card.querySelector(`.status-btn[onclick*="'${status}'"]`); if(activeBtn) activeBtn.classList.add(`active-${status}`); // rimuovi status badge precedente card.querySelectorAll('.status-badge').forEach(b=>b.remove()); // sposta card nella giusta sottocategoria const catSection = card.closest('details.category'); if(!catSection) return; const catId = catSection.dataset.category.replace(/ /g,'_'); // rimetti sempre nella gin-grid principale prima di spostare const mainGrid = catSection.querySelector('.gin-grid:not(.sub-grid)'); const esaGrid = catSection.querySelector('#sub-esaurito-' + catId + ' .sub-grid'); const magGrid = catSection.querySelector('#sub-magazzino-' + catId + ' .sub-grid'); if(status === 'esaurito' && esaGrid){ const badge = document.createElement('span'); badge.className='status-badge esaurito'; badge.textContent='⛔ Esaurito'; card.querySelector('.gin-name') && card.querySelector('.gin-name').after(badge); esaGrid.appendChild(card); } else if(status === 'magazzino' && magGrid){ const badge = document.createElement('span'); badge.className='status-badge magazzino'; badge.textContent='📦 Magazzino'; card.querySelector('.gin-name') && card.querySelector('.gin-name').after(badge); magGrid.appendChild(card); } else if(mainGrid){ insertAlphabetically(mainGrid, card); } // aggiorna visibilità e contatori sottosezioni updateSubSections(catSection, catId);
 } function insertAlphabetically(grid, card){ var name=(card.getAttribute('data-gin-name')||'').toLowerCase(); var cards=Array.from(grid.querySelectorAll(':scope > article.gin-card')); var inserted=false; for(var i=0;i<cards.length;i++){ var eName=(cards[i].getAttribute('data-gin-name')||'').toLowerCase(); if(name<eName){ grid.insertBefore(card,cards[i]); inserted=true; break; } } if(!inserted) grid.appendChild(card); }
 function updateSubSections(catSection, catId){ ['esaurito','magazzino'].forEach(type=>{ const sub = catSection.querySelector('#sub-' + type + '-' + catId); if(!sub) return; const count = sub.querySelectorAll('.gin-card').length; const countEl = sub.querySelector('.sub-count'); if(countEl) countEl.textContent = count; sub.style.display = count > 0 ? '' : 'none'; });
-} // --- Salva su Firestore ---
-window.setStatus = async function(ginId, status, btn){ applyStatus(ginId, status); try{ await setDoc(doc(db,'gin_status', ginId),{status}); showSync(); } catch(e){ console.error('Errore salvataggio stato gin:', e.code, e.message); } }; // --- Master toggle (no password — accesso già protetto da personale.html) ---
+} // --- Master toggle (no password — accesso già protetto da personale.html) ---
 const masterBtn = document.getElementById('masterBtn');
 masterBtn.addEventListener('click',()=>{
   if(document.body.classList.contains('master-mode')){
