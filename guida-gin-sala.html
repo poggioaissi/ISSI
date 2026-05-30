@@ -266,11 +266,18 @@ onSnapshot(colRef, (snapshot)=>{ snapshot.forEach(docSnap=>{ const ginId = docSn
 }, (err)=>{ console.warn('onSnapshot error:', err.code); });
 // --- Salva su Firestore (definita qui per garantire auth attiva) ---
 window.setStatus = async function(ginId, status, btn){
-  applyStatus(ginId, status);
   try{
-    await setDoc(doc(db,'gin_status', ginId),{status});
+
+    await setDoc(
+        doc(db,'gin_status', ginId),
+        {status}
+    );
+
+    applyStatus(ginId, status);
+
     showSync();
-  } catch(e){
+
+}catch(e){
     console.error('Errore salvataggio stato gin:', e.code, e.message);
     const el = document.getElementById('syncIndicator');
     el.textContent = '⚠️ Errore salvataggio';
