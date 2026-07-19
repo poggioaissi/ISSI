@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -31,16 +32,30 @@
   try {
     firebase.initializeApp(firebaseConfig);
     window.db = null; // inizializzato dopo il login anonimo
+    window.firebaseAuthError = null;
     firebase.auth().signInAnonymously().then(function() {
       window.db = firebase.database();
       // Notifica il resto dell'app che Firebase è pronto
       document.dispatchEvent(new Event('firebase-ready'));
     }).catch(function(e) {
-      console.warn('Firebase auth non disponibile:', e.message);
+      window.firebaseAuthError = e;
+      console.error('Firebase auth non disponibile:', e.code, e.message);
+      document.dispatchEvent(new CustomEvent('firebase-error', {detail:e}));
+    });
+    // Se la connessione al database si interrompe (dopo essere stata attiva), avvisa
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user && window.db){
+        try{
+          firebase.database().ref('.info/connected').on('value', function(snap){
+            document.dispatchEvent(new CustomEvent('firebase-connection', {detail: !!snap.val()}));
+          });
+        }catch(e){}
+      }
     });
   } catch(e) {
     window.db = null;
-    console.warn('Firebase non disponibile:', e.message);
+    window.firebaseAuthError = e;
+    console.error('Firebase non disponibile:', e.message);
   }
 </script>
 <!-- Ripristina tema salvato prima del render per evitare flash -->
@@ -1085,6 +1100,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   <div class="topbar-inner">
     <div class="topbar-title">Magazzino <span>/ Ordini</span></div>
     <div style="display:flex;align-items:center;gap:8px">
+      <span class="fb-status" id="fbStatus" title="Stato connessione database" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:4px 8px;border-radius:999px;background:var(--color-surface-2);cursor:default;">🟡 Cloud…</span>
       <button class="theme-btn" id="themeToggle" aria-label="Cambia tema"><span id="themeIcon">☀️</span></button>
       <button class="btn-carica-cloud" id="btnCaricaCloud" onclick="caricaDaFirebase()" title="Carica ultimo ordine e giacenze dal cloud">☁️ Carica</button>
       <button class="btn-reset" onclick="resetAll()">↺ Azzera</button>
@@ -1481,7 +1497,7 @@ function saveSupplierNotesFirebase(){
     if(!ready || !window.db){ console.warn('saveSupplierNotesFirebase: Firebase non disponibile'); return false; }
     return db.ref('note_fornitori').set(supplierNotes)
       .then(()=>true)
-      .catch(e=>{ console.warn('saveSupplierNotesFirebase error',e); return false; });
+      .catch(e=>{ console.error('saveSupplierNotesFirebase error',e.code,e.message); setFbStatus('error',e); return false; });
   });
 }
 function loadSupplierNotesFirebase(){
@@ -1598,7 +1614,7 @@ function saveStore(data){
         });
       }).catch(()=>{});
       return true;
-    }).catch(e=>{ console.warn('saveStore error',e); return false; });
+    }).catch(e=>{ console.error('saveStore error',e.code,e.message); setFbStatus('error',e); return false; });
   });
 }
 function loadStore(){
@@ -1632,7 +1648,7 @@ function saveGiacenze(){
     CATALOG.forEach(p=>{ const st=state[p.name]; if(st.giac>0) snap[p.name]={giac:st.giac,giacUnit:st.giacUnit}; });
     return db.ref('giacenze').set({date:new Date().toISOString(), data:snap})
       .then(()=>true)
-      .catch(e=>{ console.warn('saveGiacenze error',e); return false; });
+      .catch(e=>{ console.error('saveGiacenze error',e.code,e.message); setFbStatus('error',e); return false; });
   });
 }
 function loadGiacenze(){
@@ -2452,18 +2468,30 @@ function downloadImgAll(){
   const bg=isDark?'#0f160e':'#eef1e8';
   const btn=document.getElementById('btnDownloadImgAll');
   if(btn){btn.textContent='⏳…';btn.disabled=true;}
-  html2canvas(panel,{backgroundColor:bg,scale:2,useCORS:true,logging:false})
-    .then(canvas=>{
-      const link=document.createElement('a');
-      link.download=`ordine-completo_${ds}.png`;
-      link.href=canvas.toDataURL('image/png');
-      link.click();
-      if(btn){btn.textContent='✓ Salvata!';setTimeout(()=>{btn.textContent='⬇ Img';btn.disabled=false;},2000);}
-    })
-    .catch(err=>{
-      alert('Errore generazione immagine: '+err.message);
-      if(btn){btn.textContent='⬇ Img';btn.disabled=false;}
-    });
+
+  const finish=(dataUrl)=>{
+    const link=document.createElement('a');
+    link.download=`ordine-completo_${ds}.png`;
+    link.href=dataUrl;
+    link.click();
+    if(btn){btn.textContent='✓ Salvata!';setTimeout(()=>{btn.textContent='⬇ Img';btn.disabled=false;},2000);}
+  };
+  const fail=(err)=>{
+    alert('Errore generazione immagine: '+(err&&err.message?err.message:err));
+    if(btn){btn.textContent='⬇ Img';btn.disabled=false;}
+  };
+
+  // html-to-image usa il motore di rendering nativo del browser (supporta color-mix, oklch, ecc.)
+  if(window.htmlToImage){
+    htmlToImage.toPng(panel,{backgroundColor:bg,pixelRatio:2}).then(finish).catch(fail);
+  } else if(window.html2canvas){
+    // Fallback se html-to-image non è disponibile (es. CDN irraggiungibile)
+    html2canvas(panel,{backgroundColor:bg,scale:2,useCORS:true,logging:false})
+      .then(canvas=>finish(canvas.toDataURL('image/png')))
+      .catch(fail);
+  } else {
+    fail('Libreria di generazione immagini non disponibile.');
+  }
 }
 window.downloadImgAll=downloadImgAll;
 
@@ -2476,18 +2504,28 @@ function downloadImgGiacenze(){
   const bg=isDark?'#0f160e':'#eef1e8';
   const btn=document.getElementById('btnDownloadImgGiac');
   if(btn){btn.textContent='⏳…';btn.disabled=true;}
-  html2canvas(panel,{backgroundColor:bg,scale:2,useCORS:true,logging:false})
-    .then(canvas=>{
-      const link=document.createElement('a');
-      link.download=`giacenze_${ds}.png`;
-      link.href=canvas.toDataURL('image/png');
-      link.click();
-      if(btn){btn.textContent='✓ Salvata!';setTimeout(()=>{btn.textContent='⬇ Scarica immagine giacenze';btn.disabled=false;},2000);}
-    })
-    .catch(err=>{
-      alert('Errore generazione immagine: '+err.message);
-      if(btn){btn.textContent='⬇ Scarica immagine giacenze';btn.disabled=false;}
-    });
+
+  const finish=(dataUrl)=>{
+    const link=document.createElement('a');
+    link.download=`giacenze_${ds}.png`;
+    link.href=dataUrl;
+    link.click();
+    if(btn){btn.textContent='✓ Salvata!';setTimeout(()=>{btn.textContent='⬇ Scarica immagine giacenze';btn.disabled=false;},2000);}
+  };
+  const fail=(err)=>{
+    alert('Errore generazione immagine: '+(err&&err.message?err.message:err));
+    if(btn){btn.textContent='⬇ Scarica immagine giacenze';btn.disabled=false;}
+  };
+
+  if(window.htmlToImage){
+    htmlToImage.toPng(panel,{backgroundColor:bg,pixelRatio:2}).then(finish).catch(fail);
+  } else if(window.html2canvas){
+    html2canvas(panel,{backgroundColor:bg,scale:2,useCORS:true,logging:false})
+      .then(canvas=>finish(canvas.toDataURL('image/png')))
+      .catch(fail);
+  } else {
+    fail('Libreria di generazione immagini non disponibile.');
+  }
 }
 window.downloadImgGiacenze=downloadImgGiacenze;
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
@@ -2870,6 +2908,29 @@ function caricaDaFirebase(){
   });
 }
 window.caricaDaFirebase = caricaDaFirebase;
+
+/* ── INDICATORE STATO CONNESSIONE FIREBASE ── */
+function setFbStatus(mode, detail){
+  const el=document.getElementById('fbStatus');
+  if(!el) return;
+  if(mode==='connected'){
+    el.textContent='🟢 Cloud';
+    el.title='Connesso al database Firebase';
+  } else if(mode==='error'){
+    el.textContent='🔴 Cloud offline';
+    el.title='Connessione Firebase fallita'+(detail?(': '+(detail.code||'')+' '+(detail.message||detail)):'')+'\nControlla: 1) Autenticazione anonima abilitata su Firebase Console, 2) Dominio autorizzato in Authentication > Settings, 3) Regole database, 4) Connessione internet.';
+  } else if(mode==='pending'){
+    el.textContent='🟡 Cloud…';
+    el.title='Connessione al database in corso…';
+  }
+}
+document.addEventListener('firebase-ready', ()=>setFbStatus('connected'));
+document.addEventListener('firebase-error', (e)=>setFbStatus('error', e.detail));
+document.addEventListener('firebase-connection', (e)=>{ setFbStatus(e.detail ? 'connected' : 'error'); });
+// Se dopo 8s nessun evento è arrivato, segnala comunque un problema
+setTimeout(()=>{ if(!window.db) setFbStatus('error', window.firebaseAuthError || 'timeout connessione'); }, 8000);
+if(window.firebaseAuthError) setFbStatus('error', window.firebaseAuthError);
+else if(window.db) setFbStatus('connected');
 
 /* ── INIT ── */
 restoreLocalState();  // sincrono: carica qty/unit/giac/giacUnit da localStorage
