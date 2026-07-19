@@ -1100,7 +1100,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   </div>
 
   <div class="legenda">
-    <div class="leg-item"><div class="leg-dot prince"></div> Prince <span class="leg-note">entro le 17 · ogni giorno</span></div>
+    <div class="leg-item"><div class="leg-dot prince"></div> Prinz <span class="leg-note">entro le 17 · ogni giorno</span></div>
     <div class="leg-item"><div class="leg-dot gloo"></div> GlooGloo <span class="leg-note">entro le 15 · mart–sab</span></div>
     <div class="leg-item"><div class="leg-dot online"></div> Online / Diretto</div>
     <div class="leg-item"><div class="leg-dot altro"></div> Altro</div>
@@ -1139,6 +1139,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
       <div>
         <div class="modal-title">Ordine settimanale</div>
         <div class="modal-date" id="modalDate"></div>
+        <div class="modal-save-status" id="modalSaveStatus" style="display:none;font-size:12px;font-weight:700;margin-top:2px;"></div>
       </div>
       <button class="btn-close" onclick="closeModal()">✕</button>
     </div>
@@ -1231,7 +1232,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 'use strict';
 
 const SUPPLIERS = {
-  prince: { label:'Prince',          note:'entro le 17 · ogni giorno' },
+  prince: { label:'Prinz',           note:'entro le 17 · ogni giorno' },
   gloo:   { label:'GlooGloo',        note:'entro le 15 · mart–sab' },
   online: { label:'Online / Diretto',note:'' },
   altro:  { label:'Altro',           note:'' },
@@ -1325,10 +1326,10 @@ const CATALOG = [
   // LIQUORI
   {cat:'LIQUORI',name:'Ancho Reyes Verde',         sup:'online',unit:'bott'},
   {cat:'LIQUORI',name:'Baileys',                   sup:'gloo',  unit:'bott'},
-  {cat:'LIQUORI',name:'Blue Curaçao',              sup:'gloo',  unit:'bott'},
   {cat:'LIQUORI',name:'Campari Soda',              sup:'gloo',  unit:'ct'},
   {cat:'LIQUORI',name:'Crodino',                   sup:'gloo',  unit:'ct'},
   {cat:'LIQUORI',name:'Liquore al caffè Patron XO',sup:'gloo',  unit:'bott'},
+  {cat:'LIQUORI',name:'Limoncello Nazionale',      sup:'prince',unit:'bott'},
   {cat:'LIQUORI',name:'Love Kamikaze',             sup:'online',unit:'bott'},
   {cat:'LIQUORI',name:'Passoã',                    sup:'gloo',  unit:'bott'},
   {cat:'LIQUORI',name:'St. Germain',               sup:'gloo',  unit:'bott'},
@@ -1336,8 +1337,7 @@ const CATALOG = [
   // AMARI & DIGESTIVI
   {cat:'AMARI & DIGESTIVI',name:'Amaro del Capo 100cl',      sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Amaro del Capo 150cl',    sup:'gloo',  unit:'bott'},
-  {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro 70cl',   sup:'gloo',  unit:'bott'},
-  {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro 100cl',  sup:'gloo',  unit:'bott'},
+
   {cat:'AMARI & DIGESTIVI',name:'Amaro Jefferson',    sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Amaro Montenegro 150cl',   sup:'gloo',  unit:'bott'},
   {cat:'AMARI & DIGESTIVI',name:'Courvoisier',        sup:'gloo',  unit:'bott'},
@@ -1418,6 +1418,8 @@ const CATALOG = [
   {cat:'SCIROPPI, PUREE & ALTRO',name:'Foamer',                sup:'prince',unit:'bott'},
   {cat:'SCIROPPI, PUREE & ALTRO',name:'Mixer Lime',             sup:'prince',unit:'bott'},
   {cat:'SCIROPPI, PUREE & ALTRO',name:'Mixer Limone',           sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI, PUREE & ALTRO',name:'Purea di Cocco',        sup:'prince',unit:'bott'},
+  {cat:'SCIROPPI, PUREE & ALTRO',name:'Purea di Fragola',      sup:'prince',unit:'bott'},
   {cat:'SCIROPPI, PUREE & ALTRO',name:'Purea di Lampone',      sup:'prince',unit:'bott'},
   {cat:'SCIROPPI, PUREE & ALTRO',name:'Purea di Mango',        sup:'prince',unit:'bott'},
   {cat:'SCIROPPI, PUREE & ALTRO',name:'Purea di Passion Fruit',sup:'prince',unit:'bott'},
@@ -1451,6 +1453,45 @@ CATALOG.forEach(p => { state[p.name] = { qty:0, unit:p.unit, giac:0, giacUnit:p.
 const STORE       = 'poggio-ordine-v2';
 const STORE_GIAC  = 'poggio-giacenze-v1';
 const LS_STATE    = 'poggio-state-v1'; // localStorage: qty ordine + unità + giacenze
+const LS_NOTES    = 'poggio-note-fornitori-v1'; // localStorage: note libere per fornitore
+
+/* ── NOTE FORNITORI: state + persistenza ── */
+const supplierNotes = {};
+Object.keys(SUPPLIERS).forEach(k=>{ supplierNotes[k]=''; });
+
+function setSupplierNote(sup, val){
+  supplierNotes[sup]=val;
+  saveSupplierNotesLocal();
+}
+window.setSupplierNote=setSupplierNote;
+
+function saveSupplierNotesLocal(){
+  try{ localStorage.setItem(LS_NOTES, JSON.stringify(supplierNotes)); }catch(e){}
+}
+function restoreSupplierNotesLocal(){
+  try{
+    const raw=localStorage.getItem(LS_NOTES);
+    if(!raw) return;
+    const snap=JSON.parse(raw);
+    Object.keys(supplierNotes).forEach(k=>{ if(snap[k]!=null) supplierNotes[k]=snap[k]; });
+  }catch(e){}
+}
+function saveSupplierNotesFirebase(){
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db){ console.warn('saveSupplierNotesFirebase: Firebase non disponibile'); return false; }
+    return db.ref('note_fornitori').set(supplierNotes)
+      .then(()=>true)
+      .catch(e=>{ console.warn('saveSupplierNotesFirebase error',e); return false; });
+  });
+}
+function loadSupplierNotesFirebase(){
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db) return null;
+    return new Promise(resolve=>{
+      db.ref('note_fornitori').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+    });
+  });
+}
 
 /* ── SALVA STATO COMPLETO IN LOCALSTORAGE ── */
 function saveLocalState(){
@@ -1517,63 +1558,89 @@ function syncUIFromState(){
   updateCounters();
 }
 
+/* ── ATTENDE CHE FIREBASE SIA PRONTO (auth anonima completata) ── */
+function waitForDb(timeoutMs){
+  timeoutMs = timeoutMs || 6000;
+  if(window.db) return Promise.resolve(true);
+  return new Promise(resolve=>{
+    let done=false;
+    const onReady=()=>{ if(done) return; done=true; clearTimeout(timer); resolve(true); };
+    document.addEventListener('firebase-ready', onReady, {once:true});
+    const timer=setTimeout(()=>{
+      if(done) return; done=true;
+      document.removeEventListener('firebase-ready', onReady);
+      resolve(!!window.db);
+    }, timeoutMs);
+  });
+}
+
 /* ── ORDINE: salva/carica su Firebase ── */
 function saveStore(data){
-  if(!window.db) return;
-  try{
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db){ console.warn('saveStore: Firebase non disponibile'); return false; }
     const now = new Date();
     const iso = now.toISOString();
-    // Salva ultimo ordine (sovrascrive)
-    db.ref('ordine').set({date: iso, order: data});
-    // Salva nello storico con chiave timestamp
     const key = now.getFullYear()+'_'
       +String(now.getMonth()+1).padStart(2,'0')+'_'
       +String(now.getDate()).padStart(2,'0')+'_'
       +String(now.getHours()).padStart(2,'0')
       +String(now.getMinutes()).padStart(2,'0');
-    db.ref('storico/'+key).set({date: iso, order: data});
-    // Pulizia automatica: rimuovi voci più vecchie di 30 giorni
-    const cutoff = new Date(now.getTime() - 30*24*60*60*1000).toISOString();
-    db.ref('storico').once('value').then(snap=>{
-      if(!snap.exists()) return;
-      snap.forEach(child=>{
-        if(child.val().date < cutoff) db.ref('storico/'+child.key).remove();
-      });
-    });
-  }catch(e){ console.warn('saveStore error',e); }
+    return Promise.all([
+      db.ref('ordine').set({date: iso, order: data}),
+      db.ref('storico/'+key).set({date: iso, order: data})
+    ]).then(()=>{
+      // Pulizia automatica: rimuovi voci più vecchie di 30 giorni (non blocca l'esito del salvataggio)
+      const cutoff = new Date(now.getTime() - 30*24*60*60*1000).toISOString();
+      db.ref('storico').once('value').then(snap=>{
+        if(!snap.exists()) return;
+        snap.forEach(child=>{
+          if(child.val().date < cutoff) db.ref('storico/'+child.key).remove();
+        });
+      }).catch(()=>{});
+      return true;
+    }).catch(e=>{ console.warn('saveStore error',e); return false; });
+  });
 }
 function loadStore(){
-  if(!window.db) return Promise.resolve(null);
-  return new Promise(resolve=>{
-    db.ref('ordine').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db) return null;
+    return new Promise(resolve=>{
+      db.ref('ordine').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+    });
   });
 }
 function loadStorico(){
-  if(!window.db) return Promise.resolve([]);
-  return new Promise(resolve=>{
-    db.ref('storico').once('value').then(snap=>{
-      if(!snap.exists()){ resolve([]); return; }
-      const list=[];
-      snap.forEach(child=>{ list.push({key:child.key, ...child.val()}); });
-      list.sort((a,b)=>b.date.localeCompare(a.date)); // più recente prima
-      resolve(list);
-    }).catch(()=>resolve([]));
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db) return [];
+    return new Promise(resolve=>{
+      db.ref('storico').once('value').then(snap=>{
+        if(!snap.exists()){ resolve([]); return; }
+        const list=[];
+        snap.forEach(child=>{ list.push({key:child.key, ...child.val()}); });
+        list.sort((a,b)=>b.date.localeCompare(a.date)); // più recente prima
+        resolve(list);
+      }).catch(()=>resolve([]));
+    });
   });
 }
 
 /* ── GIACENZE: salva snapshot su Firebase ── */
 function saveGiacenze(){
-  if(!window.db) return;
-  try{
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db){ console.warn('saveGiacenze: Firebase non disponibile'); return false; }
     const snap={};
     CATALOG.forEach(p=>{ const st=state[p.name]; if(st.giac>0) snap[p.name]={giac:st.giac,giacUnit:st.giacUnit}; });
-    db.ref('giacenze').set({date:new Date().toISOString(), data:snap});
-  }catch(e){ console.warn('saveGiacenze error',e); }
+    return db.ref('giacenze').set({date:new Date().toISOString(), data:snap})
+      .then(()=>true)
+      .catch(e=>{ console.warn('saveGiacenze error',e); return false; });
+  });
 }
 function loadGiacenze(){
-  if(!window.db) return Promise.resolve(null);
-  return new Promise(resolve=>{
-    db.ref('giacenze').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db) return null;
+    return new Promise(resolve=>{
+      db.ref('giacenze').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+    });
   });
 }
 
@@ -1685,6 +1752,39 @@ function buildUI(){
     wrap.appendChild(section);
   });
 
+  // ── Sezione NOTE FORNITORI (in fondo, dopo tutte le categorie prodotto) ──
+  const noteSection = document.createElement('div');
+  noteSection.className = 'cat-section';
+  noteSection.id = 'cat_note';
+  noteSection.innerHTML = `
+    <button class="cat-header" aria-expanded="false" onclick="toggleCat('note')">
+      <div class="cat-header-left">
+        <span class="cat-icon">📝</span>
+        <span class="cat-name">NOTE FORNITORI</span>
+      </div>
+      <span class="cat-chevron">▾</span>
+    </button>
+    <div class="cat-body" id="body_note"></div>
+  `;
+  const noteBody = noteSection.querySelector('.cat-body');
+  Object.entries(SUPPLIERS).forEach(([supKey, supObj])=>{
+    const row = document.createElement('div');
+    row.style.cssText = 'padding:12px 16px;border-bottom:1px solid var(--color-border, #e5e5e5);';
+    row.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="supplier-dot ${supKey}"></div>
+        <strong>${supObj.label}</strong>
+      </div>
+      <textarea class="note-textarea" id="note_${supKey}"
+        placeholder="Nota libera per ${supObj.label} (salvata e aggiunta in fondo all'ordine di questo fornitore)…"
+        rows="2"
+        style="width:100%;box-sizing:border-box;padding:8px;border-radius:8px;border:1px solid var(--color-border,#ccc);font-family:inherit;font-size:13px;resize:vertical;"
+        onchange="setSupplierNote('${supKey}', this.value)">${supplierNotes[supKey]||''}</textarea>
+    `;
+    noteBody.appendChild(row);
+  });
+  wrap.appendChild(noteSection);
+
   loadLastOrderBar();
 }
 
@@ -1764,21 +1864,29 @@ function updateCounters(){
 
 /* ── REGISTRA GIACENZE (standalone) ── */
 function registraGiacenze(){
-  saveGiacenze();
-  loadLastOrderBar();
   const btn=document.getElementById('btnRegistraGiac');
-  if(btn){
-    const orig=btn.textContent;
-    btn.textContent='✓ Salvate!';
-    btn.classList.add('saved');
-    setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('saved'); },2000);
-  }
-  // Apre il modal sul tab giacenze per consentire il download immagine
-  renderGiacenzePanel(null);
-  switchModalTab('giacenze');
-  document.getElementById('modalNoteInput').value='';
-  document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow='hidden';
+  const orig=btn?btn.textContent:'';
+  if(btn){ btn.textContent='☁️ …'; btn.disabled=true; }
+  Promise.all([saveGiacenze(), saveSupplierNotesFirebase()]).then(([okGiac, okNotes])=>{
+    loadLastOrderBar();
+    if(btn){
+      btn.disabled=false;
+      if(okGiac){
+        btn.textContent='✓ Salvate!';
+        btn.classList.add('saved');
+      } else {
+        btn.textContent='⚠️ Non salvato (offline)';
+        btn.classList.remove('saved');
+      }
+      setTimeout(()=>{ btn.textContent=orig; btn.classList.remove('saved'); },2500);
+    }
+    // Apre il modal sul tab giacenze per consentire il download immagine
+    renderGiacenzePanel(null);
+    switchModalTab('giacenze');
+    document.getElementById('modalNoteInput').value='';
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+  });
 }
 window.registraGiacenze=registraGiacenze;
 
@@ -1910,12 +2018,29 @@ function generaOrdine(){
   switchModalTab('ordine');
   const orderData={};
   Object.entries(byS).forEach(([sup,items])=>{ if(items.length) orderData[sup]=items; });
-  saveStore(orderData);
-  saveGiacenze();
-  loadLastOrderBar();
+
+  const statusEl=document.getElementById('modalSaveStatus');
+  if(statusEl){
+    statusEl.style.display='block';
+    statusEl.textContent='☁️ Salvataggio in corso…';
+    statusEl.style.color='var(--color-text-muted, #888)';
+  }
   document.getElementById('modalNoteInput').value='';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
+
+  Promise.all([saveStore(orderData), saveGiacenze(), saveSupplierNotesFirebase()]).then(([okOrd, okGiac, okNotes])=>{
+    loadLastOrderBar();
+    if(!statusEl) return;
+    if(okOrd && okGiac){
+      statusEl.textContent='✓ Salvato sul database';
+      statusEl.style.color='var(--color-success, #3a8a3a)';
+      setTimeout(()=>{ statusEl.style.display='none'; },3000);
+    } else {
+      statusEl.textContent='⚠️ Salvataggio fallito — dati solo locali. Riprova quando torni online.';
+      statusEl.style.color='var(--color-danger, #b83a3a)';
+    }
+  });
 }
 
 /* ── RENDER MODAL ── */
@@ -1980,6 +2105,18 @@ function renderModal(byS, date){
         itemsDiv.appendChild(row);
       }
     });
+    // Nota libera del fornitore: aggiunta in fondo, separata da due righe
+    const supNote = (supplierNotes[sup]||'').trim();
+    if(supNote){
+      const sep1=document.createElement('div'); sep1.className='order-sep'; sep1.style.cssText='height:6px;'; itemsDiv.appendChild(sep1);
+      const sep2=document.createElement('div'); sep2.className='order-sep'; sep2.style.cssText='height:6px;'; itemsDiv.appendChild(sep2);
+      const noteRow=document.createElement('div');
+      noteRow.className='order-item order-note';
+      noteRow.dataset.line='📝 '+supNote;
+      noteRow.style.cssText='white-space:pre-wrap;';
+      noteRow.innerHTML=`<span class="order-item-name" style="font-style:italic;">📝 ${supNote}</span>`;
+      itemsDiv.appendChild(noteRow);
+    }
     block.appendChild(hdr);
     block.appendChild(itemsDiv);
     panel.appendChild(block);
@@ -2085,6 +2222,8 @@ function buildTxtGrouped(sup,items,date){
     if(it===null) t+='\n';
     else t+=fmtLine(it.name,it.qty,it.unit,it.noUnit,it.cat)+'\n';
   });
+  const supNote=(supplierNotes[sup]||'').trim();
+  if(supNote) t+=`\n\n📝 ${supNote}\n`;
   return t.trim();
 }
 function copyAll(){
@@ -2129,11 +2268,15 @@ function downloadImg(sup){
   const s=SUPPLIERS[sup];
   const ds=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
 
-  // Collect lines
+  // Collect lines (item normali, separatori, e nota fornitore multi-riga)
   const lines=[];
   block.querySelectorAll('.order-item,.order-sep').forEach(el=>{
     if(el.classList.contains('order-sep')) lines.push(null);
-    else lines.push({qty:el.querySelector('.order-item-qty').textContent.trim(), name:el.querySelector('.order-item-name').textContent.trim()});
+    else if(el.classList.contains('order-note')){
+      lines.push({note: el.querySelector('.order-item-name').textContent.trim()});
+    } else {
+      lines.push({qty:el.querySelector('.order-item-qty').textContent.trim(), name:el.querySelector('.order-item-name').textContent.trim()});
+    }
   });
 
   // Theme colours
@@ -2155,11 +2298,25 @@ function downloadImg(sup){
   // Canvas sizing
   const W=560;
   const lineH=36;
+  const noteLineH=20;
   const headerH=72;
   const paddingX=24;
   const paddingY=16;
-  const itemsCount=lines.length;
-  const H=headerH + paddingY + itemsCount*lineH + paddingY + 8;
+
+  // Pre-calcolo wrap testo nota con contesto di misura temporaneo
+  const measureCtx=document.createElement('canvas').getContext('2d');
+  measureCtx.font=`italic 500 12px Inter, sans-serif`;
+  const noteMaxWidth=W-paddingX*2;
+  lines.forEach(line=>{
+    if(line && line.note) line.noteWrapped=wrapText(measureCtx,line.note,noteMaxWidth);
+  });
+
+  const itemsHeight=lines.reduce((sum,line)=>{
+    if(line===null) return sum+lineH*0.5;
+    if(line.note) return sum+ (line.noteWrapped.length*noteLineH) + 6;
+    return sum+lineH;
+  },0);
+  const H=headerH + paddingY + itemsHeight + paddingY + 8;
 
   const canvas=document.createElement('canvas');
   const dpr=2;
@@ -2199,6 +2356,18 @@ function downloadImg(sup){
   let y=headerH+paddingY;
   lines.forEach(line=>{
     if(line===null){ y+=lineH*0.5; return; }
+    if(line.note){
+      ctx.fillStyle=textMuted;
+      ctx.font=`italic 500 12px Inter, sans-serif`;
+      ctx.textAlign='left';
+      ctx.textBaseline='middle';
+      line.noteWrapped.forEach(wl=>{
+        ctx.fillText(wl, paddingX, y+noteLineH/2);
+        y+=noteLineH;
+      });
+      y+=6;
+      return;
+    }
     // Qty badge
     const qtyW=150;
     ctx.fillStyle=qtyBg;
@@ -2243,6 +2412,23 @@ function downloadImg(sup){
     a.click();
     setTimeout(()=>URL.revokeObjectURL(url),2000);
   },'image/png');
+}
+
+function wrapText(ctx,text,maxWidth){
+  const words=text.split(/\s+/);
+  const lines=[];
+  let cur='';
+  words.forEach(word=>{
+    const test=cur?cur+' '+word:word;
+    if(ctx.measureText(test).width>maxWidth && cur){
+      lines.push(cur);
+      cur=word;
+    } else {
+      cur=test;
+    }
+  });
+  if(cur) lines.push(cur);
+  return lines;
 }
 
 function roundRect(ctx,x,y,w,h,r){
@@ -2631,57 +2817,78 @@ function caricaDaFirebase(){
   btn.classList.add('loading');
   btn.textContent = '☁️ …';
 
-  Promise.all([loadStore(), loadGiacenze()]).then(([savedOrd, savedGiac])=>{
-    let loaded = 0;
+  waitForDb().then(ready=>{
+    if(!ready){
+      btn.classList.remove('loading');
+      btn.textContent = '⚠️ Offline';
+      setTimeout(()=>{ btn.textContent='☁️ Carica'; }, 2500);
+      return;
+    }
+    Promise.all([loadStore(), loadGiacenze()]).then(([savedOrd, savedGiac])=>{
+      let loaded = 0;
 
-    // Ripristina ordine: qty + unità
-    if(savedOrd && savedOrd.order){
-      Object.values(savedOrd.order).forEach(items=>{
-        items.forEach(it=>{
-          if(!state[it.name]) return;
-          state[it.name].qty  = it.qty  || 0;
-          state[it.name].unit = it.unit || state[it.name].unit;
+      // Ripristina ordine: qty + unità
+      if(savedOrd && savedOrd.order){
+        Object.values(savedOrd.order).forEach(items=>{
+          items.forEach(it=>{
+            if(!state[it.name]) return;
+            state[it.name].qty  = it.qty  || 0;
+            state[it.name].unit = it.unit || state[it.name].unit;
+            loaded++;
+          });
+        });
+      }
+
+      // Ripristina giacenze: giac + giacUnit
+      if(savedGiac && savedGiac.data){
+        Object.entries(savedGiac.data).forEach(([name, entry])=>{
+          if(!state[name]) return;
+          state[name].giac     = entry.giac     || 0;
+          state[name].giacUnit = entry.giacUnit || state[name].giacUnit;
           loaded++;
         });
-      });
-    }
+      }
 
-    // Ripristina giacenze: giac + giacUnit
-    if(savedGiac && savedGiac.data){
-      Object.entries(savedGiac.data).forEach(([name, entry])=>{
-        if(!state[name]) return;
-        state[name].giac     = entry.giac     || 0;
-        state[name].giacUnit = entry.giacUnit || state[name].giacUnit;
-        loaded++;
-      });
-    }
+      // Aggiorna tutta l'UI e salva in localStorage
+      syncUIFromState();
+      saveLocalState();
 
-    // Aggiorna tutta l'UI e salva in localStorage
-    syncUIFromState();
-    saveLocalState();
-
-    // Feedback visivo
-    btn.classList.remove('loading');
-    if(loaded > 0){
-      btn.textContent = '✓ Caricato';
-      btn.classList.add('done');
-    } else {
-      btn.textContent = '☁️ Vuoto';
-    }
-    setTimeout(()=>{ btn.textContent='☁️ Carica'; btn.classList.remove('done'); }, 2500);
-  }).catch(()=>{
-    btn.classList.remove('loading');
-    btn.textContent = '⚠️ Errore';
-    setTimeout(()=>{ btn.textContent='☁️ Carica'; }, 2500);
+      // Feedback visivo
+      btn.classList.remove('loading');
+      if(loaded > 0){
+        btn.textContent = '✓ Caricato';
+        btn.classList.add('done');
+      } else {
+        btn.textContent = '☁️ Vuoto';
+      }
+      setTimeout(()=>{ btn.textContent='☁️ Carica'; btn.classList.remove('done'); }, 2500);
+    }).catch(()=>{
+      btn.classList.remove('loading');
+      btn.textContent = '⚠️ Errore';
+      setTimeout(()=>{ btn.textContent='☁️ Carica'; }, 2500);
+    });
   });
 }
 window.caricaDaFirebase = caricaDaFirebase;
 
 /* ── INIT ── */
 restoreLocalState();  // sincrono: carica qty/unit/giac/giacUnit da localStorage
+restoreSupplierNotesLocal(); // sincrono: carica note fornitori da localStorage
 buildUI();            // costruisce il DOM
 syncUIFromState();    // aggiorna tutti i campi e i pulsanti unit
 loadLastOrderBar();   // async: mostra barra ultimo salvataggio Firebase
+// Allinea le note con Firebase (se presenti versioni più recenti condivise da altri dispositivi)
+loadSupplierNotesFirebase().then(data=>{
+  if(!data) return;
+  Object.keys(supplierNotes).forEach(k=>{
+    if(data[k]!=null){
+      supplierNotes[k]=data[k];
+      const ta=document.getElementById('note_'+k);
+      if(ta) ta.value=data[k];
+    }
+  });
+  saveSupplierNotesLocal();
+});
 })();
 </script>
 </body>
