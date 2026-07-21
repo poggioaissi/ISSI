@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -117,6 +118,8 @@
   --online: #58758b; --online-soft: #dce7ef; --online-mid: rgba(88,117,139,.22);
   --altro:  #5f7a56; --altro-soft:  #dfe8d9; --altro-mid:  rgba(95,122,86,.22);
   --logi:   #8b5e9e; --logi-soft:   #f0e6f5; --logi-mid:   rgba(139,94,158,.22);
+  --clean:  #2f8f83; --clean-soft:  #d9efec; --clean-mid:  rgba(47,143,131,.22);
+  --coffee: #6f4e37; --coffee-soft: #e8dcd0; --coffee-mid: rgba(111,78,55,.22);
 }
 
 /* ── DARK THEME ── */
@@ -149,6 +152,8 @@
   --online: #9dbed0; --online-soft: #1b2730; --online-mid: rgba(157,190,208,.28);
   --altro:  #a9c697; --altro-soft:  #1f2a20; --altro-mid:  rgba(169,198,151,.28);
   --logi:   #c49ad4; --logi-soft:   #251930; --logi-mid:   rgba(196,154,212,.28);
+  --clean:  #7cd6c8; --clean-soft:  #163330; --clean-mid:  rgba(124,214,200,.28);
+  --coffee: #c9a583; --coffee-soft: #2b2019; --coffee-mid: rgba(201,165,131,.28);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -362,6 +367,8 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .leg-dot.online { background: var(--online); }
 .leg-dot.altro  { background: var(--altro); }
 .leg-dot.logi   { background: var(--logi); }
+.leg-dot.clean  { background: var(--clean); }
+.leg-dot.coffee { background: var(--coffee); }
 .leg-note { font-size: .72em; color: var(--color-text-faint); }
 
 /* ── LAST ORDER BAR ── */
@@ -498,6 +505,8 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .edit-supplier-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
 .edit-supplier-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
 .edit-supplier-header.logi   { background: var(--logi-soft);   color: var(--logi);   border-bottom: 1px solid var(--logi-mid); }
+.edit-supplier-header.clean  { background: var(--clean-soft);  color: var(--clean);  border-bottom: 1px solid var(--clean-mid); }
+.edit-supplier-header.coffee { background: var(--coffee-soft); color: var(--coffee); border-bottom: 1px solid var(--coffee-mid); }
 .edit-item-row {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 14px;
@@ -680,6 +689,22 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .cat-section.open .cat-chevron { transform: rotate(180deg); color: var(--color-primary); }
 .cat-body { display: none; }
 .cat-section.open .cat-body { display: block; }
+.cat-subheader {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px 6px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs); font-weight: 800; letter-spacing: .04em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--color-surface-2) 55%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+}
+.cat-subheader:first-child { border-top: 0; }
+.cat-subheader-count {
+  margin-left: auto;
+  font-size: var(--text-xs); font-weight: 500;
+  color: var(--color-text-faint);
+}
 
 /* ── PRODUCT ROW ── */
 .product-row {
@@ -703,6 +728,8 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .supplier-dot.online { background: var(--online); }
 .supplier-dot.altro  { background: var(--altro); }
 .supplier-dot.logi   { background: var(--logi); }
+.supplier-dot.clean  { background: var(--clean); }
+.supplier-dot.coffee { background: var(--coffee); }
 
 .product-name { flex: 1; font-size: var(--text-sm); font-weight: 500; min-width: 0; }
 
@@ -873,6 +900,8 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .order-block-header.online { background: var(--online-soft); color: var(--online); border-bottom: 1px solid var(--online-mid); }
 .order-block-header.altro  { background: var(--altro-soft);  color: var(--altro);  border-bottom: 1px solid var(--altro-mid); }
 .order-block-header.logi   { background: var(--logi-soft);   color: var(--logi);   border-bottom: 1px solid var(--logi-mid); }
+.order-block-header.clean  { background: var(--clean-soft);  color: var(--clean);  border-bottom: 1px solid var(--clean-mid); }
+.order-block-header.coffee { background: var(--coffee-soft); color: var(--coffee); border-bottom: 1px solid var(--coffee-mid); }
 .order-block-note { font-size: .7rem; font-weight: 400; opacity: .75; margin-right: auto; letter-spacing: .02em; text-transform: none; }
 .order-items { padding: 12px 16px; display: grid; gap: 7px; overflow-y: auto; max-height: 320px; }
 .order-item { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
@@ -1102,7 +1131,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div style="display:flex;align-items:center;gap:8px">
       <span class="fb-status" id="fbStatus" title="Stato connessione database" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:4px 8px;border-radius:999px;background:var(--color-surface-2);cursor:default;">🟡 Cloud…</span>
       <button class="theme-btn" id="themeToggle" aria-label="Cambia tema"><span id="themeIcon">☀️</span></button>
-      <button class="btn-carica-cloud" id="btnCaricaCloud" onclick="caricaDaFirebase()" title="Carica ultimo ordine e giacenze dal cloud">☁️ Carica</button>
+      <button class="btn-carica-cloud" id="btnCaricaCloud" onclick="openCaricaDialog()" title="Carica dal cloud">☁️ Carica</button>
       <button class="btn-reset" onclick="resetAll()">↺ Azzera</button>
     </div>
   </div>
@@ -1121,15 +1150,17 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="leg-item"><div class="leg-dot online"></div> Online / Diretto</div>
     <div class="leg-item"><div class="leg-dot altro"></div> Altro</div>
     <div class="leg-item"><div class="leg-dot logi"></div> Logi</div>
+    <div class="leg-item"><div class="leg-dot clean"></div> Clean Accent</div>
+    <div class="leg-item"><div class="leg-dot coffee"></div> CoffeeShop</div>
   </div>
 
-  <div class="last-order-bar" id="lastOrderBar" style="display:none" onclick="showLastOrder()">
+  <div class="last-order-bar" id="lastOrderBar" style="display:none" onclick="openStorico()">
     <div class="last-order-icon">🕐</div>
     <div class="last-order-text">
       <div class="last-order-title">Ultimo salvataggio</div>
       <div class="last-order-date" id="lastOrderDate">—</div>
     </div>
-    <button class="btn-storico" onclick="event.stopPropagation();openStorico()" title="Storico ordini ultimo mese">📋</button>
+    <button class="btn-storico" onclick="event.stopPropagation();openStorico()" title="Storico ordini e giacenze — ultimo mese">📋</button>
     <div class="last-order-arrow">→</div>
   </div>
 
@@ -1169,13 +1200,30 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     </div>
     <div class="modal-footer" id="modalFooter">
       <button class="btn-copy" id="btnCopyAll" onclick="copyAll()">📋 Copia tutto</button>
-      <button class="btn-download-img" id="btnDownloadImgAll" onclick="downloadImgAll()" title="Scarica immagine ordine completo">⬇ Img</button>
+      <button class="btn-download-img" id="btnDownloadImgAll" onclick="downloadImgAll()" title="Scarica PDF ordine completo">⬇ PDF</button>
     </div>
     <div class="modal-footer" id="modalFooterGiacenze" style="display:none;">
-      <button class="btn-download-img" id="btnDownloadImgGiac" onclick="downloadImgGiacenze()" title="Scarica immagine giacenze" style="flex:1;min-height:44px;font-size:var(--text-sm);font-weight:800;letter-spacing:.03em;">⬇ Scarica immagine giacenze</button>
+      <button class="btn-download-img" id="btnDownloadImgGiac" onclick="downloadImgGiacenze()" title="Scarica PDF giacenze" style="flex:1;min-height:44px;font-size:var(--text-sm);font-weight:800;letter-spacing:.03em;">⬇ Scarica PDF giacenze</button>
     </div>
     <div class="modal-note-wrap" id="modalNoteWrap">
       <textarea class="modal-note-input" id="modalNoteInput" placeholder="✏️ Nota libera (opzionale, inclusa nella copia)…" rows="2"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- CARICA DIALOG -->
+<div class="reset-dialog-overlay" id="caricaDialogOverlay" onclick="closeCaricaDialogOutside(event)">
+  <div class="reset-dialog" onclick="event.stopPropagation()">
+    <div class="reset-dialog-title">Carica dal cloud</div>
+    <div class="reset-dialog-body">Cosa vuoi caricare?</div>
+    <div class="reset-dialog-actions">
+      <button class="reset-btn-option" onclick="doCarica('giacenze')">
+        <span>📦</span><span>Carica Giacenze</span>
+      </button>
+      <button class="reset-btn-option" onclick="doCarica('tutto')">
+        <span>☁️</span><span>Carica Giacenze e Ordine</span>
+      </button>
+      <button class="reset-btn-cancel" onclick="doCarica('cancel')">Annulla</button>
     </div>
   </div>
 </div>
@@ -1221,10 +1269,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 <!-- CONFIRM DELETE OVERLAY -->
 <div class="confirm-delete-overlay" id="confirmDeleteOverlay" onclick="if(event.target===this)closeConfirmDelete()">
   <div class="confirm-delete-dialog" onclick="event.stopPropagation()">
-    <div class="confirm-delete-title">🗑️ Elimina ordine</div>
+    <div class="confirm-delete-title" id="confirmDeleteTitle">🗑️ Elimina ordine</div>
     <div class="confirm-delete-body" id="confirmDeleteBody">Vuoi eliminare questo ordine dallo storico? L'operazione non può essere annullata.</div>
     <div class="confirm-delete-actions">
-      <button class="btn-confirm-delete" onclick="confirmDeleteOrdine()">Elimina definitivamente</button>
+      <button class="btn-confirm-delete" onclick="runConfirmDelete()">Elimina definitivamente</button>
       <button class="btn-confirm-cancel" onclick="closeConfirmDelete()">Annulla</button>
     </div>
   </div>
@@ -1234,7 +1282,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 <div class="storico-overlay" id="storicoOverlay" onclick="if(event.target===this)closeStorico()">
   <div class="storico-modal" onclick="event.stopPropagation()">
     <div class="storico-header">
-      <div class="storico-title">📋 Storico ordini — ultimi 30 giorni</div>
+      <div class="storico-title">📋 Storico ordini e giacenze — ultimi 30 giorni</div>
       <button class="btn-close" onclick="closeStorico()">✕</button>
     </div>
     <div class="storico-body" id="storicoBody">
@@ -1252,7 +1300,9 @@ const SUPPLIERS = {
   gloo:   { label:'GlooGloo',        note:'entro le 15 · mart–sab' },
   online: { label:'Online / Diretto',note:'' },
   altro:  { label:'Altro',           note:'' },
-  logi:   { label:'Logi',            note:'' }
+  logi:   { label:'Logi',            note:'' },
+  clean:  { label:'Clean Accent',    note:'' },
+  coffee: { label:'CoffeeShop',      note:'' }
 };
 
 // Emoji per categoria
@@ -1262,8 +1312,30 @@ const CAT_ICONS = {
   'VERMOUTH / BITTER / AMARO':'🍊','LIQUORI':'🍬','AMARI & DIGESTIVI':'🌿',
   'ACQUA & BIBITE':'🥤','BIRRE':'🍺','SCIROPPI, PUREE & ALTRO':'🫙',
   'FUSTI & MISCELAZIONE':'🫧',
-  'VINI - COLOMBAIO':'🍷','VINI - BIANCHI':'🍾','VINI - BOLLICINE':'🥂','VINI - DESSERT':'🍯','VINI - ROSSI':'🍷'
+  'VINI - COLOMBAIO':'🍷','VINI - BIANCHI':'🍾','VINI - BOLLICINE':'🥂','VINI - DESSERT':'🍯','VINI - ROSSI':'🍷',
+  'CARTA E PRODOTTI PER LA PULIZIA':'🧻','ATTREZZATURE E PANNI PER LA PULIZIA':'🧹',
+  'DETERGENTI E IGIENIZZANTI GENERALI':'🧴','LAVAGGIO PIATTI E LAVASTOVIGLIE':'🍽️',
+  'IGIENE PERSONALE E MONOUSO PROTEZIONE':'🧤','SACCHI E SMALTIMENTO RIFIUTI':'🗑️',
+  'MONOUSO TAVOLA E ASPORTO':'🥤','TOVAGLIAME E IMBALLAGGIO':'📦',
+  'CAFFETTERIA':'☕',
+  'VINI':'🍷','CLEAN ACCENT / COFFEESHOP':'🧽'
 };
+
+// Categorie "padre" che raggruppano più sottocategorie in un unico accordion
+const CAT_GROUPS = {
+  'VINI': ['VINI - COLOMBAIO','VINI - BIANCHI','VINI - BOLLICINE','VINI - DESSERT','VINI - ROSSI'],
+  'CLEAN ACCENT / COFFEESHOP': [
+    'CARTA E PRODOTTI PER LA PULIZIA','ATTREZZATURE E PANNI PER LA PULIZIA',
+    'DETERGENTI E IGIENIZZANTI GENERALI','LAVAGGIO PIATTI E LAVASTOVIGLIE',
+    'IGIENE PERSONALE E MONOUSO PROTEZIONE','SACCHI E SMALTIMENTO RIFIUTI',
+    'MONOUSO TAVOLA E ASPORTO','TOVAGLIAME E IMBALLAGGIO','CAFFETTERIA'
+  ]
+};
+// Mappa inversa: sottocategoria → categoria padre
+const SUBCAT_PARENT = {};
+Object.entries(CAT_GROUPS).forEach(([parent,subs])=>{
+  subs.forEach(s=>{ SUBCAT_PARENT[s]=parent; });
+});
 
 const CATALOG = [
   // WHISKY
@@ -1461,6 +1533,57 @@ const CATALOG = [
   {cat:'FUSTI & MISCELAZIONE',name:'Dandy Pink Soda',                sup:'prince',unit:'ct'},
   {cat:'FUSTI & MISCELAZIONE',name:'Dandy Tonica Classic',           sup:'prince',unit:'ct'},
   {cat:'FUSTI & MISCELAZIONE',name:'Dandy Tonica Zero Zuccheri',     sup:'prince',unit:'ct'},
+  // CLEAN ACCENT — Carta e Prodotti per la Pulizia
+  {cat:'CARTA E PRODOTTI PER LA PULIZIA',name:'Carta igienica SmartOne Mini',   sup:'clean',unit:'—',noUnit:true},
+  {cat:'CARTA E PRODOTTI PER LA PULIZIA',name:'Bobine di carta industriale',    sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Attrezzature e Panni per la Pulizia
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Manico in legno a vite',            sup:'clean',unit:'—',noUnit:true},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Scopa Europa',                      sup:'clean',unit:'—',noUnit:true},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Panni microfibra blu per vetri',     sup:'clean',unit:'—',noUnit:true},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Panni in microfibra colorati',       sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Detergenti e Igienizzanti Generali
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Candeggina Solbat 2L',               sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Candeggina Lindor 2L',               sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Disinfettante spray Florkil 750ml',  sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente pavimenti Sensory White 1L',sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente pavimenti Sensory Green 1L',sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Sgrassatore solvente Solvoil Extra 1L',sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Sgrassatore Sirio Pulimega 750ml',   sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente rapido Fasty 750ml',      sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Lavaggio Piatti e Lavastoviglie
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Pasticche Lavastoviglie Florpress',     sup:'clean',unit:'—',noUnit:true},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo lavastoviglie Clean 10L',     sup:'clean',unit:'—',noUnit:true},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo lavabicchieri Top Bar 5L',    sup:'clean',unit:'—',noUnit:true},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Brillantante Clean 10L',                sup:'clean',unit:'—',noUnit:true},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Brillantante Brill 2010 5kg',           sup:'clean',unit:'—',noUnit:true},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo piatti a mano Ama Piatti 1.5L',sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Igiene Personale e Monouso Protezione
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Sapone mani con pompetta 750ml',  sup:'clean',unit:'—',noUnit:true},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Guanti nitrile nero taglia L',    sup:'clean',unit:'—',noUnit:true},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Guanti nitrile nero taglia XL',   sup:'clean',unit:'—',noUnit:true},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Salviettine al limone Panarea',   sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Sacchi e Smaltimento Rifiuti
+  {cat:'SACCHI E SMALTIMENTO RIFIUTI',name:'Sacchi neri giganti 90x130',               sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Monouso Tavola e Asporto
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Bustine porta posate Pocket Bianco Light',     sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Bicchieri in plastica e Kristal assortiti',    sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Piatti piani in polpa di cellulosa',           sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Coltelli in PLA compostabili',                 sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Forchette in PLA compostabili',                sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cucchiaini finger food CPLA',                  sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cannucce neri PLA 21 cm',                      sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cannucce neri PLA 15 cm',                      sup:'clean',unit:'—',noUnit:true},
+  // CLEAN ACCENT — Tovagliame e Imballaggio
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovagliette americane Onda Verde',             sup:'clean',unit:'—',noUnit:true},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Pellicola trasparente alimentare 300m',        sup:'clean',unit:'—',noUnit:true},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Nastro adesivo di carta',                      sup:'clean',unit:'—',noUnit:true},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Sacchetti in carta Avana 14x28',               sup:'clean',unit:'—',noUnit:true},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovaglie TNT, tovaglioli e carta paglia',       sup:'clean',unit:'—',noUnit:true},
+  // COFFEESHOP — Caffetteria
+  {cat:'CAFFETTERIA',name:'Mokador Diva Sophia',                       sup:'coffee',unit:'—',noUnit:true},
+  {cat:'CAFFETTERIA',name:'Mokador Diva Grace (Decaffeinato)',         sup:'coffee',unit:'—',noUnit:true},
+  {cat:'CAFFETTERIA',name:'Orzo',                                       sup:'coffee',unit:'—',noUnit:true},
+  {cat:'CAFFETTERIA',name:'Ginseng',                                    sup:'coffee',unit:'—',noUnit:true},
 ];
 
 const state = {};
@@ -1640,15 +1763,33 @@ function loadStorico(){
   });
 }
 
-/* ── GIACENZE: salva snapshot su Firebase ── */
+/* ── GIACENZE: salva snapshot su Firebase (+ storico) ── */
 function saveGiacenze(){
   return waitForDb().then(ready=>{
     if(!ready || !window.db){ console.warn('saveGiacenze: Firebase non disponibile'); return false; }
     const snap={};
     CATALOG.forEach(p=>{ const st=state[p.name]; if(st.giac>0) snap[p.name]={giac:st.giac,giacUnit:st.giacUnit}; });
-    return db.ref('giacenze').set({date:new Date().toISOString(), data:snap})
-      .then(()=>true)
-      .catch(e=>{ console.error('saveGiacenze error',e.code,e.message); setFbStatus('error',e); return false; });
+    const now = new Date();
+    const iso = now.toISOString();
+    const key = now.getFullYear()+'_'
+      +String(now.getMonth()+1).padStart(2,'0')+'_'
+      +String(now.getDate()).padStart(2,'0')+'_'
+      +String(now.getHours()).padStart(2,'0')
+      +String(now.getMinutes()).padStart(2,'0');
+    return Promise.all([
+      db.ref('giacenze').set({date: iso, data: snap}),
+      db.ref('storico_giacenze/'+key).set({date: iso, data: snap})
+    ]).then(()=>{
+      // Pulizia automatica: rimuovi voci più vecchie di 30 giorni (non blocca l'esito del salvataggio)
+      const cutoff = new Date(now.getTime() - 30*24*60*60*1000).toISOString();
+      db.ref('storico_giacenze').once('value').then(snap2=>{
+        if(!snap2.exists()) return;
+        snap2.forEach(child=>{
+          if(child.val().date < cutoff) db.ref('storico_giacenze/'+child.key).remove();
+        });
+      }).catch(()=>{});
+      return true;
+    }).catch(e=>{ console.error('saveGiacenze error',e.code,e.message); setFbStatus('error',e); return false; });
   });
 }
 function loadGiacenze(){
@@ -1656,6 +1797,19 @@ function loadGiacenze(){
     if(!ready || !window.db) return null;
     return new Promise(resolve=>{
       db.ref('giacenze').once('value').then(snap=>{ resolve(snap.exists()?snap.val():null); }).catch(()=>resolve(null));
+    });
+  });
+}
+function loadStoricoGiacenze(){
+  return waitForDb().then(ready=>{
+    if(!ready || !window.db) return [];
+    return new Promise(resolve=>{
+      db.ref('storico_giacenze').once('value').then(snap=>{
+        if(!snap.exists()){ resolve([]); return; }
+        const list=[];
+        snap.forEach(child=>{ list.push({key:child.key, ...child.val()}); });
+        resolve(list);
+      }).catch(()=>resolve([]));
     });
   });
 }
@@ -1678,22 +1832,87 @@ function buildUI(){
     cats[p.cat].push(p);
   });
 
+  // Raggruppa le sottocategorie mappate in CAT_GROUPS sotto la rispettiva categoria padre
+  const displayCats = {}; // nome visualizzato -> { isGroup, subs:[nomi sottocategoria] } oppure { isGroup:false }
+  Object.keys(cats).forEach(catName=>{
+    const parent = SUBCAT_PARENT[catName];
+    if(parent){
+      if(!displayCats[parent]) displayCats[parent] = { isGroup:true, subs:[] };
+      displayCats[parent].subs.push(catName);
+    } else if(!displayCats[catName]){
+      displayCats[catName] = { isGroup:false };
+    }
+  });
+
   // Fixed order: priority cats first, then remaining alphabetically
   const PRIORITY_CATS = ['FUSTI & MISCELAZIONE','ACQUA & BIBITE','SUCCHI','BIRRE'];
-  const VINI_CATS = ['VINI - COLOMBAIO','VINI - BIANCHI','VINI - BOLLICINE','VINI - DESSERT','VINI - ROSSI'];
-  const allCats = Object.keys(cats);
-  const remaining = allCats.filter(c=>!PRIORITY_CATS.includes(c) && !VINI_CATS.includes(c)).sort((a,b)=>a.localeCompare(b,'it'));
-  // Inserisce le categorie VINI subito dopo WHISKY nell'ordine alfabetico
+  const allDisplayNames = Object.keys(displayCats);
+  const remaining = allDisplayNames.filter(c=>!PRIORITY_CATS.includes(c) && c!=='VINI').sort((a,b)=>a.localeCompare(b,'it'));
+  // Inserisce la categoria VINI subito dopo WHISKY nell'ordine alfabetico
   const whiskeyIdx = remaining.indexOf('WHISKY');
-  if(whiskeyIdx !== -1){
-    remaining.splice(whiskeyIdx+1, 0, ...VINI_CATS.filter(c=>cats[c]));
-  } else {
-    remaining.push(...VINI_CATS.filter(c=>cats[c]));
+  if(displayCats['VINI']){
+    if(whiskeyIdx !== -1) remaining.splice(whiskeyIdx+1, 0, 'VINI');
+    else remaining.push('VINI');
   }
-  const catOrder = [...PRIORITY_CATS.filter(c=>cats[c]), ...remaining];
+  const catOrder = [...PRIORITY_CATS.filter(c=>displayCats[c]), ...remaining];
+
+  // Renderizza la riga di un singolo prodotto dentro il body passato
+  function renderProductRow(p, body){
+    const s = sid(p.name);
+    const row = document.createElement('div');
+    row.className = 'product-row';
+    row.id = 'row_'+s;
+    row.dataset.name = p.name.toLowerCase();
+
+    const unitToggleHtml = p.noUnit ? '' : `
+              <div class="unit-toggle">
+                <button class="unit-btn ${p.unit==='ct'?'active':''}" id="gct_${s}" onclick="setGiacUnit('${escQ(p.name)}','ct')">ct.</button>
+                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','bott')">bott.</button>
+              </div>`;
+    const unitToggleOrdHtml = p.noUnit ? '' : `
+              <div class="unit-toggle">
+                <button class="unit-btn ${p.unit==='ct'?'active':''}" id="ubct_${s}" onclick="setUnit('${escQ(p.name)}','ct')">ct.</button>
+                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','bott')">bott.</button>
+              </div>`;
+
+    row.innerHTML = `
+      <div class="supplier-dot ${p.sup}"></div>
+      <div class="product-name">${p.name}</div>
+      <div class="row-controls">
+        <div class="ctrl-block">
+          <div class="ctrl-label">Giacenze</div>
+          <div class="qty-wrap">
+            ${unitToggleHtml}
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',-1)">−</button>
+              <input class="qty-val" type="number" min="0" value="0" id="giac_${s}"
+                onchange="setGiacInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
+              <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="ctrl-divider"></div>
+        <div class="ctrl-block">
+          <div class="ctrl-label">Ordine</div>
+          <div class="qty-wrap">
+            ${unitToggleOrdHtml}
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',-1)">−</button>
+              <input class="qty-val" type="number" min="0" value="0" id="qty_${s}"
+                onchange="setQtyInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
+              <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    body.appendChild(row);
+  }
 
   catOrder.forEach(catName=>{
-    const products = cats[catName];
+    const info = displayCats[catName];
+    const totalCount = info.isGroup
+      ? info.subs.reduce((n,s)=>n+cats[s].length,0)
+      : cats[catName].length;
     const catId = sid(catName).toLowerCase();
     const icon = CAT_ICONS[catName] || '📦';
 
@@ -1706,7 +1925,7 @@ function buildUI(){
         <div class="cat-header-left">
           <span class="cat-icon">${icon}</span>
           <span class="cat-name">${catName}</span>
-          <span class="cat-count">${products.length}</span>
+          <span class="cat-count">${totalCount}</span>
           <span class="cat-selected-badge" id="badge_${catId}">0 sel.</span>
         </div>
         <span class="cat-chevron">▾</span>
@@ -1715,56 +1934,18 @@ function buildUI(){
     `;
 
     const body = section.querySelector('.cat-body');
-    products.forEach(p=>{
-      const s = sid(p.name);
-      const row = document.createElement('div');
-      row.className = 'product-row';
-      row.id = 'row_'+s;
-      row.dataset.name = p.name.toLowerCase();
-
-      const unitToggleHtml = p.noUnit ? '' : `
-                <div class="unit-toggle">
-                  <button class="unit-btn ${p.unit==='ct'?'active':''}" id="gct_${s}" onclick="setGiacUnit('${escQ(p.name)}','ct')">ct.</button>
-                  <button class="unit-btn ${p.unit==='bott'?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','bott')">bott.</button>
-                </div>`;
-      const unitToggleOrdHtml = p.noUnit ? '' : `
-                <div class="unit-toggle">
-                  <button class="unit-btn ${p.unit==='ct'?'active':''}" id="ubct_${s}" onclick="setUnit('${escQ(p.name)}','ct')">ct.</button>
-                  <button class="unit-btn ${p.unit==='bott'?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','bott')">bott.</button>
-                </div>`;
-
-      row.innerHTML = `
-        <div class="supplier-dot ${p.sup}"></div>
-        <div class="product-name">${p.name}</div>
-        <div class="row-controls">
-          <div class="ctrl-block">
-            <div class="ctrl-label">Giacenze</div>
-            <div class="qty-wrap">
-              ${unitToggleHtml}
-              <div class="qty-ctrl">
-                <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',-1)">−</button>
-                <input class="qty-val" type="number" min="0" value="0" id="giac_${s}"
-                  onchange="setGiacInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
-                <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',1)">+</button>
-              </div>
-            </div>
-          </div>
-          <div class="ctrl-divider"></div>
-          <div class="ctrl-block">
-            <div class="ctrl-label">Ordine</div>
-            <div class="qty-wrap">
-              ${unitToggleOrdHtml}
-              <div class="qty-ctrl">
-                <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',-1)">−</button>
-                <input class="qty-val" type="number" min="0" value="0" id="qty_${s}"
-                  onchange="setQtyInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
-                <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',1)">+</button>
-              </div>
-            </div>
-          </div>
-        </div>`;
-      body.appendChild(row);
-    });
+    if(info.isGroup){
+      // Ordine sottocategorie: quello definito in CAT_GROUPS (solo quelle presenti nel catalogo)
+      CAT_GROUPS[catName].filter(sub=>cats[sub]).forEach(subCatName=>{
+        const subHeader = document.createElement('div');
+        subHeader.className = 'cat-subheader';
+        subHeader.innerHTML = `<span>${CAT_ICONS[subCatName]||'📦'}</span><span>${subCatName}</span><span class="cat-subheader-count">${cats[subCatName].length}</span>`;
+        body.appendChild(subHeader);
+        cats[subCatName].forEach(p=>renderProductRow(p, body));
+      });
+    } else {
+      cats[catName].forEach(p=>renderProductRow(p, body));
+    }
     wrap.appendChild(section);
   });
 
@@ -1869,7 +2050,7 @@ function updateCounters(){
   document.getElementById('totalSelected').textContent = selected.length;
   document.getElementById('btnGenera').disabled = selected.length===0;
   const catCounts={};
-  selected.forEach(p=>{ const c=sid(p.cat).toLowerCase(); catCounts[c]=(catCounts[c]||0)+1; });
+  selected.forEach(p=>{ const displayName=SUBCAT_PARENT[p.cat]||p.cat; const c=sid(displayName).toLowerCase(); catCounts[c]=(catCounts[c]||0)+1; });
   document.querySelectorAll('[id^="badge_"]').forEach(b=>{
     const c=b.id.replace('badge_','');
     const n=catCounts[c]||0;
@@ -2020,7 +2201,7 @@ function groupItems(items){
 
 /* ── GENERA ORDINE ── */
 function generaOrdine(){
-  const byS={prince:[],gloo:[],online:[],altro:[],logi:[]};
+  const byS={prince:[],gloo:[],online:[],altro:[],logi:[],clean:[],coffee:[]};
   CATALOG.forEach(p=>{
     const st=state[p.name];
     if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat,noUnit:!!p.noUnit});
@@ -2075,7 +2256,7 @@ window.switchModalTab = switchModalTab;
 function renderModal(byS, date){
   const panel = document.getElementById('panelOrdine');
   panel.innerHTML = '';
-  ['prince','gloo','online','altro','logi'].forEach(sup=>{
+  ['prince','gloo','online','altro','logi','clean','coffee'].forEach(sup=>{
     const items=byS[sup];
     if(!items||!items.length) return;
     const block=document.createElement('div');
@@ -2084,7 +2265,7 @@ function renderModal(byS, date){
     const hdr=document.createElement('div');
     hdr.className='order-block-header '+sup;
     const blockId='ob_'+sup;
-    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button><button class="btn-download-img" onclick="downloadImg('${sup}')" title="Scarica immagine">⬇ Img</button><button class="btn-collapse-block" onclick="toggleOrderBlock('${blockId}')" title="Comprimi/Espandi">▾</button>`;
+    hdr.innerHTML=`${s.label}${s.note?`<span class="order-block-note">${s.note}</span>`:''}<button class="btn-copy-single" onclick="copySingle(this,'${sup}')">Copia</button><button class="btn-download-img" onclick="downloadImg('${sup}')" title="Scarica PDF">⬇ PDF</button><button class="btn-collapse-block" onclick="toggleOrderBlock('${blockId}')" title="Comprimi/Espandi">▾</button>`;
     const itemsDiv=document.createElement('div');
     itemsDiv.className='order-items';
     itemsDiv.id=blockId;
@@ -2243,12 +2424,12 @@ function buildTxtGrouped(sup,items,date){
   return t.trim();
 }
 function copyAll(){
-  const byS={prince:[],gloo:[],online:[],altro:[],logi:[]};
+  const byS={prince:[],gloo:[],online:[],altro:[],logi:[],clean:[],coffee:[]};
   CATALOG.forEach(p=>{ const st=state[p.name]; if(st.qty>0) byS[p.sup].push({name:p.name,qty:st.qty,unit:st.unit,cat:p.cat,noUnit:!!p.noUnit}); });
   const now=new Date();
   const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
   let full=`🗂 ORDINE SETTIMANALE — ${ds}\n${'─'.repeat(34)}\n\n`;
-  ['prince','gloo','online','altro','logi'].forEach(sup=>{ if(byS[sup].length) full+=buildTxtGrouped(sup,byS[sup],now)+'\n\n'; });
+  ['prince','gloo','online','altro','logi','clean','coffee'].forEach(sup=>{ if(byS[sup].length) full+=buildTxtGrouped(sup,byS[sup],now)+'\n\n'; });
   const nota=document.getElementById('modalNoteInput').value.trim();
   if(nota) full+=`\n📝 NOTA:\n${nota}\n`;
   navigator.clipboard.writeText(full.trim()).then(()=>{
@@ -2303,6 +2484,8 @@ function downloadImg(sup){
     online:{bg:isDark?'#1b2730':'#dce7ef',accent:isDark?'#9dbed0':'#58758b'},
     altro: {bg:isDark?'#1f2a20':'#dfe8d9',accent:isDark?'#a9c697':'#5f7a56'},
     logi:  {bg:isDark?'#251930':'#f0e6f5',accent:isDark?'#c49ad4':'#8b5e9e'},
+    clean: {bg:isDark?'#163330':'#d9efec',accent:isDark?'#7cd6c8':'#2f8f83'},
+    coffee:{bg:isDark?'#2b2019':'#e8dcd0',accent:isDark?'#c9a583':'#6f4e37'},
   };
   const pal=palette[sup]||palette.altro;
   const bgPage=isDark?'#182117':'#f7f8f2';
@@ -2420,15 +2603,25 @@ function downloadImg(sup){
   ctx.textAlign='right';
   ctx.fillText('Poggio a Issi', W-paddingX, H-10);
 
-  // Download
-  canvas.toBlob(blob=>{
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url; a.download=`ordine-${sup}-${ds.replace(/\//g,'-')}.png`;
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),2000);
-  },'image/png');
+  // Export PDF (stessa grafica del canvas, incapsulata in un PDF anziché scaricare un PNG)
+  canvasToPdf(canvas, `ordine-${sup}-${ds.replace(/\//g,'-')}.pdf`);
 }
+
+/* ── Utility: converte un canvas in PDF scaricabile, dimensionato sull'immagine ── */
+function canvasToPdf(canvas, filename){
+  const { jsPDF } = window.jspdf || {};
+  if(!jsPDF){ alert('Libreria PDF non disponibile. Controlla la connessione e riprova.'); return; }
+  const imgData = canvas.toDataURL('image/png');
+  // Dimensioni pagina PDF (in pt) proporzionali al canvas, così la grafica resta identica
+  const pxToPt = 72/96; // conversione px->pt
+  const w = (canvas.style.width ? parseFloat(canvas.style.width) : canvas.width) * pxToPt;
+  const h = (canvas.style.height ? parseFloat(canvas.style.height) : canvas.height) * pxToPt;
+  const orientation = w >= h ? 'landscape' : 'portrait';
+  const pdf = new jsPDF({ orientation, unit:'pt', format:[w,h] });
+  pdf.addImage(imgData, 'PNG', 0, 0, w, h);
+  pdf.save(filename);
+}
+window.canvasToPdf = canvasToPdf;
 
 function wrapText(ctx,text,maxWidth){
   const words=text.split(/\s+/);
@@ -2469,31 +2662,43 @@ function downloadImgAll(){
   const btn=document.getElementById('btnDownloadImgAll');
   if(btn){btn.textContent='⏳…';btn.disabled=true;}
 
-  const finish=(dataUrl)=>{
-    const link=document.createElement('a');
-    link.download=`ordine-completo_${ds}.png`;
-    link.href=dataUrl;
-    link.click();
-    if(btn){btn.textContent='✓ Salvata!';setTimeout(()=>{btn.textContent='⬇ Img';btn.disabled=false;},2000);}
+  const finish=(dataUrl,w,h)=>{
+    pdfFromDataUrl(dataUrl, w, h, `ordine-completo_${ds}.pdf`);
+    if(btn){btn.textContent='✓ Salvato!';setTimeout(()=>{btn.textContent='⬇ PDF';btn.disabled=false;},2000);}
   };
   const fail=(err)=>{
-    alert('Errore generazione immagine: '+(err&&err.message?err.message:err));
-    if(btn){btn.textContent='⬇ Img';btn.disabled=false;}
+    alert('Errore generazione PDF: '+(err&&err.message?err.message:err));
+    if(btn){btn.textContent='⬇ PDF';btn.disabled=false;}
   };
 
   // html-to-image usa il motore di rendering nativo del browser (supporta color-mix, oklch, ecc.)
   if(window.htmlToImage){
-    htmlToImage.toPng(panel,{backgroundColor:bg,pixelRatio:2}).then(finish).catch(fail);
+    htmlToImage.toPng(panel,{backgroundColor:bg,pixelRatio:2})
+      .then(dataUrl=>finish(dataUrl, panel.offsetWidth, panel.offsetHeight))
+      .catch(fail);
   } else if(window.html2canvas){
     // Fallback se html-to-image non è disponibile (es. CDN irraggiungibile)
     html2canvas(panel,{backgroundColor:bg,scale:2,useCORS:true,logging:false})
-      .then(canvas=>finish(canvas.toDataURL('image/png')))
+      .then(canvas=>finish(canvas.toDataURL('image/png'), canvas.width/2, canvas.height/2))
       .catch(fail);
   } else {
     fail('Libreria di generazione immagini non disponibile.');
   }
 }
 window.downloadImgAll=downloadImgAll;
+
+/* ── Utility: converte un dataURL immagine in PDF scaricabile ── */
+function pdfFromDataUrl(dataUrl, wPx, hPx, filename){
+  const { jsPDF } = window.jspdf || {};
+  if(!jsPDF){ alert('Libreria PDF non disponibile. Controlla la connessione e riprova.'); return; }
+  const pxToPt = 72/96;
+  const w = wPx*pxToPt, h = hPx*pxToPt;
+  const orientation = w >= h ? 'landscape' : 'portrait';
+  const pdf = new jsPDF({ orientation, unit:'pt', format:[w,h] });
+  pdf.addImage(dataUrl, 'PNG', 0, 0, w, h);
+  pdf.save(filename);
+}
+window.pdfFromDataUrl = pdfFromDataUrl;
 
 /* ── DOWNLOAD IMMAGINE GIACENZE ── */
 function downloadImgGiacenze(){
@@ -2505,23 +2710,22 @@ function downloadImgGiacenze(){
   const btn=document.getElementById('btnDownloadImgGiac');
   if(btn){btn.textContent='⏳…';btn.disabled=true;}
 
-  const finish=(dataUrl)=>{
-    const link=document.createElement('a');
-    link.download=`giacenze_${ds}.png`;
-    link.href=dataUrl;
-    link.click();
-    if(btn){btn.textContent='✓ Salvata!';setTimeout(()=>{btn.textContent='⬇ Scarica immagine giacenze';btn.disabled=false;},2000);}
+  const finish=(dataUrl,w,h)=>{
+    pdfFromDataUrl(dataUrl, w, h, `giacenze_${ds}.pdf`);
+    if(btn){btn.textContent='✓ Salvato!';setTimeout(()=>{btn.textContent='⬇ Scarica PDF giacenze';btn.disabled=false;},2000);}
   };
   const fail=(err)=>{
-    alert('Errore generazione immagine: '+(err&&err.message?err.message:err));
-    if(btn){btn.textContent='⬇ Scarica immagine giacenze';btn.disabled=false;}
+    alert('Errore generazione PDF: '+(err&&err.message?err.message:err));
+    if(btn){btn.textContent='⬇ Scarica PDF giacenze';btn.disabled=false;}
   };
 
   if(window.htmlToImage){
-    htmlToImage.toPng(panel,{backgroundColor:bg,pixelRatio:2}).then(finish).catch(fail);
+    htmlToImage.toPng(panel,{backgroundColor:bg,pixelRatio:2})
+      .then(dataUrl=>finish(dataUrl, panel.offsetWidth, panel.offsetHeight))
+      .catch(fail);
   } else if(window.html2canvas){
     html2canvas(panel,{backgroundColor:bg,scale:2,useCORS:true,logging:false})
-      .then(canvas=>finish(canvas.toDataURL('image/png')))
+      .then(canvas=>finish(canvas.toDataURL('image/png'), canvas.width/2, canvas.height/2))
       .catch(fail);
   } else {
     fail('Libreria di generazione immagini non disponibile.');
@@ -2631,39 +2835,71 @@ function openStorico(){
   overlay.classList.add('open');
   body.innerHTML='<p class="storico-empty">Caricamento…</p>';
 
-  loadStorico().then(list=>{
-    if(!list.length){
-      body.innerHTML='<p class="storico-empty">Nessun ordine salvato nell\'ultimo mese.</p>';
+  Promise.all([loadStorico(), loadStoricoGiacenze()]).then(([ordList, giacList])=>{
+    const combined = [
+      ...ordList.map(e=>({...e, _type:'ordine'})),
+      ...giacList.map(e=>({...e, _type:'giacenze'}))
+    ];
+    combined.sort((a,b)=>b.date.localeCompare(a.date)); // più recente prima
+
+    if(!combined.length){
+      body.innerHTML='<p class="storico-empty">Nessun ordine o giacenza salvata nell\'ultimo mese.</p>';
       return;
     }
     body.innerHTML='';
-    list.forEach(entry=>{
+    combined.forEach(entry=>{
       const d=new Date(entry.date);
       const dateStr=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
       const timeStr=d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      // Conta prodotti totali
-      const totProd=Object.values(entry.order||{}).reduce((acc,arr)=>acc+arr.length,0);
-      const suppliers=Object.keys(entry.order||{}).filter(k=>(entry.order[k]||[]).length).join(', ');
       const item=document.createElement('div');
       item.className='storico-item';
       item.style.cursor='default';
-      item.innerHTML=`
-        <div style="flex:1;min-width:0;cursor:pointer" data-open="1">
-          <div class="storico-item-date">${dateStr} · ${timeStr}</div>
-          <div class="storico-item-meta">${totProd} prodotti · ${suppliers}</div>
-        </div>
-        <div class="storico-item-actions">
-          <button class="btn-storico-edit" title="Modifica ordine">✏️</button>
-          <button class="btn-storico-delete" title="Elimina ordine">🗑️</button>
-          <span class="storico-item-arrow" style="cursor:pointer" data-open="1">→</span>
-        </div>`;
-      item.querySelector('[data-open]')?.addEventListener('click',()=>{ openStoricOrdine(entry); });
-      item.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openStoricOrdine(entry)));
-      item.querySelector('.btn-storico-edit').addEventListener('click', e=>{ e.stopPropagation(); openEditOrdine(entry); });
-      item.querySelector('.btn-storico-delete').addEventListener('click', e=>{ e.stopPropagation(); openConfirmDelete(entry); });
+
+      if(entry._type==='ordine'){
+        const totProd=Object.values(entry.order||{}).reduce((acc,arr)=>acc+arr.length,0);
+        const suppliers=Object.keys(entry.order||{}).filter(k=>(entry.order[k]||[]).length).join(', ');
+        item.innerHTML=`
+          <div style="flex:1;min-width:0;cursor:pointer" data-open="1">
+            <div class="storico-item-date">🛒 ${dateStr} · ${timeStr}</div>
+            <div class="storico-item-meta">${totProd} prodotti · ${suppliers}</div>
+          </div>
+          <div class="storico-item-actions">
+            <button class="btn-storico-edit" title="Modifica ordine">✏️</button>
+            <button class="btn-storico-delete" title="Elimina ordine">🗑️</button>
+            <span class="storico-item-arrow" style="cursor:pointer" data-open="1">→</span>
+          </div>`;
+        item.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openStoricOrdine(entry)));
+        item.querySelector('.btn-storico-edit').addEventListener('click', e=>{ e.stopPropagation(); openEditOrdine(entry); });
+        item.querySelector('.btn-storico-delete').addEventListener('click', e=>{ e.stopPropagation(); openConfirmDelete(entry); });
+      } else {
+        const nProd=Object.keys(entry.data||{}).length;
+        item.innerHTML=`
+          <div style="flex:1;min-width:0;cursor:pointer" data-open="1">
+            <div class="storico-item-date">📦 ${dateStr} · ${timeStr}</div>
+            <div class="storico-item-meta">${nProd} prodotti in giacenza</div>
+          </div>
+          <div class="storico-item-actions">
+            <button class="btn-storico-delete" title="Elimina giacenza">🗑️</button>
+            <span class="storico-item-arrow" style="cursor:pointer" data-open="1">→</span>
+          </div>`;
+        item.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openStoricGiacenze(entry)));
+        item.querySelector('.btn-storico-delete').addEventListener('click', e=>{ e.stopPropagation(); openConfirmDeleteGiacenze(entry); });
+      }
       body.appendChild(item);
     });
   });
+}
+function openStoricGiacenze(entry){
+  closeStorico();
+  const d=new Date(entry.date);
+  document.getElementById('modalDate').textContent=
+    'Giacenze del '+d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderModal({}, d);
+  renderGiacenzePanel(entry.data||{});
+  switchModalTab('giacenze');
+  document.getElementById('modalNoteInput').value='';
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
 }
 function openStoricOrdine(entry){
   closeStorico();
@@ -2709,7 +2945,7 @@ function renderEditOrdineBody(){
   const body = document.getElementById('editOrdineBody');
   body.innerHTML = '';
 
-  const SUPS = ['prince','gloo','online','altro','logi'];
+  const SUPS = ['prince','gloo','online','altro','logi','clean','coffee'];
   SUPS.forEach(sup=>{
     const items = _editData[sup];
     if(!items||!items.length) return;
@@ -2814,19 +3050,30 @@ window.closeEditOrdine  = closeEditOrdine;
 
 /* ── DELETE ORDINE ── */
 let _deleteEntry = null;
+let _deleteGiacEntry = null;
+let _confirmDeleteHandler = null;
 
 function openConfirmDelete(entry){
   _deleteEntry = entry;
+  _confirmDeleteHandler = confirmDeleteOrdine;
   const d = new Date(entry.date);
   const dateStr = d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('confirmDeleteTitle').textContent = '🗑️ Elimina ordine';
   document.getElementById('confirmDeleteBody').textContent =
     `Eliminare l'ordine del ${dateStr}? L'operazione non può essere annullata.`;
   document.getElementById('confirmDeleteOverlay').classList.add('open');
 }
 
+function runConfirmDelete(){
+  if(_confirmDeleteHandler) _confirmDeleteHandler();
+}
+window.runConfirmDelete = runConfirmDelete;
+
 function closeConfirmDelete(){
   document.getElementById('confirmDeleteOverlay').classList.remove('open');
   _deleteEntry = null;
+  _deleteGiacEntry = null;
+  _confirmDeleteHandler = null;
 }
 
 function confirmDeleteOrdine(){
@@ -2849,8 +3096,55 @@ window.openConfirmDelete   = openConfirmDelete;
 window.closeConfirmDelete  = closeConfirmDelete;
 window.confirmDeleteOrdine = confirmDeleteOrdine;
 
+/* ── DELETE GIACENZE STORICO ── */
+function openConfirmDeleteGiacenze(entry){
+  _deleteGiacEntry = entry;
+  _confirmDeleteHandler = confirmDeleteGiacenzeEntry;
+  const d = new Date(entry.date);
+  const dateStr = d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('confirmDeleteTitle').textContent = '🗑️ Elimina giacenze';
+  document.getElementById('confirmDeleteBody').textContent =
+    `Eliminare le giacenze del ${dateStr}? L'operazione non può essere annullata.`;
+  document.getElementById('confirmDeleteOverlay').classList.add('open');
+}
+function confirmDeleteGiacenzeEntry(){
+  if(!_deleteGiacEntry || !window.db){ closeConfirmDelete(); return; }
+  const key  = _deleteGiacEntry.key;
+  const date = _deleteGiacEntry.date;
+
+  db.ref('storico_giacenze/'+key).remove().then(()=>{
+    db.ref('giacenze').once('value').then(snap=>{
+      if(snap.exists() && snap.val().date === date){
+        db.ref('giacenze').remove().then(()=>loadLastOrderBar());
+      }
+    });
+    closeConfirmDelete();
+    openStorico();
+    loadLastOrderBar();
+  }).catch(()=>{ alert('Errore durante l\'eliminazione.'); });
+}
+window.openConfirmDeleteGiacenze   = openConfirmDeleteGiacenze;
+window.confirmDeleteGiacenzeEntry  = confirmDeleteGiacenzeEntry;
+
+/* ── CARICA DIALOG ── */
+function openCaricaDialog(){
+  document.getElementById('caricaDialogOverlay').classList.add('open');
+}
+function closeCaricaDialogOutside(e){
+  if(e.target===document.getElementById('caricaDialogOverlay')) doCarica('cancel');
+}
+function doCarica(mode){
+  document.getElementById('caricaDialogOverlay').classList.remove('open');
+  if(mode==='cancel') return;
+  caricaDaFirebase(mode);
+}
+window.openCaricaDialog = openCaricaDialog;
+window.closeCaricaDialogOutside = closeCaricaDialogOutside;
+window.doCarica = doCarica;
+
 /* ── CARICA DA FIREBASE → UI + localStorage ── */
-function caricaDaFirebase(){
+function caricaDaFirebase(mode){
+  mode = mode || 'tutto'; // 'giacenze' = solo giacenze, 'tutto' = giacenze + ordine
   const btn = document.getElementById('btnCaricaCloud');
   btn.classList.add('loading');
   btn.textContent = '☁️ …';
@@ -2862,11 +3156,14 @@ function caricaDaFirebase(){
       setTimeout(()=>{ btn.textContent='☁️ Carica'; }, 2500);
       return;
     }
-    Promise.all([loadStore(), loadGiacenze()]).then(([savedOrd, savedGiac])=>{
+    const loaders = mode==='giacenze'
+      ? [Promise.resolve(null), loadGiacenze()]
+      : [loadStore(), loadGiacenze()];
+    Promise.all(loaders).then(([savedOrd, savedGiac])=>{
       let loaded = 0;
 
-      // Ripristina ordine: qty + unità
-      if(savedOrd && savedOrd.order){
+      // Ripristina ordine: qty + unità (solo se richiesto)
+      if(mode!=='giacenze' && savedOrd && savedOrd.order){
         Object.values(savedOrd.order).forEach(items=>{
           items.forEach(it=>{
             if(!state[it.name]) return;
