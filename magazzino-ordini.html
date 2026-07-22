@@ -917,6 +917,12 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   white-space: nowrap; min-width: 130px; text-align: center;
 }
 .order-item-name { flex: 1; }
+.order-item-tech {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-weight: 400;
+  font-style: italic;
+}
 .order-item-note {
   font-size: .7rem; font-weight: 400;
   color: var(--color-text-faint);
@@ -1217,16 +1223,27 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 <!-- CARICA DIALOG -->
 <div class="reset-dialog-overlay" id="caricaDialogOverlay" onclick="closeCaricaDialogOutside(event)">
   <div class="reset-dialog" onclick="event.stopPropagation()">
-    <div class="reset-dialog-title">Carica dal cloud</div>
-    <div class="reset-dialog-body">Cosa vuoi caricare?</div>
-    <div class="reset-dialog-actions">
-      <button class="reset-btn-option" onclick="doCarica('giacenze')">
-        <span>📦</span><span>Carica Giacenze</span>
-      </button>
-      <button class="reset-btn-option" onclick="doCarica('tutto')">
-        <span>☁️</span><span>Carica Giacenze e Ordine</span>
-      </button>
-      <button class="reset-btn-cancel" onclick="doCarica('cancel')">Annulla</button>
+    <div id="caricaStep1">
+      <div class="reset-dialog-title">Carica dal cloud</div>
+      <div class="reset-dialog-body">Cosa vuoi caricare?</div>
+      <div class="reset-dialog-actions">
+        <button class="reset-btn-option" onclick="showCaricaDateList('giacenze')">
+          <span>📦</span><span>Carica Giacenze</span>
+        </button>
+        <button class="reset-btn-option" onclick="showCaricaDateList('tutto')">
+          <span>☁️</span><span>Carica Giacenze e Ordine</span>
+        </button>
+        <button class="reset-btn-cancel" onclick="doCarica('cancel')">Annulla</button>
+      </div>
+    </div>
+    <div id="caricaStep2" style="display:none">
+      <div class="reset-dialog-title" id="caricaStep2Title">Scegli la data</div>
+      <div class="reset-dialog-body" id="caricaStep2Body">Seleziona il salvataggio da caricare</div>
+      <div class="reset-dialog-actions" id="caricaDateList" style="max-height:320px;overflow-y:auto;"></div>
+      <div class="reset-dialog-actions" style="margin-top:4px;">
+        <button class="reset-btn-cancel" onclick="backToCaricaStep1()">← Indietro</button>
+        <button class="reset-btn-cancel" onclick="doCarica('cancel')">Annulla</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2389,13 +2406,17 @@ function renderModal(byS, date){
         row.className='order-item';
         row.dataset.line=fmtLine(it.name,it.qty,it.unit,it.noUnit,it.cat);
         // Visualizzazione nella modal: "01 BOTT. // 01 CT. Nome (06 BOTT.)"
+        const techSuffix = CLEAN_TECH[it.name] ? ` <span class="order-item-tech">(${CLEAN_TECH[it.name]})</span>` : '';
         let qtyHtml, nameHtml;
         if(it.noUnit){
           qtyHtml=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')} —</span>`;
-          nameHtml=`<span class="order-item-name">${it.name}</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}${techSuffix}</span>`;
         } else if(it.unit==='bott'){
           qtyHtml=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')} BOTT.</span>`;
-          nameHtml=`<span class="order-item-name">${it.name}</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}${techSuffix}</span>`;
+        } else if(it.unit==='pz'){
+          qtyHtml=`<span class="order-item-qty">${String(it.qty).padStart(2,'0')} PZ.</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}${techSuffix}</span>`;
         } else {
           // cartone
           const nb = (it.cat && CAT_SHOW_BOTT.has(it.cat)) ? bottPerCt(it.name) : null;
@@ -2404,7 +2425,7 @@ function renderModal(byS, date){
                        + String(it.qty).padStart(2,'0')+' CT.';
           // bottNote rimossa: totale già mostrato in qtyStr
           qtyHtml=`<span class="order-item-qty">${qtyStr}</span>`;
-          nameHtml=`<span class="order-item-name">${it.name}</span>`;
+          nameHtml=`<span class="order-item-name">${it.name}${techSuffix}</span>`;
         }
         row.innerHTML=qtyHtml+nameHtml;
         itemsDiv.appendChild(row);
@@ -3237,22 +3258,61 @@ window.confirmDeleteGiacenzeEntry  = confirmDeleteGiacenzeEntry;
 /* ── CARICA DIALOG ── */
 function openCaricaDialog(){
   document.getElementById('caricaDialogOverlay').classList.add('open');
+  backToCaricaStep1();
 }
 function closeCaricaDialogOutside(e){
   if(e.target===document.getElementById('caricaDialogOverlay')) doCarica('cancel');
 }
 function doCarica(mode){
   document.getElementById('caricaDialogOverlay').classList.remove('open');
-  if(mode==='cancel') return;
-  caricaDaFirebase(mode);
+}
+function backToCaricaStep1(){
+  document.getElementById('caricaStep1').style.display = '';
+  document.getElementById('caricaStep2').style.display = 'none';
 }
 window.openCaricaDialog = openCaricaDialog;
 window.closeCaricaDialogOutside = closeCaricaDialogOutside;
 window.doCarica = doCarica;
+window.backToCaricaStep1 = backToCaricaStep1;
 
-/* ── CARICA DA FIREBASE → UI + localStorage ── */
-function caricaDaFirebase(mode){
-  mode = mode || 'tutto'; // 'giacenze' = solo giacenze, 'tutto' = giacenze + ordine
+/* Mostra lo step 2: elenco date disponibili per la modalità scelta */
+function showCaricaDateList(mode){
+  const step1 = document.getElementById('caricaStep1');
+  const step2 = document.getElementById('caricaStep2');
+  const listEl = document.getElementById('caricaDateList');
+  document.getElementById('caricaStep2Title').textContent =
+    mode==='giacenze' ? 'Carica Giacenze' : 'Carica Giacenze e Ordine';
+  step1.style.display = 'none';
+  step2.style.display = '';
+  listEl.innerHTML = '<p class="storico-empty" style="padding:16px 0;">Caricamento…</p>';
+
+  const loader = mode==='giacenze' ? loadStoricoGiacenze() : loadStorico();
+  loader.then(list=>{
+    if(!list || !list.length){
+      listEl.innerHTML = '<p class="storico-empty" style="padding:16px 0;">Nessun salvataggio trovato nell\'ultimo mese.</p>';
+      return;
+    }
+    list.sort((a,b)=>b.date.localeCompare(a.date)); // più recente prima
+    listEl.innerHTML = '';
+    list.forEach(entry=>{
+      const d = new Date(entry.date);
+      const dateStr = d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+      const timeStr = d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      const btn = document.createElement('button');
+      btn.className = 'reset-btn-option';
+      btn.innerHTML = `<span>${mode==='giacenze'?'📦':'☁️'}</span><span>${dateStr} · ${timeStr}</span>`;
+      btn.onclick = ()=>{ document.getElementById('caricaDialogOverlay').classList.remove('open'); caricaDaFirebase(mode, entry.key); };
+      listEl.appendChild(btn);
+    });
+  });
+}
+window.showCaricaDateList = showCaricaDateList;
+
+/* ── CARICA DA FIREBASE → UI + localStorage ──
+   mode: 'giacenze' = solo giacenze, 'tutto' = giacenze + ordine
+   dateKey: chiave dello snapshot storico da caricare (es. '2026_07_22_1430'); se assente, carica l'ultimo salvataggio corrente */
+function caricaDaFirebase(mode, dateKey){
+  mode = mode || 'tutto';
   const btn = document.getElementById('btnCaricaCloud');
   btn.classList.add('loading');
   btn.textContent = '☁️ …';
@@ -3264,10 +3324,18 @@ function caricaDaFirebase(mode){
       setTimeout(()=>{ btn.textContent='☁️ Carica'; }, 2500);
       return;
     }
-    const loaders = mode==='giacenze'
-      ? [Promise.resolve(null), loadGiacenze()]
-      : [loadStore(), loadGiacenze()];
-    Promise.all(loaders).then(([savedOrd, savedGiac])=>{
+    let ordLoader, giacLoader;
+    if(dateKey){
+      // Carica uno snapshot storico specifico
+      ordLoader  = (mode==='giacenze') ? Promise.resolve(null)
+        : new Promise(resolve=>{ db.ref('storico/'+dateKey).once('value').then(s=>resolve(s.exists()?s.val():null)).catch(()=>resolve(null)); });
+      giacLoader = new Promise(resolve=>{ db.ref('storico_giacenze/'+dateKey).once('value').then(s=>resolve(s.exists()?s.val():null)).catch(()=>resolve(null)); });
+    } else {
+      // Carica l'ultimo salvataggio corrente (comportamento precedente)
+      ordLoader  = mode==='giacenze' ? Promise.resolve(null) : loadStore();
+      giacLoader = loadGiacenze();
+    }
+    Promise.all([ordLoader, giacLoader]).then(([savedOrd, savedGiac])=>{
       let loaded = 0;
 
       // Ripristina ordine: qty + unità (solo se richiesto)
@@ -3283,8 +3351,9 @@ function caricaDaFirebase(mode){
       }
 
       // Ripristina giacenze: giac + giacUnit
-      if(savedGiac && savedGiac.data){
-        Object.entries(savedGiac.data).forEach(([name, entry])=>{
+      const giacData = savedGiac && (savedGiac.data || savedGiac);
+      if(giacData){
+        Object.entries(giacData).forEach(([name, entry])=>{
           if(!state[name]) return;
           state[name].giac     = entry.giac     || 0;
           state[name].giacUnit = entry.giacUnit || state[name].giacUnit;
