@@ -777,6 +777,9 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   display: flex; align-items: center; justify-content: center;
   transition: background var(--transition), color var(--transition);
   flex-shrink: 0;
+  touch-action: manipulation;
+  user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 .qty-btn:hover { background: var(--color-surface-2); color: var(--color-text); }
 .qty-val {
@@ -1323,7 +1326,7 @@ const CAT_ICONS = {
 
 // Categorie "padre" che raggruppano più sottocategorie in un unico accordion
 const CAT_GROUPS = {
-  'VINI': ['VINI - COLOMBAIO','VINI - BIANCHI','VINI - BOLLICINE','VINI - DESSERT','VINI - ROSSI'],
+  'VINI': ['VINI - BIANCHI','VINI - BOLLICINE','VINI - DESSERT','VINI - ROSSI'],
   'CLEAN ACCENT / COFFEESHOP': [
     'CARTA E PRODOTTI PER LA PULIZIA','ATTREZZATURE E PANNI PER LA PULIZIA',
     'DETERGENTI E IGIENIZZANTI GENERALI','LAVAGGIO PIATTI E LAVASTOVIGLIE',
@@ -1376,7 +1379,7 @@ const CATALOG = [
   {cat:'GIN',name:"Brockman's",              sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Ciauru Gin Pompelmo Rosa', sup:'online',unit:'bott'},
   {cat:'GIN',name:'Frantuono',               sup:'online',unit:'bott'},
-  {cat:'GIN',name:'Gin Amiata',                 sup:'gloo',  unit:'bott'},
+  {cat:'GIN',name:'Gin Amiata',                 sup:'prince',unit:'bott'},
   {cat:'GIN',name:"Hendrick's",              sup:'gloo',  unit:'bott'},
   {cat:'GIN',name:'J Rose',                  sup:'prince',unit:'bott'},
   {cat:'GIN',name:'Maite Fiamma',            sup:'prince',unit:'bott'},
@@ -1534,51 +1537,55 @@ const CATALOG = [
   {cat:'FUSTI & MISCELAZIONE',name:'Dandy Tonica Classic',           sup:'prince',unit:'ct'},
   {cat:'FUSTI & MISCELAZIONE',name:'Dandy Tonica Zero Zuccheri',     sup:'prince',unit:'ct'},
   // CLEAN ACCENT — Carta e Prodotti per la Pulizia
-  {cat:'CARTA E PRODOTTI PER LA PULIZIA',name:'Carta igienica SmartOne Mini',   sup:'clean',unit:'—',noUnit:true},
-  {cat:'CARTA E PRODOTTI PER LA PULIZIA',name:'Bobine di carta industriale',    sup:'clean',unit:'—',noUnit:true},
+  {cat:'CARTA E PRODOTTI PER LA PULIZIA',name:'Carta igienica SmartOne Mini',   sup:'clean',unit:'pz'},
+  {cat:'CARTA E PRODOTTI PER LA PULIZIA',name:'Bobine di carta industriale',    sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Attrezzature e Panni per la Pulizia
-  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Manico in legno a vite',            sup:'clean',unit:'—',noUnit:true},
-  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Scopa Europa',                      sup:'clean',unit:'—',noUnit:true},
-  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Panni microfibra blu per vetri',     sup:'clean',unit:'—',noUnit:true},
-  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Panni in microfibra colorati',       sup:'clean',unit:'—',noUnit:true},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Manico in legno a vite',            sup:'clean',unit:'pz'},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Scopa Europa',                      sup:'clean',unit:'pz'},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Panni microfibra blu per vetri',     sup:'clean',unit:'pz'},
+  {cat:'ATTREZZATURE E PANNI PER LA PULIZIA',name:'Panni in microfibra colorati',       sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Detergenti e Igienizzanti Generali
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Candeggina Solbat 2L',               sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Candeggina Lindor 2L',               sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Disinfettante spray Florkil 750ml',  sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente pavimenti Sensory White 1L',sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente pavimenti Sensory Green 1L',sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Sgrassatore solvente Solvoil Extra 1L',sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Sgrassatore Sirio Pulimega 750ml',   sup:'clean',unit:'—',noUnit:true},
-  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente rapido Fasty 750ml',      sup:'clean',unit:'—',noUnit:true},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Candeggina Solbat 2L',               sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Candeggina Lindor 2L',               sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Disinfettante spray Florkil 750ml',  sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente pavimenti Sensory White 1L',sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente pavimenti Sensory Green 1L',sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Sgrassatore solvente Solvoil Extra 1L',sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Sgrassatore Sirio Pulimega 750ml',   sup:'clean',unit:'pz'},
+  {cat:'DETERGENTI E IGIENIZZANTI GENERALI',name:'Detergente rapido Fasty 750ml',      sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Lavaggio Piatti e Lavastoviglie
-  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Pasticche Lavastoviglie Florpress',     sup:'clean',unit:'—',noUnit:true},
-  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo lavastoviglie Clean 10L',     sup:'clean',unit:'—',noUnit:true},
-  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo lavabicchieri Top Bar 5L',    sup:'clean',unit:'—',noUnit:true},
-  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Brillantante Clean 10L',                sup:'clean',unit:'—',noUnit:true},
-  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Brillantante Brill 2010 5kg',           sup:'clean',unit:'—',noUnit:true},
-  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo piatti a mano Ama Piatti 1.5L',sup:'clean',unit:'—',noUnit:true},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Pasticche Lavastoviglie Florpress',     sup:'clean',unit:'pz'},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo lavastoviglie Clean 10L',     sup:'clean',unit:'pz'},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo lavabicchieri Top Bar 5L',    sup:'clean',unit:'pz'},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Brillantante Clean 10L',                sup:'clean',unit:'pz'},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Brillantante Brill 2010 5kg',           sup:'clean',unit:'pz'},
+  {cat:'LAVAGGIO PIATTI E LAVASTOVIGLIE',name:'Detersivo piatti a mano Ama Piatti 1.5L',sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Igiene Personale e Monouso Protezione
-  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Sapone mani con pompetta 750ml',  sup:'clean',unit:'—',noUnit:true},
-  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Guanti nitrile nero taglia L',    sup:'clean',unit:'—',noUnit:true},
-  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Guanti nitrile nero taglia XL',   sup:'clean',unit:'—',noUnit:true},
-  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Salviettine al limone Panarea',   sup:'clean',unit:'—',noUnit:true},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Sapone mani con pompetta 750ml',  sup:'clean',unit:'pz'},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Guanti nitrile nero taglia L',    sup:'clean',unit:'pz'},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Guanti nitrile nero taglia XL',   sup:'clean',unit:'pz'},
+  {cat:'IGIENE PERSONALE E MONOUSO PROTEZIONE',name:'Salviettine al limone Panarea',   sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Sacchi e Smaltimento Rifiuti
-  {cat:'SACCHI E SMALTIMENTO RIFIUTI',name:'Sacchi neri giganti 90x130',               sup:'clean',unit:'—',noUnit:true},
+  {cat:'SACCHI E SMALTIMENTO RIFIUTI',name:'Sacchi neri giganti 90x130',               sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Monouso Tavola e Asporto
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Bustine porta posate Pocket Bianco Light',     sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Bicchieri in plastica e Kristal assortiti',    sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Piatti piani in polpa di cellulosa',           sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Coltelli in PLA compostabili',                 sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Forchette in PLA compostabili',                sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cucchiaini finger food CPLA',                  sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cannucce neri PLA 21 cm',                      sup:'clean',unit:'—',noUnit:true},
-  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cannucce neri PLA 15 cm',                      sup:'clean',unit:'—',noUnit:true},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Bustine porta posate Pocket Bianco Light',     sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Bicchieri in plastica e Kristal assortiti',    sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Piatti piani in polpa di cellulosa',           sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Coltelli in PLA compostabili',                 sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Forchette in PLA compostabili',                sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cucchiaini finger food CPLA',                  sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cannucce neri PLA 21 cm',                      sup:'clean',unit:'pz'},
+  {cat:'MONOUSO TAVOLA E ASPORTO',name:'Cannucce neri PLA 15 cm',                      sup:'clean',unit:'pz'},
   // CLEAN ACCENT — Tovagliame e Imballaggio
-  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovagliette americane Onda Verde',             sup:'clean',unit:'—',noUnit:true},
-  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Pellicola trasparente alimentare 300m',        sup:'clean',unit:'—',noUnit:true},
-  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Nastro adesivo di carta',                      sup:'clean',unit:'—',noUnit:true},
-  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Sacchetti in carta Avana 14x28',               sup:'clean',unit:'—',noUnit:true},
-  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovaglie TNT, tovaglioli e carta paglia',       sup:'clean',unit:'—',noUnit:true},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovagliette americane Onda Verde',             sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Pellicola trasparente alimentare 300m',        sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Nastro adesivo di carta',                      sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Sacchetti in carta Avana 14x28',               sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovaglie TNT nere',                             sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovagliolini Neri Cocktail',                    sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovaglioli Bordeaux',                           sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Carta Paglia Verde',                            sup:'clean',unit:'pz'},
+  {cat:'TOVAGLIAME E IMBALLAGGIO',name:'Tovaglioli Pocket Bianco',                      sup:'clean',unit:'pz'},
   // COFFEESHOP — Caffetteria
   {cat:'CAFFETTERIA',name:'Mokador Diva Sophia',                       sup:'coffee',unit:'—',noUnit:true},
   {cat:'CAFFETTERIA',name:'Mokador Diva Grace (Decaffeinato)',         sup:'coffee',unit:'—',noUnit:true},
@@ -1681,7 +1688,7 @@ function syncUIFromState(){
       const bct=document.getElementById('ubct_'+s);
       const bbott=document.getElementById('ubbott_'+s);
       if(bct)   bct.classList.toggle('active',st.unit==='ct');
-      if(bbott) bbott.classList.toggle('active',st.unit==='bott');
+      if(bbott) bbott.classList.toggle('active',st.unit!=='ct');
     }
     // Giacenza — aggiorna sempre (anche a 0 per azzeramento)
     const ginp=document.getElementById('giac_'+s);
@@ -1691,7 +1698,7 @@ function syncUIFromState(){
       const gct=document.getElementById('gct_'+s);
       const gbott=document.getElementById('gbott_'+s);
       if(gct)   gct.classList.toggle('active',st.giacUnit==='ct');
-      if(gbott) gbott.classList.toggle('active',st.giacUnit==='bott');
+      if(gbott) gbott.classList.toggle('active',st.giacUnit!=='ct');
     }
   });
   updateCounters();
@@ -1846,14 +1853,14 @@ function buildUI(){
 
   // Fixed order: priority cats first, then remaining alphabetically
   const PRIORITY_CATS = ['FUSTI & MISCELAZIONE','ACQUA & BIBITE','SUCCHI','BIRRE'];
+  const AFTER_WHISKY = ['VINI - COLOMBAIO','VINI','CLEAN ACCENT / COFFEESHOP'];
   const allDisplayNames = Object.keys(displayCats);
-  const remaining = allDisplayNames.filter(c=>!PRIORITY_CATS.includes(c) && c!=='VINI').sort((a,b)=>a.localeCompare(b,'it'));
-  // Inserisce la categoria VINI subito dopo WHISKY nell'ordine alfabetico
+  const remaining = allDisplayNames.filter(c=>!PRIORITY_CATS.includes(c) && !AFTER_WHISKY.includes(c)).sort((a,b)=>a.localeCompare(b,'it'));
+  // Inserisce Vini - Il Colombaio, Vini e Clean Accent / Coffeeshop subito dopo WHISKY
   const whiskeyIdx = remaining.indexOf('WHISKY');
-  if(displayCats['VINI']){
-    if(whiskeyIdx !== -1) remaining.splice(whiskeyIdx+1, 0, 'VINI');
-    else remaining.push('VINI');
-  }
+  const toInsertAfterWhisky = AFTER_WHISKY.filter(c=>displayCats[c]);
+  if(whiskeyIdx !== -1) remaining.splice(whiskeyIdx+1, 0, ...toInsertAfterWhisky);
+  else remaining.push(...toInsertAfterWhisky);
   const catOrder = [...PRIORITY_CATS.filter(c=>displayCats[c]), ...remaining];
 
   // Renderizza la riga di un singolo prodotto dentro il body passato
@@ -1864,15 +1871,17 @@ function buildUI(){
     row.id = 'row_'+s;
     row.dataset.name = p.name.toLowerCase();
 
+    const altUnit  = p.sup==='clean' ? 'pz' : 'bott';
+    const altLabel = p.sup==='clean' ? 'pz.' : 'bott.';
     const unitToggleHtml = p.noUnit ? '' : `
               <div class="unit-toggle">
                 <button class="unit-btn ${p.unit==='ct'?'active':''}" id="gct_${s}" onclick="setGiacUnit('${escQ(p.name)}','ct')">ct.</button>
-                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','bott')">bott.</button>
+                <button class="unit-btn ${p.unit===altUnit?'active':''}" id="gbott_${s}" onclick="setGiacUnit('${escQ(p.name)}','${altUnit}')">${altLabel}</button>
               </div>`;
     const unitToggleOrdHtml = p.noUnit ? '' : `
               <div class="unit-toggle">
                 <button class="unit-btn ${p.unit==='ct'?'active':''}" id="ubct_${s}" onclick="setUnit('${escQ(p.name)}','ct')">ct.</button>
-                <button class="unit-btn ${p.unit==='bott'?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','bott')">bott.</button>
+                <button class="unit-btn ${p.unit===altUnit?'active':''}" id="ubbott_${s}" onclick="setUnit('${escQ(p.name)}','${altUnit}')">${altLabel}</button>
               </div>`;
 
     row.innerHTML = `
@@ -1884,10 +1893,10 @@ function buildUI(){
           <div class="qty-wrap">
             ${unitToggleHtml}
             <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',-1)">−</button>
+              <button class="qty-btn" data-action="giac" data-name="${escQ(p.name)}" data-delta="-1">−</button>
               <input class="qty-val" type="number" min="0" value="0" id="giac_${s}"
                 onchange="setGiacInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
-              <button class="qty-btn" onclick="changeGiac('${escQ(p.name)}',1)">+</button>
+              <button class="qty-btn" data-action="giac" data-name="${escQ(p.name)}" data-delta="1">+</button>
             </div>
           </div>
         </div>
@@ -1897,10 +1906,10 @@ function buildUI(){
           <div class="qty-wrap">
             ${unitToggleOrdHtml}
             <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',-1)">−</button>
+              <button class="qty-btn" data-action="qty" data-name="${escQ(p.name)}" data-delta="-1">−</button>
               <input class="qty-val" type="number" min="0" value="0" id="qty_${s}"
                 onchange="setQtyInput('${escQ(p.name)}',this.value)" onfocus="this.select()"/>
-              <button class="qty-btn" onclick="changeQty('${escQ(p.name)}',1)">+</button>
+              <button class="qty-btn" data-action="qty" data-name="${escQ(p.name)}" data-delta="1">+</button>
             </div>
           </div>
         </div>
@@ -2007,7 +2016,7 @@ function setUnit(name,unit){
   const bct=document.getElementById('ubct_'+s);
   const bbott=document.getElementById('ubbott_'+s);
   if(bct)   bct.classList.toggle('active',unit==='ct');
-  if(bbott) bbott.classList.toggle('active',unit==='bott');
+  if(bbott) bbott.classList.toggle('active',unit!=='ct');
   saveLocalState();
 }
 function setGiacUnit(name,unit){
@@ -2016,7 +2025,7 @@ function setGiacUnit(name,unit){
   const gct=document.getElementById('gct_'+s);
   const gbott=document.getElementById('gbott_'+s);
   if(gct)   gct.classList.toggle('active',unit==='ct');
-  if(gbott) gbott.classList.toggle('active',unit==='bott');
+  if(gbott) gbott.classList.toggle('active',unit!=='ct');
   saveLocalState();
 }
 
@@ -2044,7 +2053,56 @@ function setQty(name,val){
   saveLocalState();
 }
 
-/* ── COUNTERS ── */
+/* ── LONG-PRESS: incremento/decremento rapido tenendo premuto +/- ── */
+function qtyBtnAction(action, name, delta){
+  if(action==='giac') changeGiac(name, delta);
+  else changeQty(name, delta);
+}
+(function setupQtyHoldRepeat(){
+  const HOLD_DELAY = 450;     // ms prima che scatti la ripetizione automatica
+  const START_INTERVAL = 180; // intervallo iniziale tra un incremento e l'altro
+  const MIN_INTERVAL = 45;    // intervallo minimo (velocità massima)
+  const ACCEL = 0.85;         // fattore di accelerazione ad ogni tick
+
+  let holdTimer = null;
+  let repeatTimer = null;
+  let wasRepeating = false;
+
+  function stopAll(){
+    if(holdTimer) clearTimeout(holdTimer);
+    if(repeatTimer) clearTimeout(repeatTimer);
+    holdTimer = null;
+    repeatTimer = null;
+  }
+  function startRepeat(btn){
+    wasRepeating = true;
+    const action = btn.dataset.action, name = btn.dataset.name, delta = parseInt(btn.dataset.delta,10);
+    let interval = START_INTERVAL;
+    (function tick(){
+      qtyBtnAction(action, name, delta);
+      interval = Math.max(MIN_INTERVAL, interval*ACCEL);
+      repeatTimer = setTimeout(tick, interval);
+    })();
+  }
+
+  const wrap = document.getElementById('categoriesWrap');
+  wrap.addEventListener('pointerdown', e=>{
+    const btn = e.target.closest('.qty-btn');
+    if(!btn) return;
+    wasRepeating = false;
+    stopAll();
+    holdTimer = setTimeout(()=>startRepeat(btn), HOLD_DELAY);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(evt=>{
+    wrap.addEventListener(evt, ()=>{ stopAll(); });
+  });
+  wrap.addEventListener('click', e=>{
+    const btn = e.target.closest('.qty-btn');
+    if(!btn) return;
+    if(wasRepeating){ wasRepeating = false; return; } // già incrementato dal long-press
+    qtyBtnAction(btn.dataset.action, btn.dataset.name, parseInt(btn.dataset.delta,10));
+  });
+})();
 function updateCounters(){
   const selected = CATALOG.filter(p=>state[p.name].qty>0);
   document.getElementById('totalSelected').textContent = selected.length;
@@ -2116,27 +2174,77 @@ function bottPerCt(name){ return BOTT_PER_CT[name] || 6; }
 /* Categorie per cui si mostra (N BOTT.) sul cartone */
 const CAT_SHOW_BOTT = new Set(['GIN','WHISKY','RUM','AGAVE / VODKA','VERMOUTH / BITTER / AMARO','LIQUORI','AMARI & DIGESTIVI']);
 
+/* ── DICITURE TECNICHE FORNITORE (Clean Accent) — codice articolo / descrizione listino ── */
+const CLEAN_TECH = {
+  'Carta igienica SmartOne Mini':        'CAIGWC.0700.002 - CARTA IGIENICA SMARTONE MINI 111 MT. CF.PZ.12',
+  'Bobine di carta industriale':         'ROTIND.0301.015 - BOBINA PURA OVATTA PAPER1000 CF.PZ.2',
+  'Manico in legno a vite':              'ATPUCA.0202.007 - MANICO LEGNO CM.130 A VITE',
+  'Scopa Europa':                        'ATPUCA.0205.008 - SCOPA EUROPA',
+  'Panni microfibra blu per vetri':      'MISPAB.2700.014 - PANNO ULTRA MICROFIBRA BLU VETRI CM.40X55 CF. PZ.5',
+  'Panni in microfibra colorati':        'Non presente nel listino',
+  'Candeggina Solbat 2L':                'CALCAC.0401.002 - VARICHINA SOLBAT FL.LT.2',
+  'Candeggina Lindor 2L':                'CALCAC.0401.003 - VARICHINA LINDOR FL.LT.2',
+  'Disinfettante spray Florkil 750ml':   'DISANI.4400.021 - FLORKIL FLACONE ML.750',
+  'Detergente pavimenti Sensory White 1L':'DPAVIM.3700.028 - SENSORY WHITE FLACONE LT.1',
+  'Detergente pavimenti Sensory Green 1L':'DPAVIM.3700.029 - SENSORY GREEN FLACONE LT.1',
+  'Sgrassatore solvente Solvoil Extra 1L':'DPULGE.4703.018 - SOLVOIL EXTRA FLACONE LT.1',
+  'Sgrassatore Sirio Pulimega 750ml':    'DPULGE.4703.016 - SIRIO PULIMEGA FLACONE ML.750',
+  'Detergente rapido Fasty 750ml':       'DPULGE.4704.003 - FASTY FLACONE ML.750',
+  'Pasticche Lavastoviglie Florpress':   'Non presente nel listino',
+  'Detersivo lavastoviglie Clean 10L':   'DESTOV.4500.004 - CLEAN LAVASTOVIGLIE TANICA LT.10 (KG.12)',
+  'Detersivo lavabicchieri Top Bar 5L':  'DESTOV.4500.015 - TOP BAR TANICA LT.5',
+  'Brillantante Clean 10L':              'DESTOV.4501.002 - CLEAN BRILLANTANTE TANICA LT. 10',
+  'Brillantante Brill 2010 5kg':         'DESTOV.4501.008 - BRILL 2010 TANICA KG.5',
+  'Detersivo piatti a mano Ama Piatti 1.5L':'DESTOV.4504.004 - AMA PIATTI FLACONE ML. 1500',
+  'Sapone mani con pompetta 750ml':      'SMAIGC.3600.006 - SAPONE MANI C/POMPETTA FLACONE ML.750',
+  'Guanti nitrile nero taglia L':        'GUANTI.2001.015 - GUANTI NITRILE NERO S/TALCO CF.PZ.100(IVA5) LARGE',
+  'Guanti nitrile nero taglia XL':       'GUANTI.2001.016 - GUANTI NITRILE NERO S/TALCO CF.PZ.100(IVA5) XLARGE',
+  'Salviettine al limone Panarea':       'SMAIGC.3604.001 - SALVIETTINA AL LIMONE "PANAREA" CF. PZ. 80',
+  'Sacchi neri giganti 90x130':          'SAIMPA.3002.016 - SACCHI N.U. NERI 90X130 SP.0,9 CT.PZ.90',
+  'Bustine porta posate Pocket Bianco Light':'BUSPOR.4102.001 - POCKET BIANCO LIGHT CT.PZ.1000',
+  'Bicchieri in plastica e Kristal assortiti':'FOODMO.3100.009 fino a FOODMO.3100.051',
+  'Piatti piani in polpa di cellulosa':  'FOODMO.3103.022 - PIATTO PIANO POLPA CELL. BORDOFINO',
+  'Coltelli in PLA compostabili':        'FOODMO.3104.005 - COLTELLO IN PLA CF.PZ.50',
+  'Forchette in PLA compostabili':       'FOODMO.3104.023 - FORCHETTA IN PLA CF.PZ.50',
+  'Cucchiaini finger food CPLA':         'FOODMO.3105.015 - MINI CUCCHIAINO FINGER FOOD CPLA PZ.100',
+  'Cannucce neri PLA 21 cm':             'FOODMO.3110.010 - CANNUCCIA PLA SFUSA NERA CM.21 PZ.500',
+  'Cannucce neri PLA 15 cm':             'FOODMO.3110.012 - CANNUCCIA PLA SFUSA NERA CM.15 PZ.250',
+  'Tovagliette americane Onda Verde':    'PACKSE.1602.005 - TOVAGLIETTA 30X48 ONDA VERDE CT.PZ.350',
+  'Pellicola trasparente alimentare 300m':'PELALL.2800.001 - PELLICOLA TRASPARENTE MT.300 H.30 S/ASTUCCIO',
+  'Nastro adesivo di carta':             'PINDUS.2900.005 - NASTRO CARTA A ROTOLO',
+  'Sacchetti in carta Avana 14x28':      'SACASO.3404.011 - SACCHETTO CARTA AVANA 14X28 CT. KG.10',
+  'Tovaglie TNT nere':                   'Gamma TVEMON / TVIMON',
+  'Tovagliolini Neri Cocktail':          'Gamma TVEMON / TVIMON',
+  'Tovaglioli Bordeaux':                 'Gamma TVEMON / TVIMON',
+  'Carta Paglia Verde':                  'Gamma TVEMON / TVIMON',
+  'Tovaglioli Pocket Bianco':            'Gamma TVEMON / TVIMON'
+};
+
 /* ── FORMAT LINE ── */
 function fmtLine(name,qty,unit,noUnit,cat){
-  if(noUnit) return String(qty).padStart(2,'0')+' — '+name;
-  if(unit==='bott') return String(qty).padStart(2,'0')+' BOTT. '+name;
+  const tech = CLEAN_TECH[name] ? ' ('+CLEAN_TECH[name]+')' : '';
+  if(noUnit) return String(qty).padStart(2,'0')+' — '+name+tech;
+  if(unit==='bott') return String(qty).padStart(2,'0')+' BOTT. '+name+tech;
+  if(unit==='pz')   return String(qty).padStart(2,'0')+' PZ. '+name+tech;
   // cartone
-  let line = String(qty).padStart(2,'0')+' CT. '+name;
+  let line = String(qty).padStart(2,'0')+' CT. '+name+tech;
   if(cat && CAT_SHOW_BOTT.has(cat)){
     const nb = bottPerCt(name);
     line += ' ('+String(qty*nb).padStart(2,'0')+' BOTT.)';
   }
   return line;
 }
-/* Formato doppio per la visualizzazione nella modal (bott // ct) */
+/* Formato doppio per la visualizzazione nella modal (bott/pz // ct) */
 function fmtLinePair(name,qty,unit,noUnit,cat){
-  if(noUnit) return String(qty).padStart(2,'0')+' — '+name;
-  if(unit==='bott') return String(qty).padStart(2,'0')+' BOTT. // — '+name;
+  const tech = CLEAN_TECH[name] ? ' ('+CLEAN_TECH[name]+')' : '';
+  if(noUnit) return String(qty).padStart(2,'0')+' — '+name+tech;
+  if(unit==='bott') return String(qty).padStart(2,'0')+' BOTT. // — '+name+tech;
+  if(unit==='pz')   return String(qty).padStart(2,'0')+' PZ. // — '+name+tech;
   // cartone
   const nb = (cat && CAT_SHOW_BOTT.has(cat)) ? bottPerCt(name) : null;
   const bottTot = nb ? (qty * nb) : null;
   let line = (bottTot ? String(bottTot).padStart(2,'0')+' BOTT. // ' : '— // ')
-           + String(qty).padStart(2,'0')+' CT. '+name;
+           + String(qty).padStart(2,'0')+' CT. '+name+tech;
   // totale bottiglie già mostrato inline  return line;
 }
 
