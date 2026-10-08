@@ -20,7 +20,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="theme-color" content="#e3ebd6" />
-<meta name="color-scheme" content="dark light" />
+<meta name="color-scheme" content="light" />
 <meta name="description" content="Menù 2026 di Poggio a Issi — ristorante e cocktail bar. Cucina toscana, hamburger, pinse, gin tonic e carta dei vini." />
 <meta property="og:title" content="Poggio a Issi — Menù 2026" />
 <meta property="og:description" content="Cucina toscana, griglia, hamburger, pinse artigianali e una selezione esclusiva di gin tonic firmata dal Gingegnere." />
@@ -63,7 +63,7 @@
   --transition: 240ms var(--ease-out);
 
   /* Tema chiaro: bosco di giorno */
-  --color-bg: #d6e2c3;
+  --color-bg: #e2eada;
   --blob-1: #b7d18f;
   --blob-2: #f2d59b;
   --blob-3: #9fc7a9;
@@ -90,10 +90,10 @@
 
   --glass: rgba(255, 255, 255, .5);
   --glass-strong: rgba(255, 255, 255, .72);
-  --glass-solid: #fffef8;
-  --section-open: rgba(205, 220, 182, .72);
-  --card-border: rgba(21, 33, 14, .13);
-  --card-shadow: 0 1px 2px rgba(20, 35, 10, .08), 0 4px 14px rgba(20, 35, 10, .08);
+  --glass-solid: rgba(255, 255, 252, .9);
+  --section-open: rgba(236, 242, 228, .78);
+  --card-border: rgba(21, 33, 14, .07);
+  --card-shadow: 0 1px 2px rgba(20, 35, 10, .04), 0 3px 10px rgba(20, 35, 10, .04);
   --glass-edge: rgba(255, 255, 255, .8);
   --glass-hi: rgba(255, 255, 255, .95);
   --glass-shadow: 0 1px 1px rgba(20, 35, 10, .04), 0 8px 28px rgba(20, 35, 10, .1);
@@ -249,7 +249,7 @@ input, select, textarea { font-size: 16px; }
   position: relative;
   z-index: 3;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 10px;
 }
@@ -653,26 +653,45 @@ html[data-theme="dark"] :is(.card, .wine-item, .gin-item, .simple-item)::after {
   transition: background-color var(--transition);
 }
 .sub-trigger .sub-trigger-title {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 12px;
+  min-width: 0;
   font-family: var(--font-display);
-  font-weight: 650;
-  font-size: clamp(1.12rem, 1.02rem + .5vw, 1.32rem);
-  line-height: 1.15;
-  letter-spacing: -.03em;
+  font-weight: 600;
+  font-size: 1.04rem;
+  line-height: 1.3;
+  letter-spacing: -.02em;
+  color: var(--color-text);
 }
 .sub-trigger .sub-trigger-title::before {
   content: ""; flex-shrink: 0;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 4px var(--color-accent-gold-soft);
+  width: 34px; height: 34px; border-radius: 11px;
+  background: var(--color-accent-gold-soft);
+  -webkit-mask: none; mask: none;
 }
+.sub-trigger .sub-trigger-title::after {
+  content: ""; position: absolute;
+  left: 24px; top: 50%; translate: 0 -50%;
+  width: 18px; height: 18px;
+  background: var(--color-accent);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.sub-trigger { padding-left: 16px; min-height: 60px; }
+.sub-trigger.open .sub-trigger-title::before { background: var(--color-accent); }
+.sub-trigger.open .sub-trigger-title::after { background: var(--on-accent); }
 /* Intestazioni dentro le liste (Bollicine, Bianchi, Rossi...) */
-.sub-body div[style*="padding:8px 0 4px"] { border-top: 0 !important; padding-top: 14px !important; }
+.sub-body div[style*="padding:8px 0 4px"] {
+  display: flex; align-items: center; gap: 12px;
+  border-top: 0 !important;
+  margin-top: 10px !important;
+  padding: 10px 4px 2px !important;
+}
+.sub-body div[style*="padding:8px 0 4px"]::after { content: ""; flex: 1; height: 1px; background: var(--color-border); }
 .sub-body div[style*="padding:8px 0 4px"] > span[style] {
-  font-size: .8rem !important;
-  font-weight: 700 !important;
-  letter-spacing: .1em !important;
-  color: var(--color-accent) !important;
+  font-size: .78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: .12em !important;
+  color: var(--color-text-muted) !important;
 }
 .sub-trigger .sub-trigger-chevron {
   width: 30px; height: 30px; border-radius: 50%;
@@ -968,22 +987,22 @@ html[data-lang="de"] div.lang-de { display: block; }
   --i-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E %3Cpath d='m5 12 7-7 7 7' /%3E %3Cpath d='M12 19V5' /%3E %3C/svg%3E");
   --i-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' %3E %3Cpath d='m6 9 6 6 6-6' /%3E %3C/svg%3E");
 }
-#ll-condividi .section-icon, #condividi .section-icon { --icon: var(--i-utensils); }
-#ll-primi .section-icon { --icon: var(--i-soup); }
-#ll-insalatone .section-icon { --icon: var(--i-salad); }
-#ll-griglia .section-icon, #griglia .section-icon { --icon: var(--i-flame); }
-#ll-contorni .section-icon, #contorni .section-icon { --icon: var(--i-carrot); }
-#ll-dolci .section-icon, #dolci .section-icon { --icon: var(--i-cake); }
-#ll-allergeni .section-icon, #allergeni .section-icon { --icon: var(--i-alert); }
-#hamburger .section-icon { --icon: var(--i-burger); }
-#pinse .section-icon { --icon: var(--i-pizza); }
-#vini .section-icon { --icon: var(--i-wine); }
-#birre .section-icon { --icon: var(--i-beer); }
-#gin .section-icon { --icon: var(--i-martini); }
-#cocktail .section-icon { --icon: var(--i-citrus); }
-#caffe .section-icon { --icon: var(--i-coffee); }
+#ll-condividi, #condividi { --icon: var(--i-utensils); }
+#ll-primi { --icon: var(--i-soup); }
+#ll-insalatone { --icon: var(--i-salad); }
+#ll-griglia, #griglia { --icon: var(--i-flame); }
+#ll-contorni, #contorni { --icon: var(--i-carrot); }
+#ll-dolci, #dolci { --icon: var(--i-cake); }
+#ll-allergeni, #allergeni { --icon: var(--i-alert); }
+#hamburger { --icon: var(--i-burger); }
+#pinse { --icon: var(--i-pizza); }
+#vini { --icon: var(--i-wine); }
+#birre { --icon: var(--i-beer); }
+#gin { --icon: var(--i-martini); }
+#cocktail { --icon: var(--i-citrus); }
+#caffe { --icon: var(--i-coffee); }
 </style></head><body><div class="ambient" aria-hidden="true"><i></i><i></i><i></i><i></i></div><header class="topbar"><div class="topbar-inner"></div></header><div class="shell page"><section class="hero-card">
-<div class="hero-topline"><div class="pill-group" role="group" aria-label="Lingua"><button class="pill-btn active" data-lang="it" data-act="lang">ITA</button><button class="pill-btn" data-lang="en" data-act="lang">ENG</button><button class="pill-btn" data-lang="fr" data-act="lang">FRA</button><button class="pill-btn" data-lang="es" data-act="lang">ESP</button><button class="pill-btn" data-lang="de" data-act="lang">DEU</button></div><button class="theme-toggle" id="themeToggle" aria-label="Cambia tema"><span id="themeIcon">☀️</span></button></div>
+<div class="hero-topline"><div class="pill-group" role="group" aria-label="Lingua"><button class="pill-btn active" data-lang="it" data-act="lang">ITA</button><button class="pill-btn" data-lang="en" data-act="lang">ENG</button><button class="pill-btn" data-lang="fr" data-act="lang">FRA</button><button class="pill-btn" data-lang="es" data-act="lang">ESP</button><button class="pill-btn" data-lang="de" data-act="lang">DEU</button></div></div>
 <div class="hero-copy">
 <h2 class="hero-title">Poggio <span class="hero-a">a</span> Issi</h2>
 <p class="hero-subtitle"><span class="lang-it">Menù 2026 · Gusto, Natura &amp; Arte del Drink</span><span class="lang-en">Menu 2026 · Taste, Nature &amp; The Art of Drink</span><span class="lang-fr">Menu 2026 · Goût, Nature &amp; L'Art du Cocktail</span><span class="lang-es">Menú 2026 · Sabor, Naturaleza &amp; El Arte de la Bebida</span><span class="lang-de">Menü 2026 · Geschmack, Natur &amp; Die Kunst des Drinks</span></p></div>
@@ -1308,14 +1327,11 @@ html[data-lang="de"] div.lang-de { display: block; }
   /* ─── COSTANTI E STORAGE ─── */
   const LANGS = ["it", "en", "fr", "es", "de"];
   const LANG_KEY = "poggio-lang";
-  const THEME_KEY = "poggio-theme";
 
   /* window.__ls è definito nello script del <head>, con try/catch su localStorage */
   const ls = window.__ls || { get: () => null, set: () => {} };
 
   const root = document.documentElement;
-  const themeToggle = document.getElementById("themeToggle");
-  const themeIcon = document.getElementById("themeIcon");
   const scrollTopBtn = document.getElementById("scrollTopBtn");
   const shell = document.querySelector(".shell");
   const tabsScroll = document.querySelector(".tabs-scroll");
@@ -1346,20 +1362,8 @@ html[data-lang="de"] div.lang-de { display: block; }
     tabsScroll.scrollTo({ left, behavior: "smooth" });
   }
 
-  /* ─── TEMA ─── */
-  function syncThemeIcon() {
-    themeIcon.textContent = root.getAttribute("data-theme") === "dark" ? "🌙" : "☀️";
-  }
-  /* Tema: Light alla prima visita, rispetta la scelta dell'utente nelle sessioni successive */
-  const savedTheme = ls.get(THEME_KEY);
-  if (savedTheme === "light" || savedTheme === "dark") root.setAttribute("data-theme", savedTheme);
-  syncThemeIcon();
-  themeToggle.addEventListener("click", () => {
-    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    ls.set(THEME_KEY, next);
-    syncThemeIcon();
-  });
+  /* ─── TEMA: sempre chiaro ─── */
+  root.setAttribute("data-theme", "light");
 
   /* ─── LINGUA ─── */
   const CAT_LABELS = {
