@@ -1638,6 +1638,8 @@ html[data-lang="de"] div.lang-de { display: block; }
   window.addEventListener("resize", updateNavFade, { passive: true });
   document.fonts?.ready.then(updateNavFade);
   updateNavFade();
+  /* Avviso allergeni alla prima visita, dopo che la pagina si è mostrata */
+  setTimeout(() => showDialog(dialogs.allergen), 900);
 })();
 </script>
 </body></html>
