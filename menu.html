@@ -480,7 +480,7 @@ body.scrolled .sticky-nav { background: var(--glass-strong); box-shadow: inset 0
 .content { display: grid; gap: 12px; }
 .meal-panel { display: none; }
 .meal-panel.active { display: grid; gap: 12px; }
-.section { scroll-margin-top: calc(var(--safe-top) + 76px); }
+.section, .sub-trigger { scroll-margin-top: calc(var(--safe-top) + 76px); }
 
 .section {
   position: relative;
@@ -1417,6 +1417,7 @@ html[data-lang="de"] div.lang-de { display: block; }
   /* ─── SOTTO-ACCORDION (vini, birre, bibite) ─── */
   function toggleSub(btn) {
     const wasOpen = btn.classList.contains("open");
+    const hadOther = !wasOpen && !!btn.closest(".sub-accordion").querySelector(".sub-trigger.open");
     btn.closest(".sub-accordion").querySelectorAll(".sub-trigger").forEach(t => {
       t.classList.remove("open");
       t.setAttribute("aria-expanded", "false");
@@ -1424,6 +1425,12 @@ html[data-lang="de"] div.lang-de { display: block; }
     if (wasOpen) return;
     btn.classList.add("open");
     btn.setAttribute("aria-expanded", "true");
+    /* Chiudendo la sottosezione precedente il titolo può finire sopra lo schermo:
+       lo riporta in cima così la lista si legge dall'inizio */
+    const top = btn.getBoundingClientRect().top;
+    if (hadOther || top < 0 || top > window.innerHeight - 80) {
+      requestAnimationFrame(() => btn.scrollIntoView({ behavior: "smooth", block: "start" }));
+    }
 
     if (!document.getElementById("panel-bevande")?.classList.contains("active")) return;
     const body = btn.nextElementSibling;
