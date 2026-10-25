@@ -710,6 +710,7 @@ html[data-theme="dark"] :is(.card, .wine-item, .gin-item, .simple-item)::after {
 /* ═══ VINI E BIRRE ═══════════════════════════════════════════ */
 .wine-list { grid-template-columns: 1fr; }
 .wine-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: nowrap; cursor: pointer; transition: background-color var(--transition); }
+.wine-item[hidden], .wine-detail[hidden] { display: none !important; }
 .wine-item.wd-open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; background: var(--glass-strong); }
 .wine-info { min-width: 0; flex: 1; }
 .wine-name { font-weight: 620; font-size: 1rem; line-height: 1.3; letter-spacing: -.015em; }
@@ -1141,7 +1142,7 @@ html[data-lang="de"] div.lang-de { display: block; }
   </div>
 </div>
 
-<div class="wine-item" data-act="wd" role="button" aria-expanded="false" tabindex="0">
+<div class="wine-item" hidden data-act="wd" role="button" aria-expanded="false" tabindex="0">
   <div class="wine-info">
     <div class="wine-name">Strade — Blanche <span class="gf-badge">Gluten Free</span><span class="wd-chevron" aria-hidden="true">▾</span></div>
     <div class="wine-producer"><span class="lang-it">Birrificio San Gimignano · Blanche / Witbier · 5,0% vol</span><span class="lang-en">Birrificio San Gimignano · Blanche / Witbier · 5.0% ABV</span><span class="lang-fr">Birrificio San Gimignano · Blanche / Witbier · 5,0% vol</span><span class="lang-es">Birrificio San Gimignano · Blanche / Witbier · 5,0% vol</span><span class="lang-de">Birrificio San Gimignano · Blanche / Witbier · 5,0% vol</span></div>
@@ -1149,7 +1150,7 @@ html[data-lang="de"] div.lang-de { display: block; }
   <i class="wd-badge" aria-hidden="true">▾</i>
   <div class="wine-price">7€</div>
 </div>
-<div class="wine-detail">
+<div class="wine-detail" hidden>
   <div class="wd-row">
     <span class="wd-label"><span class="lang-it">Stile</span><span class="lang-en">Style</span><span class="lang-fr">Style</span><span class="lang-es">Estilo</span><span class="lang-de">Stil</span></span>
     <span class="wd-val"><span class="lang-it">Blanche / Witbier</span><span class="lang-en">Blanche / Witbier</span><span class="lang-fr">Blanche / Witbier</span><span class="lang-es">Blanche / Witbier</span><span class="lang-de">Blanche / Witbier</span></span>
